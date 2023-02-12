@@ -379,11 +379,11 @@ void project3DPoint() {
   cv::Vec3d thetaLeft, thetaRight;
 
   rollLeft = 0;
-  pitchLeft = +M_PI / 4;
+  pitchLeft = +M_PI / 36;
   yawLeft = 0;
 
   rollRight = 0;
-  pitchRight = -M_PI / 4;
+  pitchRight = -M_PI / 36;
   yawRight = 0;
 
   txLeft = -0.5;
