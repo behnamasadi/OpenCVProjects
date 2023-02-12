@@ -47,15 +47,7 @@ Assuming that the camera and world share the same coordinate system:
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.latex?%5Cmathbf%7BP%7D%3D%20%7B%5Cdisplaystyle%20%7B%5Cbegin%7Bbmatrix%7Df_%7Bx%7D%26%5Cgamma%20%26c_%7Bx%7D%5C%5C0%26f_%7By%7D%26c_%7By%7D%5C%5C0%260%261%5Cend%7Bbmatrix%7D%7D%7D%20%5Cbegin%7Bbmatrix%7D%201%26%200%20%26%200%20%26%200%20%5C%5C%200%20%26%201%20%26%200%20%26%200%5C%5C%200%20%26%200%20%26%201%20%26%200%20%5Cend%7Bbmatrix%7D
-" alt="https://latex.codecogs.com/svg.latex?\mathbf{P}= {\displaystyle {\begin{bmatrix}f_{x}&\gamma &c_{x}\\0&f_{y}&c_{y}\\0&0&1\end{bmatrix}}}
-\begin{bmatrix}
- 1& 0 & 0 & 0 \\ 
-0 & 1 & 0 & 0\\ 
-0 & 0 & 1 & 0 
-\end{bmatrix}" />
-
-
+<img src="https://latex.codecogs.com/svg.latex?%5Cmathbf%7BP%7D%3D%20%7B%5Cdisplaystyle%20%7B%5Cbegin%7Bbmatrix%7Df_%7Bx%7D%26%5Cgamma%20%26c_%7Bx%7D%5C%5C0%26f_%7By%7D%26c_%7By%7D%5C%5C0%260%261%5Cend%7Bbmatrix%7D%7D%7D%20%5Cbegin%7Bbmatrix%7D%201%26%200%20%26%200%20%26%200%20%5C%5C%200%20%26%201%20%26%200%20%26%200%5C%5C%200%20%26%200%20%26%201%20%26%200%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?\mathbf{P}= {\displaystyle {\begin{bmatrix}f_{x}&\gamma &c_{x}\\0&f_{y}&c_{y}\\0&0&1\end{bmatrix}}} \begin{bmatrix}  1& 0 & 0 & 0 \\ 0 & 1 & 0 & 0\\ 0 & 0 & 1 & 0 \end{bmatrix}" />
 
 <br/>
 <br/>
@@ -306,17 +298,7 @@ std::cout<<static_cast<unsigned>(img.at<uchar>( cv::Point(column,row))     )<<st
 ## 2.5 Projection with Lens Distortion
 
 
-<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7D%20x%5C%5C%20y%5C%5C%20z%20%5Cend%7Bbmatrix%7D%3D%20R%5Cbegin%7Bbmatrix%7D%20X%5C%5C%20Y%5C%5C%20Z%20%5Cend%7Bbmatrix%7D&plus;t
-" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}
-x\\ 
-y\\ 
-z
-\end{bmatrix}=
-R\begin{bmatrix}
-X\\ 
-Y\\ 
-Z
-\end{bmatrix}+t" />
+<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7D%20x%5C%5C%20y%5C%5C%20z%20%5Cend%7Bbmatrix%7D%3D%20R%5Cbegin%7Bbmatrix%7D%20X%5C%5C%20Y%5C%5C%20Z%20%5Cend%7Bbmatrix%7D&plus;t" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix} x\\ y\\ z \end{bmatrix}= R\begin{bmatrix} X\\ Y\\ Z \end{bmatrix}+t" />
 
 
 
