@@ -256,6 +256,10 @@ target_link_libraries(remap ${OpenCV_LIBS} )
 add_executable(file_storage_io src/file_storage_io.cpp)
 target_link_libraries(file_storage_io ${OpenCV_LIBS} )
 
+add_executable(camera_projection_matrix src/camera_projection_matrix.cpp)
+target_link_libraries(camera_projection_matrix ${OpenCV_LIBS} )
+
+
 
 find_package (Eigen3 NO_MODULE)
 IF(${EIGEN3_FOUND})
