@@ -55,31 +55,34 @@ If they are different:
 
 <br/>
 <br/>
-<img src="images/projection_in_ex.jpg" height="520" width="500" alt="" />
-
-[image courtesy](https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf)
- 
-
-<br/>
-<br/>
 
 
-<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Cmathbf%7BP%3DKR%5BI-C%5D%7D%20%5C%5C%20%5Cmathbf%7BP%3DK%5BR%7Ct%5D%7D%20%5C%5C%20%5Ctext%7Bwhere%3A%7D%20%5C%5C%20%5Cmathbf%7Bt%3D-RC%7D%20%5C%5C%20%5Ctext%7Band%20C%20is%20Coordinate%20of%20the%20camera%20center%20in%20the%20world%20coordinate%20frame%7D" alt="https://latex.codecogs.com/svg.latex?\\
-\mathbf{P=KR[I-C]}
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Cmathbf%7BP%3DK%5BR_w%5Ec%7Ct_w%5Ec%5D%7D%20%5C%5C%20%5Cmathbf%7BP%3DKR_w%5Ec%5BI-C%5D%7D%20%5C%5C%20%5Ctext%7Bwhere%3A%7D%20%5C%5C%20%5Cmathbf%7Bt_w%5Ec%3D-R_w%5EcC%7D%20%5C%5C%20%5Ctext%7Band%20C%20is%20Coordinate%20of%20the%20camera%20center%20in%20the%20world%20coordinate%20frame%7D" alt="https://latex.codecogs.com/svg.latex?\\
+\mathbf{P=K[R_w^c|t_w^c]}
 \\
-\mathbf{P=K[R|t]}
+\mathbf{P=KR_w^c[I-C]}
 \\ \text{where:}
 \\
-\mathbf{t=-RC}
+\mathbf{t_w^c=-R_w^cC}
 \\
 \text{and C is Coordinate of the
 camera center in the
 world coordinate frame} " />
 
+
+Ref: [1](https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf)
+ 
+
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.image?{\displaystyle&space;z_{c}{\begin{bmatrix}u\\v\\1\end{bmatrix}}=K\,{\begin{bmatrix}R&T\end{bmatrix}}{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}=P{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}}" title="https://latex.codecogs.com/svg.image?{\displaystyle z_{c}{\begin{bmatrix}u\\v\\1\end{bmatrix}}=K\,{\begin{bmatrix}R&T\end{bmatrix}}{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}=P{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}}" />
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?%7B%5Cdisplaystyle%20z_%7Bc%7D%7B%5Cbegin%7Bbmatrix%7Du%5C%5Cv%5C%5C1%5Cend%7Bbmatrix%7D%7D%3DK%5C%2C%7B%5Cbegin%7Bbmatrix%7DR_%7Bw%7D%5E%7Bc%7D%20%26T_%7Bw%7D%5E%7Bc%7D%5Cend%7Bbmatrix%7D%7D%7B%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CZ_%7Bw%7D%5C%5C1%5Cend%7Bbmatrix%7D%7D%3DP%7B%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CZ_%7Bw%7D%5C%5C1%5Cend%7Bbmatrix%7D%7D%7D" alt="{\displaystyle z_{c}{\begin{bmatrix}u\\v\\1\end{bmatrix}}=K\,{\begin{bmatrix}R_{w}^{c} &T_{w}^{c}\end{bmatrix}}{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}=P{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\1\end{bmatrix}}}" />
 
 
 
@@ -433,15 +436,6 @@ For each observed point coordinate (u,v) the function computes:
 
 Refs: [1](https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#ga69f2545a8b62a6b0fc2ee060dc30559d)
 
-
-
-# 3D World Unit Vector
-
-
-
-
-Refs: [1](https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#ga69f2545a8b62a6b0fc2ee060dc30559d)
-
 # 3D World Unit Vector
 
 Refs: [1](https://stackoverflow.com/questions/12977980/in-opencv-converting-2d-image-point-to-3d-world-unit-vector),
@@ -456,6 +450,29 @@ Refs: [1](https://stackoverflow.com/questions/12977980/in-opencv-converting-2d-i
 
 
 # Resizing Image Effect on the Camera Intrinsic Matrix
+
+
+
+
+
+
+
+
+```cpp
+
+void cv::projectPoints	(	InputArray 	objectPoints,
+InputArray 	rvec,
+InputArray 	tvec,
+InputArray 	cameraMatrix,
+InputArray 	distCoeffs,
+OutputArray 	imagePoints,
+OutputArray 	jacobian = noArray(),
+double 	aspectRatio = 0 
+)	
+```
+
+`rvec` and `tvec` are the rotation and translation that transform object pose from world coordinate into 
+camera's coordinate, namely `R_c_w=R_w_c.inv()` and `T_c_w=-T_w_c`
 
 
 

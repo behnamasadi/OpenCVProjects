@@ -84,89 +84,89 @@ void project3DPoint() {
 
   /*
 
-  OpenCV camera coordinate:
+      OpenCV camera coordinate:
 
-                    Z
-                  ▲
-                 /
-                /
-               /1 2 3 4     x or u means column
-              |------------ ⯈
-             1|
-             2|
-             3|
-             4|
-              | y or v means row
-              ⯆
-
-
+                        Z
+                      ▲
+                     /
+                    /
+                   /1 2 3 4     x or u means column
+                  |------------ ⯈
+                 1|
+                 2|
+                 3|
+                 4|
+                  | y or v means row
+                  ⯆
 
 
-  In OpenCV, Point(x=column,y=row). For instance the point in the following
-  image can be accessed with
 
-      X
-      --------column---------►
-      | Point(0,0) Point(1,0) Point(2,0) Point(3,0)
-      | Point(0,1) Point(1,1) Point(2,1) Point(3,1)
-      | Point(0,2) Point(1,2) Point(2,2) Point(3,2)
-    y |
-     row
-      |
-      |
-      ▼
 
-      However if you access an image directly, the order is
+      In OpenCV, Point(x=column,y=row). For instance the point in the following
+      image can be accessed with
+
+              u
+    ------------------------------------------►
+    | (0,0) (1,0) (2,0) (3,0) (u,v) (u+1,v)
+    | (0,1) (1,1) (2,1) (3,1)
+    | (0,2) (1,2) (2,2) (3,2)
+  v | (u,v)
+    | (u,v+1)
+    |
+    |
+    ▼
+
+  However if you access an image directly, the order is
   mat.at<type>(row,column). So the following will return the same value:
-      mat.at<type>(row,column)
-      mat.at<type>(cv::Point(column,row))
-
-      X
-      --------column---------►
-      | mat.at<type>(0,0) mat.at<type>(0,1) mat.at<type>(0,2) mat.at<type>(0,3)
-      | mat.at<type>(1,0) mat.at<type>(1,1) mat.at<type>(1,2) mat.at<type>(1,3)
-      | mat.at<type>(2,0) mat.at<type>(2,1) mat.at<type>(2,2) mat.at<type>(2,3)
-    y |
-     row
-      |
-      |
-      ▼
-
-
-
-  The parameters fx=f*mx  and fy=f*my  where mx=1/width and my=1/height  meaning
-  size of 1 pixel in x and y
-
-  mx=1/width
-  my=1/height
-
-  cx=Width/2;
-  cy=Height/2 ;
-
-  fx=f*mx
-
-  k=[fx  0  cx
-     0  fy  cy
-     0  0   1 ]
-
-                  Z
-                  ▲
-                 /
-                /
-               /1 2 3 4     X
-              |------------ ⯈
-             1|
-             2|
-             3|
-             4|
-              | Y
-              ⯆
-
-
   mat.at<type>(row,column)
   mat.at<type>(cv::Point(column,row))
 
-  */
+  X
+  --------column---------►
+  | mat.at<type>(0,0) mat.at<type>(0,1) mat.at<type>(0,2) mat.at<type>(0,3)
+  | mat.at<type>(1,0) mat.at<type>(1,1) mat.at<type>(1,2) mat.at<type>(1,3)
+  | mat.at<type>(2,0) mat.at<type>(2,1) mat.at<type>(2,2) mat.at<type>(2,3)
+  y |
+  row
+  |
+  |
+  ▼
+
+
+
+      The parameters fx=f*mx  and fy=f*my  where mx=1/width and my=1/height
+      meaning size of 1 pixel in x and y
+
+      mx=1/width
+      my=1/height
+
+      cx=Width/2;
+      cy=Height/2 ;
+
+      fx=f*mx
+
+      k=[fx  0  cx
+         0  fy  cy
+         0  0   1 ]
+
+                      Z
+                      ▲
+                     /
+                    /
+                   /1 2 3 4     X
+                  |------------ ⯈
+                 1|
+                 2|
+                 3|
+                 4|
+                  | Y
+                  ⯆
+
+
+      mat.at<type>(row,column)
+      mat.at<type>(cv::Point(column,row))
+
+      */
 
   ///////////////// camera intrinsic /////////////////
   int numberOfPixelInHeight, numberOfPixelInWidth;
@@ -199,22 +199,32 @@ void project3DPoint() {
   ///////////////// cameras extrinsic /////////////////
   /*
 
+    P[x,y,z,w]
 
-                  Z                        Z
-                  ▲                         ▲
-                 /                           \
-                /                             \
-               /1 2 3 4     X                  \ 1 2 3 4
-  Left Cam   |------------ ⯈                   |------------ ⯈Right cam
-            1|                               1 |
-            2|                               2 |
-            3|                               3 |
-           Y |                               Y |
-             ⯆                                ⯆
+                                           Z
+                                            ▲
+                                             \
+                                              \
+                                               \ 1 2 3 4
+                                               |------------  camera
+                                             1 |
+                                             2 |
+                                             3 |
+                                             Y |
+                                               ⯆
 
-  We set the world ref frame on the left camera and translate the right camera
-  rotate it around Y axis (pitch)
 
+                  Z
+                  ▲
+                 /
+                /
+               /1 2 3 4     X
+  world      |------------ ⯈
+            1|
+            2|
+            3|
+           Y |
+             ⯆
   */
 
   double roll, pitch, yaw, tx, ty, tz;
@@ -233,16 +243,30 @@ void project3DPoint() {
   // T_w_c cameraTranslation
   cv::Mat T_w_c = (cv::Mat_<double>(3, 1) << tx, ty, tz);
 
-  std::vector<cv::Point3d> objectPointsInWorldCoordinate;
-  objectPointsInWorldCoordinate = readPoints("../data/points.csv");
+  std::vector<cv::Point3d> objectPointsInWorldesCoordinate =
+      readPoints("../data/points.csv");
 
   ///////////////// 3D points from world /////////////////
 
   std::vector<cv::Point2d> projectedPointsInCamera;
 
-  ///////////////// projecting 3D points into camera /////////////////
+  cv::Mat R_c_w = R_w_c.inv();
+  cv::Mat T_c_w = -T_w_c;
 
-  cv::projectPoints(objectPointsInWorldCoordinate, R_w_c, T_w_c, cameraMatrix,
+  /*
+   `rvec` and `tvec` are the rotation and translation that transform object pose
+from world coordinate into camera's coordinate, namely R_c_w=R_w_c.inv() and
+T_c_w=-T_w_c
+
+
+
+  */
+
+  std::cout << "======= projecting 3D points into camera  unsing "
+               "OpenCV======="
+            << std::endl;
+
+  cv::projectPoints(objectPointsInWorldesCoordinate, R_c_w, T_c_w, cameraMatrix,
                     distortionCoefficient, projectedPointsInCamera);
 
   std::cout << "projected point in camera" << std::endl;
@@ -250,54 +274,45 @@ void project3DPoint() {
     std::cout << "row: " << p.y << ","
               << " column: " << p.x << std::endl;
 
-  cv::Mat R_c_w = R_w_c.inv();
+  std::cout
+      << "======= projecting 3D points into camera unsing P=K[R|t] ======="
+      << std::endl;
 
-  cv::Mat P(3, 4, cv::DataType<double>::type);
-  P.at<double>(0, 0) = R_c_w.at<double>(0, 0);
-  P.at<double>(0, 1) = R_c_w.at<double>(0, 1);
-  P.at<double>(0, 2) = R_c_w.at<double>(0, 2);
+  //   1)P=K[R|t]
+  cv::Mat P(3, 4, cv::DataType<double>::type),
+      R_t(3, 4, cv::DataType<double>::type);
+  R_t.at<double>(0, 0) = R_c_w.at<double>(0, 0);
+  R_t.at<double>(0, 1) = R_c_w.at<double>(0, 1);
+  R_t.at<double>(0, 2) = R_c_w.at<double>(0, 2);
 
-  P.at<double>(1, 0) = R_c_w.at<double>(1, 0);
-  P.at<double>(1, 1) = R_c_w.at<double>(1, 1);
-  P.at<double>(1, 2) = R_c_w.at<double>(1, 2);
+  R_t.at<double>(1, 0) = R_c_w.at<double>(1, 0);
+  R_t.at<double>(1, 1) = R_c_w.at<double>(1, 1);
+  R_t.at<double>(1, 2) = R_c_w.at<double>(1, 2);
 
-  P.at<double>(2, 0) = R_c_w.at<double>(2, 0);
-  P.at<double>(2, 1) = R_c_w.at<double>(2, 1);
-  P.at<double>(2, 2) = R_c_w.at<double>(2, 2);
+  R_t.at<double>(2, 0) = R_c_w.at<double>(2, 0);
+  R_t.at<double>(2, 1) = R_c_w.at<double>(2, 1);
+  R_t.at<double>(2, 2) = R_c_w.at<double>(2, 2);
 
-  P.at<double>(0, 3) = T_w_c.at<double>(0, 0);
-  P.at<double>(1, 3) = T_w_c.at<double>(1, 0);
-  P.at<double>(2, 3) = T_w_c.at<double>(2, 0);
+  R_t.at<double>(0, 3) = T_c_w.at<double>(0, 0);
+  R_t.at<double>(1, 3) = T_c_w.at<double>(1, 0);
+  R_t.at<double>(2, 3) = T_c_w.at<double>(2, 0);
 
-  // 1)P=K[R|t]
-  cv::Mat R_t;
-  cv::hconcat(R_c_w, T_w_c, R_t);
-  cv::Mat projectionMatrix = cameraMatrix * R_t;
-
-  std::cout << cameraMatrix * P << std::endl;
-
-  std::cout << projectionMatrix << std::endl;
+  P = cameraMatrix * R_t;
+  std::cout << P << std::endl;
 
   cv::Mat1d pointInWorldCoordinateHomogeneous(4, 1);
 
-  // cv::convertPointsToHomogeneous(objectPointsInWorldCoordinate,
-  //                              objectPointsInWorldCoordinateHomogeneous);
-
   cv::Mat pHomogeneous(3, 1, cv::DataType<double>::type);
-  cv::Mat p(2, 1, cv::DataType<double>::type);
 
   std::cout << "projected point in camera" << std::endl;
 
-  for (auto const &point : objectPointsInWorldCoordinate) {
+  for (auto const &point : objectPointsInWorldesCoordinate) {
     pointInWorldCoordinateHomogeneous.at<double>(0, 0) = point.x;
     pointInWorldCoordinateHomogeneous.at<double>(1, 0) = point.y;
     pointInWorldCoordinateHomogeneous.at<double>(2, 0) = point.z;
     pointInWorldCoordinateHomogeneous.at<double>(3, 0) = 1;
 
-    // cv::Point3d pHomogeneous=cameraMatrix
-    // *P*pointInWorldCoordinateHomogeneous ;
-
-    pHomogeneous = cameraMatrix * P * pointInWorldCoordinateHomogeneous;
+    pHomogeneous = P * pointInWorldCoordinateHomogeneous;
 
     std::cout << "row: "
               << pHomogeneous.at<double>(1, 0) / pHomogeneous.at<double>(2, 0)
@@ -306,30 +321,92 @@ void project3DPoint() {
               << std::endl;
   }
 
+  std::cout
+      << "======= projecting 3D points into camera unsing P=KR[I-C] ======="
+      << std::endl;
+  /*
+    cv::Mat I_C = cv::Mat::zeros(3, 4, cv::DataType<double>::type);
+
+    I_C.at<double>(0, 0) = 1;
+    I_C.at<double>(1, 1) = 1;
+    I_C.at<double>(2, 2) = 1;
+
+    I_C.at<double>(0, 3) = -T_w_c.at<double>(0, 0);
+    I_C.at<double>(1, 3) = -T_w_c.at<double>(1, 0);
+    I_C.at<double>(2, 3) = -T_w_c.at<double>(2, 0);
+
+    P = cameraMatrix * R_c_w * I_C;
+    std::cout << P << std::endl;
+
+    std::cout << "projected point in camera" << std::endl;
+
+    for (auto const &point : objectPointsInWorldesCoordinate) {
+      pointInWorldCoordinateHomogeneous.at<double>(0, 0) = point.x;
+      pointInWorldCoordinateHomogeneous.at<double>(1, 0) = point.y;
+      pointInWorldCoordinateHomogeneous.at<double>(2, 0) = point.z;
+      pointInWorldCoordinateHomogeneous.at<double>(3, 0) = 1;
+
+      pHomogeneous = P * pointInWorldCoordinateHomogeneous;
+
+      std::cout << "row: "
+                << pHomogeneous.at<double>(1, 0) / pHomogeneous.at<double>(2, 0)
+                << " , column: "
+                << pHomogeneous.at<double>(0, 0) / pHomogeneous.at<double>(2, 0)
+                << std::endl;
+    }
+  */
+
+  std::cout << "======= decomposing Projection Matrix ======= " << std::endl;
+
+  std::cout << "=======Ground Truth=======" << std::endl;
+
+  std::cout << "Rotation Matrix (Ground Truth)" << std::endl;
+  std::cout << R_c_w << std::endl;
+
+  std::cout << "Translation Matrix (Ground Truth)" << std::endl;
+  std::cout << T_c_w << std::endl;
+
+  std::cout << "Camera Matrix (Ground Truth)" << std::endl;
+  std::cout << cameraMatrix << std::endl;
+
   cv::Mat calculatedCameraMatrix, calculatedRotation, calculatedTranslation;
 
-  cv::decomposeProjectionMatrix(projectionMatrix, calculatedCameraMatrix,
-                                calculatedRotation, calculatedTranslation);
+  cv::decomposeProjectionMatrix(P, calculatedCameraMatrix, calculatedRotation,
+                                calculatedTranslation);
 
   std::cout << "Computed Rotation Matrix (OpenCV)" << std::endl;
   std::cout << calculatedRotation << std::endl;
 
   std::cout << "Computed Translation Matrix (OpenCV)" << std::endl;
-  // std::cout<<calculatedTranslation/calculatedTranslation.at<double>(3,0)
-  // <<std::endl;
-  cv::Mat tempT =
-      (cv::Mat_<double>(3, 1) << calculatedTranslation.at<double>(0, 0) /
-                                     calculatedTranslation.at<double>(3, 0),
-       calculatedTranslation.at<double>(1, 0) /
-           calculatedTranslation.at<double>(3, 0),
-       calculatedTranslation.at<double>(2, 0) /
-           calculatedTranslation.at<double>(3, 0));
-  std::cout << -R_w_c * tempT << std::endl;
+  std::cout << calculatedTranslation / calculatedTranslation.at<double>(3, 0)
+            << std::endl;
 
-  std::cout << "Computed Camera Matrix (OpenCV)" << std::endl;
-  std::cout << calculatedCameraMatrix << std::endl;
+  std::cout<<"Computed Translation Matrix (OpenCV)" <<std::endl;
+    //std::cout<<calculatedTranslation/calculatedTranslation.at<double>(3,0) <<std::endl;
+    cv::Mat tempT=(cv::Mat_<double>(3,1)<<
+                   calculatedTranslation.at<double>(0,0)/calculatedTranslation.at<double>(3,0),
+                   calculatedTranslation.at<double>(1,0)/calculatedTranslation.at<double>(3,0),
+                   calculatedTranslation.at<double>(2,0)/calculatedTranslation.at<double>(3,0));
+    std::cout<<-calculatedRotation*tempT<<std::endl;
 
-  //https://ros-developer.com/2019/01/01/decomposing-projection-using-opencv-and-c/
+    std::cout << "Computed Camera Matrix (OpenCV)" << std::endl;
+    std::cout << calculatedCameraMatrix << std::endl;
+
+  // https://ros-developer.com/2019/01/01/decomposing-projection-using-opencv-and-c/
+
+  //  cv::Mat R_t;
+  //  cv::hconcat(R_c_w, T_w_c, R_t);
+  //  cv::Mat tionMatrix = cameraMatrix * R_t;
+
+  //  std::cout << cameraMatrix * P << std::endl;
+
+  //  std::cout << projectionMatrix << std::endl;
+
+  // cv::convertPointsToHomogeneous(objectPointsInWorldCoordinate,
+  //                              objectPointsInWorldCoordinateHomogeneous);
+
+  // cv::Point3d pHomogeneous=cameraMatrix
+  // *P*pointInWorldCoordinateHomogeneous ;
 }
 
 int main(int argc, char **argv) { project3DPoint(); }
