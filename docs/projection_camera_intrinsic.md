@@ -100,6 +100,28 @@ Ref: [1](https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf)
 <br/>
 <br/>
 
+```cpp
+
+void cv::projectPoints	(	InputArray 	objectPoints,
+InputArray 	rvec,
+InputArray 	tvec,
+InputArray 	cameraMatrix,
+InputArray 	distCoeffs,
+OutputArray 	imagePoints,
+OutputArray 	jacobian = noArray(),
+double 	aspectRatio = 0 
+)	
+```
+
+`rvec` and `tvec` are the rotation and translation that transform object pose from world coordinate into 
+camera's coordinate, namely `R_c_w=R_w_c.inv()` and `T_c_w=-T_w_c`
+
+
+
+<br/>
+<br/>
+
+
 
 <img src="https://latex.codecogs.com/svg.image?mx=\frac{&space;\text{Number&space;of&space;Pixel&space;In&space;Width}}{\text{Width&space;of&space;Sensor}}=\frac{1}{\text{Width&space;of&space;Pixel}" title="https://latex.codecogs.com/svg.image?mx=\frac{ \text{Number of Pixel In Width}}{\text{Width of Sensor}}=\frac{1}{\text{Width of Pixel}" />
 
@@ -451,28 +473,15 @@ Refs: [1](https://stackoverflow.com/questions/12977980/in-opencv-converting-2d-i
 
 # Resizing Image Effect on the Camera Intrinsic Matrix
 
+```
+fx.new=(new width resolution/old width resolution)*fx.old
+fy.new=(new height resolution/old height resolution)*fy.old
 
-
-
-
-
-
-
-```cpp
-
-void cv::projectPoints	(	InputArray 	objectPoints,
-InputArray 	rvec,
-InputArray 	tvec,
-InputArray 	cameraMatrix,
-InputArray 	distCoeffs,
-OutputArray 	imagePoints,
-OutputArray 	jacobian = noArray(),
-double 	aspectRatio = 0 
-)	
+cx.new=(new width resolution/old width resolution)*cx.old
+cy.new=(new height resolution/old height resolution)*cy.old
 ```
 
-`rvec` and `tvec` are the rotation and translation that transform object pose from world coordinate into 
-camera's coordinate, namely `R_c_w=R_w_c.inv()` and `T_c_w=-T_w_c`
+
 
 
 
