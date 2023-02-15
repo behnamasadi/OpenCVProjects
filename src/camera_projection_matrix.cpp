@@ -3,6 +3,61 @@
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 
+// https://www.cnblogs.com/shengguang/p/5932522.html
+void HouseHolderQR(const cv::Mat &A, cv::Mat &Q, cv::Mat &R) {
+  assert(A.channels() == 1);
+  assert(A.rows >= A.cols);
+  auto sign = [](double value) { return value >= 0 ? 1 : -1; };
+  const auto totalRows = A.rows;
+  const auto totalCols = A.cols;
+  R = A.clone();
+  Q = cv::Mat::eye(totalRows, totalRows, A.type());
+  for (int col = 0; col < A.cols; ++col) {
+    cv::Mat matAROI =
+        cv::Mat(R, cv::Range(col, totalRows), cv::Range(col, totalCols));
+    cv::Mat y = matAROI.col(0);
+    auto yNorm = norm(y);
+    cv::Mat e1 = cv::Mat::eye(y.rows, 1, A.type());
+    cv::Mat w = y + sign(y.at<double>(0, 0)) * yNorm * e1;
+    cv::Mat v = w / norm(w);
+    cv::Mat vT;
+    cv::transpose(v, vT);
+    cv::Mat I = cv::Mat::eye(matAROI.rows, matAROI.rows, A.type());
+    cv::Mat I_2VVT = I - 2 * v * vT;
+    cv::Mat matH = cv::Mat::eye(totalRows, totalRows, A.type());
+    cv::Mat matHROI =
+        cv::Mat(matH, cv::Range(col, totalRows), cv::Range(col, totalRows));
+    I_2VVT.copyTo(matHROI);
+    R = matH * R;
+    Q = Q * matH;
+  }
+}
+
+void saveImage(double focalLength, int numberOfPixelInHeight,
+               int numberOfPixelInWidth,
+               std::vector<cv::Point2d> projectedPoints) {
+
+  double row, col;
+
+  cv::Mat cameraImage =
+      cv::Mat::zeros(numberOfPixelInHeight, numberOfPixelInWidth, CV_8UC1);
+  cv::line(cameraImage, cv::Point2d(numberOfPixelInWidth / 2, 0),
+           cv::Point2d(numberOfPixelInWidth / 2, numberOfPixelInHeight),
+           cv::Scalar(255, 255, 255));
+  cv::line(cameraImage, cv::Point2d(0, numberOfPixelInHeight / 2),
+           cv::Point2d(numberOfPixelInWidth, numberOfPixelInHeight / 2),
+           cv::Scalar(255, 255, 255));
+  for (std::size_t i = 0; i < projectedPoints.size(); i++) {
+    col = int(projectedPoints.at(i).x);
+    row = int(projectedPoints.at(i).y);
+    // std::cout<<row <<"," <<col  <<std::endl;
+    cameraImage.at<char>(int(row), int(col)) = char(255);
+  }
+  std::string fileName = std::string("image_") + std::to_string(focalLength) +
+                         std::string("_.jpg");
+  cv::imwrite(fileName, cameraImage);
+}
+
 cv::Mat rotationMatrixFromRollPitchYaw(double alpha, double beta,
                                        double gamma) {
   /*
@@ -262,8 +317,7 @@ T_c_w=-T_w_c
 
   */
 
-  std::cout << "======= projecting 3D points into camera  unsing "
-               "OpenCV======="
+  std::cout << "====projecting 3D points into camera  unsing OpenCV===="
             << std::endl;
 
   cv::projectPoints(objectPointsInWorldesCoordinate, R_c_w, T_c_w, cameraMatrix,
@@ -273,6 +327,11 @@ T_c_w=-T_w_c
   for (const auto p : projectedPointsInCamera)
     std::cout << "row: " << p.y << ","
               << " column: " << p.x << std::endl;
+
+  std::cout << "====saving projected point into image===="<<std::endl;
+
+      saveImage(focalLength, numberOfPixelInHeight, numberOfPixelInWidth,
+                projectedPointsInCamera);
 
   std::cout
       << "======= projecting 3D points into camera unsing P=K[R|t] ======="
@@ -321,92 +380,196 @@ T_c_w=-T_w_c
               << std::endl;
   }
 
-  std::cout
-      << "======= projecting 3D points into camera unsing P=KR[I-C] ======="
-      << std::endl;
-  /*
-    cv::Mat I_C = cv::Mat::zeros(3, 4, cv::DataType<double>::type);
+  std::cout << "========projecting 3D points from camera coordinate ========"
+            << std::endl;
 
-    I_C.at<double>(0, 0) = 1;
-    I_C.at<double>(1, 1) = 1;
-    I_C.at<double>(2, 2) = 1;
+  std::vector<cv::Point3d> objectPointsInCameraCoordinate;
 
-    I_C.at<double>(0, 3) = -T_w_c.at<double>(0, 0);
-    I_C.at<double>(1, 3) = -T_w_c.at<double>(1, 0);
-    I_C.at<double>(2, 3) = -T_w_c.at<double>(2, 0);
+  cv::Mat Transformation_c_w = cv::Mat::zeros(4, 4, cv::DataType<double>::type);
 
-    P = cameraMatrix * R_c_w * I_C;
-    std::cout << P << std::endl;
+  Transformation_c_w.at<double>(0, 0) = R_c_w.at<double>(0, 0);
+  Transformation_c_w.at<double>(0, 1) = R_c_w.at<double>(0, 1);
+  Transformation_c_w.at<double>(0, 2) = R_c_w.at<double>(0, 2);
 
-    std::cout << "projected point in camera" << std::endl;
+  Transformation_c_w.at<double>(1, 0) = R_c_w.at<double>(1, 0);
+  Transformation_c_w.at<double>(1, 1) = R_c_w.at<double>(1, 1);
+  Transformation_c_w.at<double>(1, 2) = R_c_w.at<double>(1, 2);
 
-    for (auto const &point : objectPointsInWorldesCoordinate) {
-      pointInWorldCoordinateHomogeneous.at<double>(0, 0) = point.x;
-      pointInWorldCoordinateHomogeneous.at<double>(1, 0) = point.y;
-      pointInWorldCoordinateHomogeneous.at<double>(2, 0) = point.z;
-      pointInWorldCoordinateHomogeneous.at<double>(3, 0) = 1;
+  Transformation_c_w.at<double>(2, 0) = R_c_w.at<double>(2, 0);
+  Transformation_c_w.at<double>(2, 1) = R_c_w.at<double>(2, 1);
+  Transformation_c_w.at<double>(2, 2) = R_c_w.at<double>(2, 2);
 
-      pHomogeneous = P * pointInWorldCoordinateHomogeneous;
+  Transformation_c_w.at<double>(0, 3) = T_c_w.at<double>(0, 0);
+  Transformation_c_w.at<double>(1, 3) = T_c_w.at<double>(1, 0);
+  Transformation_c_w.at<double>(2, 3) = T_c_w.at<double>(2, 0);
+  Transformation_c_w.at<double>(3, 3) = 1;
 
-      std::cout << "row: "
-                << pHomogeneous.at<double>(1, 0) / pHomogeneous.at<double>(2, 0)
-                << " , column: "
-                << pHomogeneous.at<double>(0, 0) / pHomogeneous.at<double>(2, 0)
-                << std::endl;
-    }
-  */
+  for (auto const &p : objectPointsInWorldesCoordinate) {
 
-  std::cout << "======= decomposing Projection Matrix ======= " << std::endl;
+    pointInWorldCoordinateHomogeneous.at<double>(0, 0) = p.x;
+    pointInWorldCoordinateHomogeneous.at<double>(1, 0) = p.y;
+    pointInWorldCoordinateHomogeneous.at<double>(2, 0) = p.z;
+    pointInWorldCoordinateHomogeneous.at<double>(3, 0) = 1;
+
+    cv::Mat1d pointInCameraCoordinateHomogeneous(4, 1);
+    pointInCameraCoordinateHomogeneous =
+        Transformation_c_w * pointInWorldCoordinateHomogeneous;
+    //    cv::convertPointsFromHomogeneous(Transformation_c_w *
+    //                                         pointInWorldCoordinateHomogeneous,
+    //                                     pointInCameraCoordinate);
+    cv::Point3d tmp_p;
+    tmp_p.x = pointInCameraCoordinateHomogeneous.at<double>(0, 0) /
+              pointInCameraCoordinateHomogeneous.at<double>(3, 0);
+    tmp_p.y = pointInCameraCoordinateHomogeneous.at<double>(1, 0) /
+              pointInCameraCoordinateHomogeneous.at<double>(3, 0);
+    tmp_p.z = pointInCameraCoordinateHomogeneous.at<double>(2, 0) /
+              pointInCameraCoordinateHomogeneous.at<double>(3, 0);
+    objectPointsInCameraCoordinate.push_back(tmp_p);
+  }
+
+  cv::Mat projectedPointsMatrixHomogeneous =
+      cameraMatrix * cv::Mat(objectPointsInCameraCoordinate).reshape(1).t();
+
+  for (int i = 0; i < projectedPointsMatrixHomogeneous.cols; i++) {
+    projectedPointsMatrixHomogeneous.at<double>(0, i) /=
+        projectedPointsMatrixHomogeneous.at<double>(2, i);
+    projectedPointsMatrixHomogeneous.at<double>(1, i) /=
+        projectedPointsMatrixHomogeneous.at<double>(2, i);
+    projectedPointsMatrixHomogeneous.at<double>(2, i) /=
+        projectedPointsMatrixHomogeneous.at<double>(2, i);
+  }
+  std::cout << projectedPointsMatrixHomogeneous << std::endl;
 
   std::cout << "=======Ground Truth=======" << std::endl;
 
-  std::cout << "Rotation Matrix (Ground Truth)" << std::endl;
+  std::cout << "Rotation Matrix R_c_w (Ground Truth)" << std::endl;
   std::cout << R_c_w << std::endl;
 
-  std::cout << "Translation Matrix (Ground Truth)" << std::endl;
+  std::cout << "Translation Matrix T_c_w (Ground Truth)" << std::endl;
   std::cout << T_c_w << std::endl;
 
   std::cout << "Camera Matrix (Ground Truth)" << std::endl;
   std::cout << cameraMatrix << std::endl;
 
-  cv::Mat calculatedCameraMatrix, calculatedRotation, calculatedTranslation;
+  cv::Mat calculatedCameraMatrix, calculatedRotation_c_w, C_homogeneous;
 
-  cv::decomposeProjectionMatrix(P, calculatedCameraMatrix, calculatedRotation,
-                                calculatedTranslation);
+  cv::decomposeProjectionMatrix(P, calculatedCameraMatrix,
+                                calculatedRotation_c_w, C_homogeneous);
 
-  std::cout << "Computed Rotation Matrix (OpenCV)" << std::endl;
-  std::cout << calculatedRotation << std::endl;
+  std::cout << "Calculated Rotation Matrix (OpenCV)" << std::endl;
+  std::cout << calculatedRotation_c_w << std::endl;
 
-  std::cout << "Computed Translation Matrix (OpenCV)" << std::endl;
-  std::cout << calculatedTranslation / calculatedTranslation.at<double>(3, 0)
-            << std::endl;
+  std::cout << "Calculated Translation Matrix (OpenCV)" << std::endl;
+  cv::Mat C = (cv::Mat_<double>(3, 1) << C_homogeneous.at<double>(0, 0) /
+                                             C_homogeneous.at<double>(3, 0),
+               C_homogeneous.at<double>(1, 0) / C_homogeneous.at<double>(3, 0),
+               C_homogeneous.at<double>(2, 0) / C_homogeneous.at<double>(3, 0));
+  std::cout << -calculatedRotation_c_w * C << std::endl;
 
-  std::cout<<"Computed Translation Matrix (OpenCV)" <<std::endl;
-    //std::cout<<calculatedTranslation/calculatedTranslation.at<double>(3,0) <<std::endl;
-    cv::Mat tempT=(cv::Mat_<double>(3,1)<<
-                   calculatedTranslation.at<double>(0,0)/calculatedTranslation.at<double>(3,0),
-                   calculatedTranslation.at<double>(1,0)/calculatedTranslation.at<double>(3,0),
-                   calculatedTranslation.at<double>(2,0)/calculatedTranslation.at<double>(3,0));
-    std::cout<<-calculatedRotation*tempT<<std::endl;
+  std::cout << "Computed Camera Matrix (OpenCV)" << std::endl;
+  std::cout << calculatedCameraMatrix << std::endl;
 
-    std::cout << "Computed Camera Matrix (OpenCV)" << std::endl;
-    std::cout << calculatedCameraMatrix << std::endl;
+  /*
 
-  // https://ros-developer.com/2019/01/01/decomposing-projection-using-opencv-and-c/
+      P=KR[I|-X0]=[H_inf3x3|h3x1]
+      KR=H_inf3x3
+      1)X0
+      -KRX0=h3x1 => X0=-(KR)^-1*h3x1 ==>X0=-(H_inf3x3)^-1*h3x1
+      2)K,R
 
-  //  cv::Mat R_t;
-  //  cv::hconcat(R_c_w, T_w_c, R_t);
-  //  cv::Mat tionMatrix = cameraMatrix * R_t;
+      KR=H_inf3x3 =>(KR)^-1= H_inf3x3^-1 =>R^-1*K^-1=H_inf3x3^-1 | R^-1*K^-1=Q*R
+     => R=Q^-1, K=R^-1 H_inf3x3^-1=Q*R       |
 
-  //  std::cout << cameraMatrix * P << std::endl;
+  */
 
-  //  std::cout << projectionMatrix << std::endl;
+  cv::Mat H_inf3x3 =
+      (cv::Mat_<double>(3, 3) << P.at<double>(0, 0), P.at<double>(0, 1),
+       P.at<double>(0, 2), P.at<double>(1, 0), P.at<double>(1, 1),
+       P.at<double>(1, 2), P.at<double>(2, 0), P.at<double>(2, 1),
+       P.at<double>(2, 2));
 
-  // cv::convertPointsToHomogeneous(objectPointsInWorldCoordinate,
-  //                              objectPointsInWorldCoordinateHomogeneous);
+  cv::Mat h3x1 = (cv::Mat_<double>(3, 1) << P.at<double>(0, 3),
+                  P.at<double>(1, 3), P.at<double>(2, 3));
 
-  // cv::Point3d pHomogeneous=cameraMatrix
-  // *P*pointInWorldCoordinateHomogeneous ;
+  cv::Mat Q, R;
+  cv::Mat H_inf3x3_inv = H_inf3x3.inv();
+  // R=Q^-1, K=R^-1
+
+  HouseHolderQR(H_inf3x3_inv, Q, R);
+  cv::Mat K = R.inv();
+
+  std::cout << "========Decomposing Using My Code======" << std::endl;
+  // due to homogeneity we divide it by last element
+  std::cout << "Estimated Camera Matrix\n"
+            << K / K.at<double>(2, 2) << std::endl;
+
+  cv::Mat rotationMatrix = Q.inv();
+  std::cout << "Estimated Camera Rotation\n"
+            << rotationMatrix * -1 << std::endl;
+
+  std::cout << "Estimated Camera Translation" << std::endl;
+
+  // t=-R*C, Q.inv()=R
+  std::cout << -1 * (-Q.inv() * (-H_inf3x3.inv() * h3x1)) << std::endl;
+
+  std::cout << "========3D World Unit Vector======" << std::endl;
+
+  R_c_w = cv::Mat::eye(3, 3, cv::DataType<double>::type);
+  T_c_w = cv::Mat::zeros(3, 1, cv::DataType<double>::type);
+
+  std::cout << R_c_w << std::endl;
+  std::cout << T_c_w << std::endl;
+
+  cv::projectPoints(objectPointsInWorldesCoordinate, R_c_w, T_c_w, cameraMatrix,
+                    distortionCoefficient, projectedPointsInCamera);
+
+  cv::Mat projectedPointsHomogenous;
+  int cols = projectedPointsInCamera.size();
+  int rows = 3;
+
+  projectedPointsHomogenous.create(rows, cols, CV_64FC1);
+  for (int j = 0; j < cols; j++) {
+    projectedPointsHomogenous.at<double>(0, j) = projectedPointsInCamera[j].x;
+    projectedPointsHomogenous.at<double>(1, j) = projectedPointsInCamera[j].y;
+    projectedPointsHomogenous.at<double>(2, j) = 1;
+  }
+
+  /*
+  The inverse of a 3x3 matrix:
+  | a11 a12 a13 |-1
+  | a21 a22 a23 |    =  1/DET * A^-1
+  | a31 a32 a33 |
+
+  with A^-1  =
+
+  |  a33a22-a32a23  -(a33a12-a32a13)   a23a12-a22a13 |
+  |-(a33a21-a31a23)   a33a11-a31a13  -(a23a11-a21a13)|
+  |  a32a21-a31a22  -(a32a11-a31a12)   a22a11-a21a12 |
+
+  and DET  =  a11(a33a22-a32a23) - a21(a33a12-a32a13) + a31(a23a12-a22a13)
+
+  Camera Matrix:
+
+  |fx 0 cx|
+  |0 fy cy|
+  |0 0  1 |
+
+  Rays are  A^-1*p:
+
+   1    |fy 0   -fycx|  |u|
+  ----- |0  fx -cy*fx| *|v| = [ (u- cx)/fx, (v-cx)/fy, 1]
+  fx*fy |0  0   fy*fx|  |1|
+
+  */
+
+  cv::Mat rays = cameraMatrix.inv() *
+                 projectedPointsHomogenous; // put in world coordinates
+  std::cout << "camera rays" << std::endl;
+  std::cout << rays << std::endl;
+
+  std::cout << "unit vector (normalized camera rays)" << std::endl;
+  rays *= 1 / cv::norm(rays);
+  std::cout << rays << std::endl;
 }
 
 int main(int argc, char **argv) { project3DPoint(); }

@@ -84,6 +84,10 @@ read more [here](https://ros-developer.com/2017/11/08/docker/)
    * [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)   
    * [SLAM Loop Closure](docs/slam_loop_closure.md)   
    * [The Kannala-Brandt Fisheye Model](docs/kannala_brandt_fisheye_model.md)  
+   * [3D World Unit Vector](docs/3d_world_unit_vector.md)     
+   * [Undistorting Points and Images](docs/undistorting.md)        
+
+   
    
    
 

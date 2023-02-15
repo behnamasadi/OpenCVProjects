@@ -1,3 +1,26 @@
+- [1. Camera Lenses](#1-camera-lenses)
+  * [1.1 Tilt Shift Lenses](#11-tilt-shift-lenses)
+  * [1.2 Fisheye Lenses](#12-fisheye-lenses)
+  * [1.3 Rectilinear Lenses](#13-rectilinear-lenses)
+- [2. Lenses Distortion](#2-lenses-distortion)
+  * [2.1 Radial Distortions](#21-radial-distortions)
+  * [2.1 Pincushion Distortion](#21-pincushion-distortion)
+  * [2.2 Barrel Distortion](#22-barrel-distortion)
+  * [2.3 Mustache Distortion](#23-mustache-distortion)
+  * [2.4 Tangential Distortions](#24-tangential-distortions)
+- [3. Lens Chromatic Aberration](#3-lens-chromatic-aberration)
+- [4. Distortion Models](#4-distortion-models)
+  * [4.1  Brown-Conrady](#41--brown-conrady)
+    + [4.1.1 Radial Distortion](#411-radial-distortion)
+    + [4.1.2 Tangential distortion:](#412-tangential-distortion-)
+    + [4.1.3  Both Distortion Together](#413--both-distortion-together)
+  * [4.2  Division Model](#42--division-model)
+- [4.3 OpenCV Lens Distortion Model](#43-opencv-lens-distortion-model)
+- [Image Resolution and Distortion Coefficient](#image-resolution-and-distortion-coefficient)
+
+
+
+
 # 1. Camera Lenses
 
 
@@ -215,17 +238,18 @@ do not depend on the scene viewed and they remain the **same** regardless of ima
 
 However, <img src="https://latex.codecogs.com/svg.image?f_x" title="https://latex.codecogs.com/svg.image?f_x" />, <img src="https://latex.codecogs.com/svg.image?f_y" title="https://latex.codecogs.com/svg.image?f_y" />, <img src="https://latex.codecogs.com/svg.image?c_x" title="https://latex.codecogs.com/svg.image?c_x" />, and <img src="https://latex.codecogs.com/svg.image?c_y" title="https://latex.codecogs.com/svg.image?c_y" /> need to be scaled appropriately.
 
+```
+fx.new=(new width resolution/old width resolution)*fx.old
+fy.new=(new height resolution/old height resolution)*fy.old
 
-In OpenCV `cv::undistort`does the followings:
-For each pixel of the destination lens-corrected image do:
-
-- Convert the pixel coordinates `(u_dst, v_dst)` to normalized coordinates `(x_d, y_d`) using the inverse of the calibration matrix `K`,
-- Apply the lens-distortion model, as displayed above, to obtain the distorted normalized coordinates `(x_u, y_u)`,
-- Convert `(x_u, y_u)` to distorted pixel coordinates using the calibration matrix `K`,
-- Use the interpolation method of your choice to find the intensity/depth associated with the pixel coordinates `(u_src, v_src)` in the source image, and assign this intensity/depth to the current destination pixel.
+cx.new=(new width resolution/old width resolution)*cx.old
+cy.new=(new height resolution/old height resolution)*cy.old
+```
+Refs: [1](https://stackoverflow.com/questions/44888119/c-opencv-calibration-of-the-camera-with-different-resolution),
 
 
-Refs: [1](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#camera-calibration-and-3d-reconstruction), [2](https://stackoverflow.com/questions/21958521/understanding-of-opencv-undistortion)
+
+
 
 
 
