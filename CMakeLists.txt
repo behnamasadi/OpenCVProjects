@@ -234,8 +234,8 @@ add_executable(rodrigue_rotation_matrices src/rodrigue_rotation_matrices.cpp)
 target_link_libraries(rodrigue_rotation_matrices ${OpenCV_LIBS} )
 
 
-#add_executable(homography src/homography.cpp)
-#target_link_libraries(homography ${OpenCV_LIBS} )
+add_executable(homography src/homography.cpp)
+target_link_libraries(homography ${OpenCV_LIBS} )
 
 add_executable(perspective_transformation src/perspective_transformation.cpp)
 target_link_libraries(perspective_transformation ${OpenCV_LIBS} )
@@ -256,6 +256,8 @@ target_link_libraries(file_storage_io ${OpenCV_LIBS} )
 add_executable(camera_projection_matrix src/camera_projection_matrix.cpp)
 target_link_libraries(camera_projection_matrix ${OpenCV_LIBS} )
 
+add_executable(corner_detection src/corner_detection.cpp)
+target_link_libraries(corner_detection ${OpenCV_LIBS} )
 
 
 find_package (Eigen3 NO_MODULE)
