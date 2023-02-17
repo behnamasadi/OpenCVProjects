@@ -29,9 +29,7 @@ so all point the `Z` will be zero:
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7Du%5C%5Cv%5C%5Cw%5Cend%7Bbmatrix%7D%3D%20%5Cbegin%7Bbmatrix%7D%20p_%7B11%7D%20%26%20p_%7B12%7D%20%26p_%7B14%7D%20%5C%5C%20p_%7B21%7D%20%26%20p_%7B22%7D%20%26p_%7B24%7D%20%5C%5C%20p_%7B31%7D%20%26%20p_%7B32%7D%20%26p_%7B34%7D%20%5Cend%7Bbmatrix%7D%20%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CW_%7Bw%7D%5Cend%7Bbmatrix%7D
-" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}u\\v\\w\end{bmatrix}= \begin{bmatrix} p_{11} & p_{12}  &p_{14}
-\\p_{21} & p_{22}  &p_{24} \\ p_{31} & p_{32}  &p_{34} \end{bmatrix} \begin{bmatrix}X_{w}\\Y_{w}\\W_{w}\end{bmatrix}" />
+<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7Du%5C%5Cv%5C%5Cw%5Cend%7Bbmatrix%7D%3D%20%5Cbegin%7Bbmatrix%7D%20p_%7B11%7D%20%26%20p_%7B12%7D%20%26p_%7B14%7D%20%5C%5C%20p_%7B21%7D%20%26%20p_%7B22%7D%20%26p_%7B24%7D%20%5C%5C%20p_%7B31%7D%20%26%20p_%7B32%7D%20%26p_%7B34%7D%20%5Cend%7Bbmatrix%7D%20%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CW_%7Bw%7D%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}u\\v\\w\end{bmatrix}= \begin{bmatrix} p_{11} & p_{12}  &p_{14} \\p_{21} & p_{22}  &p_{24} \\ p_{31} & p_{32}  &p_{34} \end{bmatrix} \begin{bmatrix}X_{w}\\Y_{w}\\W_{w}\end{bmatrix}" />
 
 <br/>
 <br/>
