@@ -119,8 +119,7 @@ read more [here](https://ros-developer.com/2017/11/08/docker/)
    * [ICP Iterative Closest Point](src/icp.cpp)  
    * [Structured Light Range Finding](src/structured_light_range_finding.cpp)  
    * [Estate Estimation with Kalman Filter](src/kalman_filter.cpp)  
-
-   
+  
 
 # [FFmpeg Commands](#)
 - [Available encoders and decoders](docs/ffmpeg.md#available-encoders-and-decoders)  

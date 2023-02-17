@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include "transformation.hpp"
+
 
 std::vector<cv::Point3d>
 readPoints(std::string pathToPointFile = "../data/points.csv") {
@@ -37,48 +39,6 @@ readPoints(std::string pathToPointFile = "../data/points.csv") {
   return objectPoints;
 }
 
-cv::Mat rotationMatrixFromRollPitchYaw(double alpha, double beta,
-                                       double gamma) {
-  /*
-      yaw:
-          A yaw is a counterclockwise rotation of alpha about the  z-axis. The
-      rotation matrix is given by
-
-          R_z
-
-          |cos(alpha) -sin(alpha) 0|
-          |sin(alpha)   cos(alpha) 0|
-          |    0            0     1|
-
-      pitch:
-          R_y
-          A pitch is a counterclockwise rotation of  beta about the  y-axis. The
-      rotation matrix is given by
-
-          |cos(beta)  0   sin(beta)|
-          |0          1       0    |
-          |-sin(beta) 0   cos(beta)|
-
-      roll:
-          A roll is a counterclockwise rotation of  gamma about the  x-axis. The
-      rotation matrix is given by
-          R_x
-          |1          0           0|
-          |0 cos(gamma) -sin(gamma)|
-          |0 sin(gamma)  cos(gamma)|
-  */
-
-  cv::Mat R_z = (cv::Mat_<double>(3, 3) << cos(alpha), -sin(alpha), 0,
-                 sin(alpha), cos(alpha), 0, 0, 0, 1);
-
-  cv::Mat R_y = (cv::Mat_<double>(3, 3) << cos(beta), 0, sin(beta), 0, 1, 0,
-                 -sin(beta), 0, cos(beta));
-
-  cv::Mat R_x = (cv::Mat_<double>(3, 3) << 1, 0, 0, 0, cos(gamma), -sin(gamma),
-                 0, sin(gamma), cos(gamma));
-
-  return R_z * R_y * R_x;
-}
 
 cv::Mat
 findFundamentalMatrix(std::vector<cv::Point2d> &imagePointsLeftCamera,
@@ -355,20 +315,35 @@ void project3DPoint() {
   /*
 
 
-                  Z                        Z
-                  ▲                         ▲
-                 /                           \
-                /                             \
-               /1 2 3 4     X                  \ 1 2 3 4
-  Left Cam   |------------ ⯈                   |------------ ⯈Right cam
-            1|                               1 |
-            2|                               2 |
-            3|                               3 |
-           Y |                               Y |
-             ⯆                                ⯆
 
-  We set the world ref frame on the left camera and translate the right camera
-  rotate it around Y axis (pitch)
+
+
+                    Z                        Z
+                    ▲                         ▲
+                   /                           \
+                  /                             \
+                 /1 2 3 4     X                  \ 1 2 3 4
+    Left Cam   |------------ ⯈                   |------------ ⯈Right cam
+              1|                               1 |
+              2|                               2 |
+              3|                               3 |
+             Y |                               Y |
+               ⯆                                ⯆
+
+
+
+                                          Z
+                                          ▲
+                                         /
+                                        /
+                                       /1 2 3 4     X
+                          world      |------------ ⯈
+                                    1|
+                                    2|
+                                    3|
+                                   Y |
+                                     ⯆
+
 
   */
 
@@ -376,23 +351,24 @@ void project3DPoint() {
   double rollLeft, pitchLeft, yawLeft, rollRight, pitchRight, yawRight, txLeft,
       tyLeft, tzLeft, txRight, tyRight, tzRight;
 
-  cv::Vec3d thetaLeft, thetaRight;
-
   rollLeft = 0;
   pitchLeft = +M_PI / 36;
+  //pitchLeft = +M_PI / 4;
   yawLeft = 0;
 
   rollRight = 0;
   pitchRight = -M_PI / 36;
+  //pitchRight = -M_PI / 4;
+
   yawRight = 0;
 
   txLeft = -0.5;
   tyLeft = 0.0;
-  tzLeft = -4.0;
+  tzLeft = +4.0;
 
   txRight = 0.5;
   tyRight = 0.0;
-  tzRight = -4.0;
+  tzRight = +4.0;
 
   leftCameraRotation =
       rotationMatrixFromRollPitchYaw(rollLeft, pitchLeft, yawLeft);
@@ -432,13 +408,13 @@ void project3DPoint() {
 
   ///////////////// projecting 3D points into camera /////////////////
 
-  cv::projectPoints(objectPointsInWorldCoordinate, leftCameraRotation,
-                    leftCameraTranslation, cameraMatrix, distortionCoefficient,
+  cv::projectPoints(objectPointsInWorldCoordinate, leftCameraRotation.inv(),
+                    -leftCameraTranslation, cameraMatrix, distortionCoefficient,
                     projectedPointsInLeftCamera);
 
-  cv::projectPoints(objectPointsInWorldCoordinate, rightCameraRotation,
-                    rightCameraTranslation, cameraMatrix, distortionCoefficient,
-                    projectedPointsInRightCamera);
+  cv::projectPoints(objectPointsInWorldCoordinate, rightCameraRotation.inv(),
+                    -rightCameraTranslation, cameraMatrix,
+                    distortionCoefficient, projectedPointsInRightCamera);
 
   std::cout << "projected point in left camera" << std::endl;
   for (const auto p : projectedPointsInLeftCamera)

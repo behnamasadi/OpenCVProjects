@@ -234,8 +234,8 @@ add_executable(rodrigue_rotation_matrices src/rodrigue_rotation_matrices.cpp)
 target_link_libraries(rodrigue_rotation_matrices ${OpenCV_LIBS} )
 
 
-add_executable(homography src/homography.cpp)
-target_link_libraries(homography ${OpenCV_LIBS} )
+add_executable(finding_homography_using_keypoints_RANSAC src/finding_homography_using_keypoints_RANSAC.cpp)
+target_link_libraries(finding_homography_using_keypoints_RANSAC ${OpenCV_LIBS} )
 
 add_executable(perspective_transformation src/perspective_transformation.cpp)
 target_link_libraries(perspective_transformation ${OpenCV_LIBS} )
@@ -258,6 +258,15 @@ target_link_libraries(camera_projection_matrix ${OpenCV_LIBS} )
 
 add_executable(corner_detection src/corner_detection.cpp)
 target_link_libraries(corner_detection ${OpenCV_LIBS} )
+
+
+add_executable(finding_homography_matrix_4_corresponding_points src/finding_homography_matrix_4_corresponding_points.cpp)
+target_link_libraries(finding_homography_matrix_4_corresponding_points ${OpenCV_LIBS})
+
+
+add_executable(apply_homography_on_image src/apply_homography_on_image.cpp)
+target_link_libraries(apply_homography_on_image ${OpenCV_LIBS} )
+
 
 
 find_package (Eigen3 NO_MODULE)

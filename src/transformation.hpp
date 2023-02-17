@@ -90,3 +90,47 @@ Eigen::Matrix3d eulerAnglesToRotationMatrix(double roll, double pitch,double yaw
     Eigen::Matrix3d rotationMatrix = q.matrix();
     return rotationMatrix;
 }
+
+
+cv::Mat rotationMatrixFromRollPitchYaw(double alpha, double beta,
+                                       double gamma) {
+  /*
+      yaw:
+          A yaw is a counterclockwise rotation of alpha about the  z-axis. The
+      rotation matrix is given by
+
+          R_z
+
+          |cos(alpha) -sin(alpha) 0|
+          |sin(alpha)   cos(alpha) 0|
+          |    0            0     1|
+
+      pitch:
+          R_y
+          A pitch is a counterclockwise rotation of  beta about the  y-axis. The
+      rotation matrix is given by
+
+          |cos(beta)  0   sin(beta)|
+          |0          1       0    |
+          |-sin(beta) 0   cos(beta)|
+
+      roll:
+          A roll is a counterclockwise rotation of  gamma about the  x-axis. The
+      rotation matrix is given by
+          R_x
+          |1          0           0|
+          |0 cos(gamma) -sin(gamma)|
+          |0 sin(gamma)  cos(gamma)|
+  */
+
+  cv::Mat R_z = (cv::Mat_<double>(3, 3) << cos(alpha), -sin(alpha), 0,
+                 sin(alpha), cos(alpha), 0, 0, 0, 1);
+
+  cv::Mat R_y = (cv::Mat_<double>(3, 3) << cos(beta), 0, sin(beta), 0, 1, 0,
+                 -sin(beta), 0, cos(beta));
+
+  cv::Mat R_x = (cv::Mat_<double>(3, 3) << 1, 0, 0, 0, cos(gamma), -sin(gamma),
+                 0, sin(gamma), cos(gamma));
+
+  return R_z * R_y * R_x;
+}

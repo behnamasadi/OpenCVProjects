@@ -26,11 +26,11 @@ void projectPointcloudInStereoImagePlane()
 	
 	txLeft=-1;
 	tyLeft=0.0;
-	tzLeft=-4.0;
+    tzLeft=+4.0;
 		
 	txRight=1.0;
 	tyRight=0.0;
-	tzRight=-4.0;
+    tzRight=+4.0;
 	
 	leftCameraRotation =eulerAnglesToRotationMatrix(thetaLeft);
 	rightCameraRotation =eulerAnglesToRotationMatrix(thetaRight);
@@ -83,8 +83,8 @@ void projectPointcloudInStereoImagePlane()
 	0,0,1);
 	
 	std::vector<cv::Point2d> imagePointsLeftCamera,imagePointsRightCamera;
-	cv::projectPoints(objectPointsInWorldCoordinate, leftCameraRotation, leftCameraTranslation, K, cv::noArray(), imagePointsLeftCamera);
-	cv::projectPoints(objectPointsInWorldCoordinate, rightCameraRotation, rightCameraTranslation, K, cv::noArray(), imagePointsRightCamera);
+    cv::projectPoints(objectPointsInWorldCoordinate, leftCameraRotation.inv(), -leftCameraTranslation, K, cv::noArray(), imagePointsLeftCamera);
+    cv::projectPoints(objectPointsInWorldCoordinate, rightCameraRotation.inv(), -rightCameraTranslation, K, cv::noArray(), imagePointsRightCamera);
 
 ////////////////////////////////////////////////storing images from right and left camera//////////////////////////////////////////////
 
