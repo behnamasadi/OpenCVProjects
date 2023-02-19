@@ -52,3 +52,28 @@ so the result is zero vector, also we can write any cross product as skew-symmet
 
 Refs: [1](https://en.wikipedia.org/wiki/Essential_matrix)
 
+
+
+# Decompose Essential Matrix
+
+Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga54a2f5b3f8aeaf6c76d4a31dece85d5d),
+
+
+/*
+@incollection{grandstrand:2004,
+  author      = "Ove Grandstrand",
+  title       = "Innovation and Intellectual Property Rights",
+  editor      = "Jan Fagerberg and David C. Mowery and Richard R. Nelson",
+  booktitle   = "The Oxford Handbook of Innovation",
+  publisher   = "Oxford University Press",
+  address     = "Oxford",
+  year        = 2004,
+  pages       = "266-290",
+  chapter     = 10,
+}
+*/
+
+9.6.2 Extraction of cameras from the essential matrix
+
+
+

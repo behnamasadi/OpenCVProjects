@@ -34,15 +34,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="298.7937"
-     inkscape:cy="143.61714"
+     inkscape:cx="166.2937"
+     inkscape:cy="140.76"
      inkscape:document-units="mm"
      inkscape:current-layer="g1100"
      showgrid="false"
      inkscape:window-width="1848"
-     inkscape:window-height="1043"
-     inkscape:window-x="1992"
-     inkscape:window-y="0"
+     inkscape:window-height="1016"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -52,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -829,24 +829,24 @@
             <text
                xml:space="preserve"
                style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-               x="312.21506"
-               y="247.55338"
+               x="314.35791"
+               y="240.41051"
                id="text1104"><tspan
                  sodipodi:role="line"
                  id="tspan1102"
-                 x="312.21506"
-                 y="247.55338"
+                 x="314.35791"
+                 y="240.41051"
                  style="font-size:17.33333397px;fill:#00ff00;fill-opacity:1">y</tspan></text>
             <text
                xml:space="preserve"
                style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-               x="283.34756"
-               y="244.93437"
+               x="279.06186"
+               y="242.7915"
                id="text1104-3"><tspan
                  sodipodi:role="line"
                  id="tspan1102-6"
-                 x="283.34756"
-                 y="244.93437"
+                 x="279.06186"
+                 y="242.7915"
                  style="font-size:17.33333397px;fill:#ff0000;fill-opacity:1">x</tspan></text>
             <text
                xml:space="preserve"
@@ -858,7 +858,7 @@
                  id="tspan1102-6-6"
                  x="248.02606"
                  y="255.82849"
-                 style="font-size:17.33333397px;fill:#0000ff;fill-opacity:1">x</tspan></text>
+                 style="font-size:17.33333397px;fill:#0000ff;fill-opacity:1">z</tspan></text>
           </g>
         </g>
       </g>

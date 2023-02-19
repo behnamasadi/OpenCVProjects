@@ -42,3 +42,19 @@ where <img src="https://latex.codecogs.com/svg.image?&space;{\mathbf&space;&spac
 
 Refs: [1](https://en.wikipedia.org/wiki/Triangulation_(computer_vision))
 
+
+
+
+```cpp
+cv::triangulatePoints	(	InputArray 	projMatr1,
+InputArray 	projMatr2,
+InputArray 	projPoints1,
+InputArray 	projPoints2,
+OutputArray 	points4D 
+)		
+```
+
+Refs: [1](https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html#gad3fc9a0c82b08df034234979960b778c)
+
+
+

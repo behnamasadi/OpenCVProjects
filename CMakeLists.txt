@@ -259,14 +259,35 @@ target_link_libraries(camera_projection_matrix ${OpenCV_LIBS} )
 add_executable(corner_detection src/corner_detection.cpp)
 target_link_libraries(corner_detection ${OpenCV_LIBS} )
 
-
 add_executable(finding_homography_matrix_4_corresponding_points src/finding_homography_matrix_4_corresponding_points.cpp)
 target_link_libraries(finding_homography_matrix_4_corresponding_points ${OpenCV_LIBS})
-
 
 add_executable(apply_homography_on_image src/apply_homography_on_image.cpp)
 target_link_libraries(apply_homography_on_image ${OpenCV_LIBS} )
 
+add_executable(decompose_essential_matrix src/decompose_essential_matrix.cpp)
+target_link_libraries(decompose_essential_matrix ${OpenCV_LIBS} )
+
+add_executable(decompose_projection_matrix src/decompose_projection_matrix.cpp)
+target_link_libraries(decompose_projection_matrix ${OpenCV_LIBS} )
+
+add_executable(decompose_homography_matrix src/decompose_homography_matrix.cpp )
+target_link_libraries(decompose_homography_matrix ${OpenCV_LIBS} )
+
+add_executable(calibrate_hand_eye src/calibrate_hand_eye.cpp)
+target_link_libraries(calibrate_hand_eye ${OpenCV_LIBS} )
+
+add_executable(computes_camera_characteristics_from_camera_intrinsic src/computes_camera_characteristics_from_camera_intrinsic.cpp)
+target_link_libraries(computes_camera_characteristics_from_camera_intrinsic ${OpenCV_LIBS} )
+
+add_executable(P3P src/P3P.cpp)
+target_link_libraries(P3P ${OpenCV_LIBS} )
+
+add_executable(PnP src/PnP.cpp)
+target_link_libraries(PnP ${OpenCV_LIBS} )
+
+add_executable(drawing_frame_axes src/drawing_frame_axes.cpp)
+target_link_libraries(drawing_frame_axes ${OpenCV_LIBS} )
 
 
 find_package (Eigen3 NO_MODULE)

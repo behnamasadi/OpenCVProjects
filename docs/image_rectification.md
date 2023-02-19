@@ -98,4 +98,11 @@ H1 = np.matmul(np.linalg.inv(H2), np.matmul(F, H2))
 ```
 
 
+
+
+A simple way to rectify the two images is to first rotate both cameras so that they are
+looking perpendicular to the line joining the camera centers c 0 and c 1 . Since there is a de-
+gree of freedom in the tilt, the smallest rotations that achieve this should be used. Next, to
+determine the desired twist around the optical axes, make the up vector (the camera y axis)
+
 Refs [1](https://en.wikipedia.org/wiki/Image_rectification), [2](https://www.cs.cmu.edu/~16385/s17/Slides/13.1_Stereo_Rectification.pdf)
