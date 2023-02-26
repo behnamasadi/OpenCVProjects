@@ -1,9 +1,50 @@
-# Homography
-Any two images of the same planar surface in space are related by a homography
+# 1. Homography
+Any two images of the same planar surface in space are related by a homography. 
+The planar homography relates the transformation between two planes (up to a scale factor):
+
+
+<img src="https://latex.codecogs.com/svg.latex?s%20%5Cbegin%7Bbmatrix%7D%20x%5E%7B%27%7D%20%5C%5C%20y%5E%7B%27%7D%20%5C%5C%201%20%5Cend%7Bbmatrix%7D%20%3D%20%5Cmathbf%7BH%7D%20%5Cbegin%7Bbmatrix%7D%20x%20%5C%5C%20y%20%5C%5C%201%20%5Cend%7Bbmatrix%7D%20%3D%20%5Cbegin%7Bbmatrix%7D%20h_%7B11%7D%20%26%20h_%7B12%7D%20%26%20h_%7B13%7D%20%5C%5C%20h_%7B21%7D%20%26%20h_%7B22%7D%20%26%20h_%7B23%7D%20%5C%5C%20h_%7B31%7D%20%26%20h_%7B32%7D%20%26%20h_%7B33%7D%20%5Cend%7Bbmatrix%7D%20%5Cbegin%7Bbmatrix%7D%20x%20%5C%5C%20y%20%5C%5C%201%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?s \begin{bmatrix} x^{'} \\ y^{'} \\ 1 \end{bmatrix} = \mathbf{H} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} = \begin{bmatrix} h_{11} & h_{12} & h_{13} \\ h_{21} & h_{22} & h_{23} \\ h_{31} & h_{32} & h_{33} \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}" />
+
+
+
+
+The homography matrix is a `3x3` matrix with 8 DoF as it is estimated up to a scale. It is generally normalized:
+ 
+ 
+ <img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20h_%7B33%7D%20%3D%201%20%5C%5C%20or%20%5C%5C%20h_%7B11%7D%5E2%20&plus;%20h_%7B12%7D%5E2%20&plus;%20h_%7B13%7D%5E2%20&plus;%20h_%7B21%7D%5E2%20&plus;%20h_%7B22%7D%5E2%20&plus;%20h_%7B23%7D%5E2%20&plus;%20h_%7B31%7D%5E2%20&plus;%20h_%7B32%7D%5E2%20&plus;%20h_%7B33%7D%5E2%20%3D%201%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} h_{33} = 1 \\ or \\ h_{11}^2 + h_{12}^2 + h_{13}^2 + h_{21}^2 + h_{22}^2 + h_{23}^2 + h_{31}^2 + h_{32}^2 + h_{33}^2 = 1
+\end{matrix}\right." />
+ 
+ 
+ 
+
+Refs: [1](https://www.cse.psu.edu/~rtc12/CSE486/lecture16.pdf), [2](https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html)
+
+# 2. Different Kinds of Transformation Related By Homography 
+The transformations shown in the followings instances are all related to transformations between two planes.
+
+
+## 2.1 Planar Surface And The Image Plane
+
+
+<img src="images/homography_transformation_example1.jpg" alt="" />
+
+
+
+## 2.2 Planar Surface Viewed By Two Cameras
+
 
 <img src="images/homography1.svg" />   
 
 
+
+
+## 2.3 Rotating Camera Around Its Axis of Projection, 
+
+A rotating camera around its axis of projection, equivalent to consider that the points are on a plane at infinity (image taken from
+
+<img src="images/homography_transformation_example3.jpg" />
+
+# 3. Calculating Homography Matrix
 For any point in the world the projection of the point on the camera plan would be:
 <img src="https://latex.codecogs.com/svg.latex?%7B%5Cdisplaystyle%20%7B%5Cbegin%7Bbmatrix%7Du%5C%5Cv%5C%5Cw%5Cend%7Bbmatrix%7D%7D%3D%20K%5C%2C%20%7B%5Cbegin%7Bbmatrix%7D%20r_%7B11%7D%20%26%20r_%7B12%7D%20%26%20r_%7B13%7D%20%26t_%7B1%7D%20%5C%5C%20r_%7B21%7D%20%26%20r_%7B22%7D%20%26%20r_%7B23%7D%20%26t_%7B2%7D%20%5C%5C%20r_%7B31%7D%20%26%20r_%7B31%7D%20%26%20r_%7B31%7D%20%26t_%7B3%7D%20%5Cend%7Bbmatrix%7D%7D%7B%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CZ_%7Bw%7D%5C%5CW_%7Bw%7D%5Cend%7Bbmatrix%7D%7D%20%3DK%5C%2C%7B%5Cbegin%7Bbmatrix%7DR_%7Bw%7D%5E%7Bc%7D%20%26T_%7Bw%7D%5E%7Bc%7D%5Cend%7Bbmatrix%7D%7D%7B%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CZ_%7Bw%7D%5C%5CW_%7Bw%7D%5Cend%7Bbmatrix%7D%7D%3DP%7B%5Cbegin%7Bbmatrix%7DX_%7Bw%7D%5C%5CY_%7Bw%7D%5C%5CZ_%7Bw%7D%5C%5CW_%7Bw%7D%5Cend%7Bbmatrix%7D%7D%7D" alt="https://latex.codecogs.com/svg.latex?{\displaystyle  {\begin{bmatrix}u\\v\\w\end{bmatrix}}=K\,{\begin{bmatrix}r_{11} & r_{12} & r_{13} &t_{1} \\ r_{21} & r_{22} & r_{23} &t_{2} \\ r_{31} & r_{31} & r_{31} &t_{3} \end{bmatrix}}{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\W_{w}\end{bmatrix}} =K\,{\begin{bmatrix}R_{w}^{c} &T_{w}^{c}\end{bmatrix}}{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\W_{w}\end{bmatrix}}=P{\begin{bmatrix}X_{w}\\Y_{w}\\Z_{w}\\W_{w}\end{bmatrix}}}" />
 

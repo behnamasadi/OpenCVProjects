@@ -177,5 +177,17 @@ Refs: [1](https://github.com/jamesbrink/docker-opengl)
 
 
 
+# Reconstruct sparse/dense model from known camera poses
 
+Refs: [1](https://colmap.github.io/faq.html#reconstruct-sparse-dense-model-from-known-camera-poses)
+
+
+
+# Extending COLMAP
+
+
+
+# Colmap and Visual Odometry
+
+Refs: [1](https://github.com/colmap/colmap/issues/568)
 

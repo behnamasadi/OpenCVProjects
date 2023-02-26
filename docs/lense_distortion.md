@@ -1,46 +1,6 @@
-- [1. Camera Lenses](#1-camera-lenses)
-  * [1.1 Tilt Shift Lenses](#11-tilt-shift-lenses)
-  * [1.2 Fisheye Lenses](#12-fisheye-lenses)
-  * [1.3 Rectilinear Lenses](#13-rectilinear-lenses)
-- [2. Lenses Distortion](#2-lenses-distortion)
-  * [2.1 Radial Distortions](#21-radial-distortions)
-  * [2.1 Pincushion Distortion](#21-pincushion-distortion)
-  * [2.2 Barrel Distortion](#22-barrel-distortion)
-  * [2.3 Mustache Distortion](#23-mustache-distortion)
-  * [2.4 Tangential Distortions](#24-tangential-distortions)
-- [3. Lens Chromatic Aberration](#3-lens-chromatic-aberration)
-- [4. Distortion Models](#4-distortion-models)
-  * [4.1  Brown-Conrady](#41--brown-conrady)
-    + [4.1.1 Radial Distortion](#411-radial-distortion)
-    + [4.1.2 Tangential distortion:](#412-tangential-distortion-)
-    + [4.1.3  Both Distortion Together](#413--both-distortion-together)
-  * [4.2  Division Model](#42--division-model)
-- [4.3 OpenCV Lens Distortion Model](#43-opencv-lens-distortion-model)
-- [Image Resolution and Distortion Coefficient](#image-resolution-and-distortion-coefficient)
+# 1. Lenses Distortion
 
-
-
-
-# 1. Camera Lenses
-
-
-
-## 1.1 Tilt Shift Lenses
-
-Refs: [1](https://en.wikipedia.org/wiki/Tilt%E2%80%93shift_photography) 
-
-
-## 1.2 Fisheye Lenses
-
-
-## 1.3 Rectilinear Lenses
-A rectilinear lens produces images in which straight features, such as the edges of building walls, appear with straight lines rather than curves. In other words, it is a lens that exhibits little or no pincushion or barrel distortion.
-As an object gets closer to the edge of the frame, the rectilinear perspective will make it appear as though it is being stretched and enlarged. Lenses of this kind are frequently employed to produce forced perspective effects.
-
-
-# 2. Lenses Distortion
-
-## 2.1 Radial Distortions
+## 1.1 Radial Distortions
 
 The lens isn't a perfect pinhole, which has the side consequence of causing symmetric radial distortion. Outside of the perspective center, light enters the lens and bends toward the image plane. The best way to understand symmetric radial distortion could be to imagine that the concavity or convexity of the lens is being used to map the image plane. Because all light passes through a single point in a pinhole camera, there would be no distortion.
 
@@ -50,22 +10,33 @@ Because it solely models distortion as a function of distance from the center of
 
 
 
-## 2.1 Pincushion Distortion
+## 1.1 Pincushion Distortion (Positive Radial Distortions)
+
+pincushion distortion  <img src="https://latex.codecogs.com/svg.latex?1%20&plus;%20k_1%20r%5E2%20&plus;%20k_2%20r%5E4%20&plus;%20k_3%20r%5E6" alt="https://latex.codecogs.com/svg.latex?1 + k_1 r^2 + k_2 r^4 + k_3 r^6" /> monotonically increasing
+
+i.e  <img  src="https://latex.codecogs.com/svg.latex?k_1%3D+1.5" alt="https://latex.codecogs.com/svg.latex?k_1=+1.5" />
+
+
 
 <img src="images/Pincushion_distortion.svg" height="250" width="250" />
 
 
-## 2.2 Barrel Distortion
+## 1.2 Barrel Distortion (Negative Radial Distortions)
+
+In barrel distortion <img src="https://latex.codecogs.com/svg.latex?1%20&plus;%20k_1%20r%5E2%20&plus;%20k_2%20r%5E4%20&plus;%20k_3%20r%5E6" alt="https://latex.codecogs.com/svg.latex?1 + k_1 r^2 + k_2 r^4 + k_3 r^6" /> monotonically decreasing
+
+i.e  <img  src="https://latex.codecogs.com/svg.latex?k_1%3D-1.5" alt="https://latex.codecogs.com/svg.latex?k_1=-1.5" />
+
 <img src="images/Barrel_distortion.svg" height="250" width="250" />
 
 
-## 2.3 Mustache Distortion
+## 1.3 Mustache Distortion
 <img src="images/Mustache_distortion.svg" height="250" width="250"/>
 
 
 
 
-## 2.4 Tangential Distortions
+## 1.4 Tangential Distortions
 Decentering distortion is a result of the lens assembly not being centered over and parallel to the image plane as the main reason.
 
 
@@ -78,10 +49,97 @@ Decentering distortion is a result of the lens assembly not being centered over 
 
 
 
-# 3. Lens Chromatic Aberration
+
+# 2. OpenCV Lens Distortion Model
 
 
-<img src="images/lens_chromatic_aberration.png" height="250" width="250"/>
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7D%20x%5C%5C%20y%5C%5C%20z%20%5Cend%7Bbmatrix%7D%3D%20R%5Cbegin%7Bbmatrix%7D%20X%5C%5C%20Y%5C%5C%20Z%20%5Cend%7Bbmatrix%7D&plus;t
+" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}
+x\\ 
+y\\ 
+z
+\end{bmatrix}=
+R\begin{bmatrix}
+X\\ 
+Y\\ 
+Z
+\end{bmatrix}+t" />
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%7Bx%7D%27%3D%5Cfrac%7Bx%7D%7Bz%7D%20%5C%5C%20%7By%7D%27%3D%5Cfrac%7By%7D%7Bz%7D%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix}
+{x}'=\frac{x}{z} 
+\\ 
+{y}'=\frac{y}{z} 
+\end{matrix}\right." />
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%7Bx%7D%27%27%3D%7Bx%7D%27%20%5Cfrac%7B1&plus;k_1r%5E2&plus;%20k_2r%5E4&plus;%20k_3r%5E6%7D%7B1&plus;k_4r%5E2%20&plus;k_5r%5E4%20&plus;%20k_6r6%20%7D%20&plus;2p_1%7Bx%7D%27%7By%7D%27&plus;p_2%28r%5E2&plus;2%7Bx%7D%27%5E2%29%20&plus;s_1r%5E2&plus;s_2r%5E4%20%5C%5C%20%5C%5C%20%7By%7D%27%27%3D%7By%7D%27%20%5Cfrac%7B1&plus;k_1r%5E2&plus;%20k_2r%5E4&plus;%20k_3r%5E6%7D%7B1&plus;k_4r%5E2%20&plus;k_5r%5E4%20&plus;%20k_6r6%20%7D&plus;p_1%28r%5E2&plus;2%7Bx%7D%27%5E2%29%20&plus;2p_2%7Bx%7D%27%7By%7D%27%20&plus;s_3r%5E2&plus;s_4r%5E4%20%5Cend%7Bmatrix%7D%5Cright." 
+alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} {x}''={x}' \frac{1+k_1r^2+ k_2r^4+ k_3r^6}{1+k_4r^2 +k_5r^4 + k_6r6 } +2p_1{x}'{y}'+p_2(r^2+2{x}'^2) +s_1r^2+s_2r^4 \\ \\ {y}''={y}' \frac{1+k_1r^2+ k_2r^4+ k_3r^6}{1+k_4r^2 +k_5r^4 + k_6r6 }+p_1(r^2+2{x}'^2) +2p_2{x}'{y}' +s_3r^2+s_4r^4 \end{matrix}\right." />
+
+
+
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20u%3Df_x%20%5Ctimes%20%7Bx%7D%27%27&plus;c_x%20%5C%5C%20v%3Df_y%20%5Ctimes%20%7By%7D%27%27&plus;c_y%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} u=f_x \times {x}''+c_x \\ v=f_y \times {y}''+c_y 
+\end{matrix}\right." />
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Ctext%7Bwhere%3A%20%7D%20r%5E2%3D%7Bx%7D%27%5E2%20&plus;%20%7By%7D%27%5E2" alt="https://latex.codecogs.com/svg.latex?\text{where: } r^2={x}'^2 + {y}'^2" />
+
+
+
+
+
+
+
+The distortion parameters:
+1. Radial coefficients <img src="https://latex.codecogs.com/svg.latex?k_1%2C%20k_2%2C%20k_3%2C%20k_4%2C%20k_5%2C%20%5Ctext%7B%20and%20%7D%20k_6" alt="https://latex.codecogs.com/svg.latex?k_1, k_2, k_3, k_4, k_5, \text{ and }  k_6" />.
+2. Tangential distortion coefficients <img src="https://latex.codecogs.com/svg.latex?p_1%20%5Ctext%7B%20and%20%7D%20p_2" alt="https://latex.codecogs.com/svg.latex?p_1 \text{ and }  p_2" />. 
+3. Thin prism distortion coefficients <img src="https://latex.codecogs.com/svg.latex?s_1%2C%20s_2%2C%20s_3%2C%20%5Ctext%7B%20and%20%7D%20s_4" alt="https://latex.codecogs.com/svg.latex?s_1, s_2, s_3, \text{ and }  s_4" />
+
+
+
+
+In the presence of tangential distortion, model is extended as:
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20u%20%3Df_x%20x%27%27%20&plus;%20c_x%20%5C%5C%20v%3Df_y%20y%27%27%20&plus;%20c_y%20%5Cend%7Bmatrix%7D%5Cright." alt="\left\{\begin{matrix}
+u =f_x x'' + c_x \\ 
+v=f_y y'' + c_y 
+\end{matrix}\right." />
+
+
+where
+
+
+
+Radial distortion is always monotonic for real lenses, and if the estimator produces a non-monotonic result, this should be considered a calibration failure.A failed estimation result may look deceptively good near the image center but will work poorly in e.g. AR/SFM applications. The optimization method used in OpenCV camera calibration does not include these constraints as the framework does not support the required integer programming and polynomial inequalities. See issue [#15992](https://github.com/opencv/opencv/issues/15992) for additional information.
+
+
+
+
+
+
+# 3. Image Resolution and Distortion Coefficient
+The distortion coefficients <img src="https://latex.codecogs.com/svg.image?k_1,k_2,p_1,p_2,k_3,k_4,k_5,k_6" title="https://latex.codecogs.com/svg.image?k_1,k_2,p_1,p_2,k_3,k_4,k_5,k_6" /> 
+do not depend on the scene viewed and they remain the **same** regardless of image resolution. If, for example, a camera has been calibrated on images of 320 x 240 resolution, absolutely the same distortion coefficients can be used for 640 x 480 images from the same camera
+
+However, <img src="https://latex.codecogs.com/svg.image?f_x" title="https://latex.codecogs.com/svg.image?f_x" />, <img src="https://latex.codecogs.com/svg.image?f_y" title="https://latex.codecogs.com/svg.image?f_y" />, <img src="https://latex.codecogs.com/svg.image?c_x" title="https://latex.codecogs.com/svg.image?c_x" />, and <img src="https://latex.codecogs.com/svg.image?c_y" title="https://latex.codecogs.com/svg.image?c_y" /> need to be scaled appropriately.
+
+```
+fx.new=(new width resolution/old width resolution)*fx.old
+fy.new=(new height resolution/old height resolution)*fy.old
+
+cx.new=(new width resolution/old width resolution)*cx.old
+cy.new=(new height resolution/old height resolution)*cy.old
+```
+Refs: [1](https://stackoverflow.com/questions/44888119/c-opencv-calibration-of-the-camera-with-different-resolution),
+
 
 
 # 4. Distortion Models
@@ -188,64 +246,6 @@ Refs: [1](https://www.tangramvision.com/blog/camera-modeling-exploring-distortio
 [2](https://www.robots.ox.ac.uk/~vgg/publications/2001/Fitzgibbon01b/fitzgibbon01b.pdf), [3](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), [4](https://ori.codes/artificial-intelligence/camera-calibration/camera-distortions/), [5](https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html)
 
 
-
-# 4.3 OpenCV Lens Distortion Model
-
-
-
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7D%20x%5C%5C%20y%5C%5C%20z%20%5Cend%7Bbmatrix%7D%3D%20R%5Cbegin%7Bbmatrix%7D%20X%5C%5C%20Y%5C%5C%20Z%20%5Cend%7Bbmatrix%7D&plus;t
-" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}
-x\\ 
-y\\ 
-z
-\end{bmatrix}=
-R\begin{bmatrix}
-X\\ 
-Y\\ 
-Z
-\end{bmatrix}+t" />
-
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%7Bx%7D%27%3D%5Cfrac%7Bx%7D%7Bz%7D%20%5C%5C%20%7By%7D%27%3D%5Cfrac%7By%7D%7Bz%7D%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix}
-{x}'=\frac{x}{z} 
-\\ 
-{y}'=\frac{y}{z} 
-\end{matrix}\right." />
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7BBmatrix%7D%20%7Bx%7D%27%27%3D%7Bx%7D%27%20%5Cfrac%7B1&plus;k_1r%5E2&plus;%20k_2r%5E4&plus;%20k_3r%5E6%7D%7B1&plus;k_4r%5E2%20&plus;k_5r%5E4%20&plus;%20k_6r6%20%7D%20&plus;2p_1%7Bx%7D%27%7By%7D%27&plus;p_2%28r%5E2&plus;2%7Bx%7D%27%5E2%29%20%5C%5C%20%7By%7D%27%27%3D%7By%7D%27%20%5Cfrac%7B1&plus;k_1r%5E2&plus;%20k_2r%5E4&plus;%20k_3r%5E6%7D%7B1&plus;k_4r%5E2%20&plus;k_5r%5E4%20&plus;%20k_6r6%20%7D&plus;p_1%28r%5E2&plus;2%7Bx%7D%27%5E2%29%20&plus;2p_2%7Bx%7D%27%7By%7D%27%20%5Cend%7BBmatrix%7D" alt="https://latex.codecogs.com/svg.latex?\begin{Bmatrix}
-{x}''={x}' \frac{1+k_1r^2+ k_2r^4+ k_3r^6}{1+k_4r^2 +k_5r^4 + k_6r6 } +2p_1{x}'{y}'+p_2(r^2+2{x}'^2) \\ {y}''={y}' \frac{1+k_1r^2+ k_2r^4+ k_3r^6}{1+k_4r^2 +k_5r^4 + k_6r6 }+p_1(r^2+2{x}'^2) +2p_2{x}'{y}' \end{Bmatrix}" />
-
-
-
-
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20u%3Df_x%20%5Ctimes%20%7Bx%7D%27%27&plus;c_x%20%5C%5C%20v%3Df_y%20%5Ctimes%20%7By%7D%27%27&plus;c_y%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} u=f_x \times {x}''+c_x \\ v=f_y \times {y}''+c_y 
-\end{matrix}\right." />
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Ctext%7Bwhere%3A%20%7D%20r%5E2%3D%7Bx%7D%27%5E2%20&plus;%20%7By%7D%27%5E2" alt="https://latex.codecogs.com/svg.latex?\text{where: } r^2={x}'^2 + {y}'^2" />
-
-
-
-# Image Resolution and Distortion Coefficient
-The distortion coefficients <img src="https://latex.codecogs.com/svg.image?k_1,k_2,p_1,p_2,k_3,k_4,k_5,k_6" title="https://latex.codecogs.com/svg.image?k_1,k_2,p_1,p_2,k_3,k_4,k_5,k_6" /> 
-do not depend on the scene viewed and they remain the **same** regardless of image resolution. If, for example, a camera has been calibrated on images of 320 x 240 resolution, absolutely the same distortion coefficients can be used for 640 x 480 images from the same camera
-
-However, <img src="https://latex.codecogs.com/svg.image?f_x" title="https://latex.codecogs.com/svg.image?f_x" />, <img src="https://latex.codecogs.com/svg.image?f_y" title="https://latex.codecogs.com/svg.image?f_y" />, <img src="https://latex.codecogs.com/svg.image?c_x" title="https://latex.codecogs.com/svg.image?c_x" />, and <img src="https://latex.codecogs.com/svg.image?c_y" title="https://latex.codecogs.com/svg.image?c_y" /> need to be scaled appropriately.
-
-```
-fx.new=(new width resolution/old width resolution)*fx.old
-fy.new=(new height resolution/old height resolution)*fy.old
-
-cx.new=(new width resolution/old width resolution)*cx.old
-cy.new=(new height resolution/old height resolution)*cy.old
-```
-Refs: [1](https://stackoverflow.com/questions/44888119/c-opencv-calibration-of-the-camera-with-different-resolution),
 
 
 
