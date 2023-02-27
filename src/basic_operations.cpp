@@ -392,38 +392,37 @@ void writingVideo() {
 
   cv::Mat frame;
 
-
-  cap>>frame;
+  cap >> frame;
 
   bool isColor = (frame.type() == CV_8UC3);
 
   cv::VideoWriter output;
-  std::string vid_output = "vid.avi";
+  std::string vid_output = "vid.mp4";
   cv::Size videoFrameSize;
 
-  videoFrameSize.height = cap.get(cv::CAP_PROP_FRAME_WIDTH) ;
-  videoFrameSize.width = cap.get(cv::CAP_PROP_FRAME_HEIGHT) ;
+  videoFrameSize.height = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+  videoFrameSize.width = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
 
-  std::cout << "frame rate: " << cap.get(cv::CAP_PROP_FPS)
-            << std::endl;
+  std::cout << "frame rate: " << cap.get(cv::CAP_PROP_FPS) << std::endl;
 
+  std::cout << "video frame size is: " << videoFrameSize << std::endl;
 
-  std::cout << "video frame size is: " << videoFrameSize
-            << std::endl;
+  // For H.264  use AVC, which would look like this:
+  //int codec = cv::VideoWriter::fourcc('a', 'v', 'c', '1');
+  //https://learn.microsoft.com/en-us/windows/win32/medfound/video-fourccs
 
+  int codec = cv::VideoWriter::fourcc('m', 'p', '4', 'v');
 
-
-  int codec = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
   output.open(vid_output, codec, cap.get(cv::CAP_PROP_FPS), videoFrameSize,
               isColor);
 
   if (!output.isOpened()) {
-      std::cerr << "Could not open the output video file for write\n";
-      return ;
+    std::cerr << "Could not open the output video file for write\n";
+    return;
   }
 
   int start = cap.get(cv::CAP_PROP_FRAME_COUNT) / 2;
-cv::namedWindow("xing", 1);
+  cv::namedWindow("xing", 1);
   for (int i = start; i < cap.get(cv::CAP_PROP_FRAME_COUNT); i++) {
     cap >> frame;
 
@@ -432,10 +431,11 @@ cv::namedWindow("xing", 1);
       break;
     if (frame.empty())
       break;
-    //std::cout<<frame.size() <<std::endl;
-    output.write(frame)  ;
+    // std::cout<<frame.size() <<std::endl;
+    //output.write(frame);
+    output<<frame;
   }
-  //output.release();
+  output.release();
 
   // cv::CAP_PROP_FPS =5,
   // cv::CAP_PROP_POS_FRAMES =1,
@@ -606,52 +606,53 @@ int main(int argc, char **argv) {
 
 using namespace cv;
 using namespace std;
-int main2(int, char**)
-{
-    Mat src;
-    // use default camera as video source
-    VideoCapture cap(0);
+int main2(int, char **) {
+  Mat src;
+  // use default camera as video source
+  VideoCapture cap(0);
+  // check if we succeeded
+  if (!cap.isOpened()) {
+    cerr << "ERROR! Unable to open camera\n";
+    return -1;
+  }
+  // get one frame from camera to know frame size and type
+  cap >> src;
+  // check if we succeeded
+  if (src.empty()) {
+    cerr << "ERROR! blank frame grabbed\n";
+    return -1;
+  }
+  bool isColor = (src.type() == CV_8UC3);
+  //--- INITIALIZE VIDEOWRITER
+  VideoWriter writer;
+  int codec = VideoWriter::fourcc(
+      'M', 'J', 'P',
+      'G');          // select desired codec (must be available at runtime)
+  double fps = 25.0; // framerate of the created video stream
+  string filename = "./live.avi"; // name of the output video file
+  writer.open(filename, codec, fps, src.size(), isColor);
+  // check if we succeeded
+  if (!writer.isOpened()) {
+    cerr << "Could not open the output video file for write\n";
+    return -1;
+  }
+  //--- GRAB AND WRITE LOOP
+  cout << "Writing videofile: " << filename << endl
+       << "Press any key to terminate" << endl;
+  for (;;) {
     // check if we succeeded
-    if (!cap.isOpened()) {
-        cerr << "ERROR! Unable to open camera\n";
-        return -1;
+    if (!cap.read(src)) {
+      cerr << "ERROR! blank frame grabbed\n";
+      break;
     }
-    // get one frame from camera to know frame size and type
-    cap >> src;
-    // check if we succeeded
-    if (src.empty()) {
-        cerr << "ERROR! blank frame grabbed\n";
-        return -1;
-    }
-    bool isColor = (src.type() == CV_8UC3);
-    //--- INITIALIZE VIDEOWRITER
-    VideoWriter writer;
-    int codec = VideoWriter::fourcc('M', 'J', 'P', 'G');  // select desired codec (must be available at runtime)
-    double fps = 25.0;                          // framerate of the created video stream
-    string filename = "./live.avi";             // name of the output video file
-    writer.open(filename, codec, fps, src.size(), isColor);
-    // check if we succeeded
-    if (!writer.isOpened()) {
-        cerr << "Could not open the output video file for write\n";
-        return -1;
-    }
-    //--- GRAB AND WRITE LOOP
-    cout << "Writing videofile: " << filename << endl
-         << "Press any key to terminate" << endl;
-    for (;;)
-    {
-        // check if we succeeded
-        if (!cap.read(src)) {
-            cerr << "ERROR! blank frame grabbed\n";
-            break;
-        }
-        // encode the frame into the videofile stream
-        writer.write(src);
-        // show live and wait for a key with timeout long enough to show images
-        imshow("Live", src);
-        if (waitKey(5) >= 0)
-            break;
-    }
-    // the videofile will be closed and released automatically in VideoWriter destructor
-    return 0;
+    // encode the frame into the videofile stream
+    writer.write(src);
+    // show live and wait for a key with timeout long enough to show images
+    imshow("Live", src);
+    if (waitKey(5) >= 0)
+      break;
+  }
+  // the videofile will be closed and released automatically in VideoWriter
+  // destructor
+  return 0;
 }
