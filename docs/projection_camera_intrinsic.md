@@ -4,6 +4,9 @@
   * [2.2 Camera Resectioning and Projection Matrix](#22-camera-resectioning-and-projection-matrix)
   * [2.3 Example of Projection](#23-example-of-projection)
   * [2.4 Image coordinate and Matrix coordinate](#24-image-coordinate-and-matrix-coordinate)
+- [3. Decompose Projection Matrix](#3-decompose-projection-matrix)
+- [4. OpenCV, OpenGL and Blender Camera coordinate](#4-opencv--opengl-and-blender-camera-coordinate)
+
 
 
 # 1. Graphical Projection
@@ -94,6 +97,31 @@ If they are different:
 \\
 \mathbf{t_w^c=-t_c^w}
 " />
+
+
+Inverse of 4x4 transformation matrix 
+
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20A%3D%5Cbegin%7Bbmatrix%7D%20R%20%26%20t%5C%5C%200%20%26%201%20%5Cend%7Bbmatrix%7D%20%5C%5C%20A%5E%7B-1%7D%3D%5Cbegin%7Bbmatrix%7D%20R%5ET%20%26%20-R%5ETt%5C%5C%200%20%26%201%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?\\
+A=\begin{bmatrix}
+R & t\\ 
+0 & 1
+\end{bmatrix}
+\\ A^{-1}=\begin{bmatrix} R^T & -R^Tt\\  0 & 1 \end{bmatrix} " />
+
+
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?A%5E%7B-1%7DX_%7B4%5Ctimes1%7D%3D%5Cbegin%7Bbmatrix%7D%20R%20%26%20t%5C%5C%200%20%26%201%20%5Cend%7Bbmatrix%7DX_%7B4%5Ctimes1%7D%3D%5Cbegin%7Bbmatrix%7D%20R%5ET%28X-t%29%20%5C%5C%201%20%5Cend%7Bbmatrix%7D_%7B4%5Ctimes1%7D" alt="https://latex.codecogs.com/svg.latex?A^{-1}X_{4\times1}=\begin{bmatrix}
+R & t\\ 
+0 & 1
+\end{bmatrix}X_{4\times1}=\begin{bmatrix}
+R^T(X-t)
+\\ 
+1
+\end{bmatrix}_{4\times1}" />
+
+
 
 
 
@@ -337,13 +365,19 @@ std::cout<<static_cast<unsigned>(img.at<uchar>(row,column))    <<std::endl;
 std::cout<<static_cast<unsigned>(img.at<uchar>( cv::Point(column,row))     )<<std::endl;
 ```
 
-
-
-
-
-# Decompose Projection Matrix
+# 3. Decompose Projection Matrix
 
 Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#gaaae5a7899faa1ffdf268cd9088940248)
+
+
+
+# 4. OpenCV, OpenGL and Blender Camera coordinate
+
+<img src="images/blender_opencv_opencv_coordinate.png" heigh="333" width="466" />
+
+
+
+
 
 
 
