@@ -149,7 +149,7 @@ Now that we have <img src="https://latex.codecogs.com/svg.image?F" title="https:
 <img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}u&space;&&space;v&space;&&space;1&space;\\\end{bmatrix}\begin{bmatrix}f_{11}&space;&&space;f_{12}&space;&&space;f_{13}&space;\\f_{21}&space;&&space;f_{22}&space;&&space;f_{23}&space;\\f_{31}&space;&&space;f_{32}&space;&&space;f_{33}&space;\\\end{bmatrix}\begin{bmatrix}u'&space;\\v'&space;\\1\end{bmatrix}=0" title="https://latex.codecogs.com/svg.image?\begin{bmatrix}u & v & 1 \\\end{bmatrix}\begin{bmatrix}f_{11} & f_{12} & f_{13} \\f_{21} & f_{22} & f_{23} \\f_{31} & f_{32} & f_{33} \\\end{bmatrix}\begin{bmatrix}u' \\v' \\1\end{bmatrix}=0" />
 
 
-To find the epipoles, since every line should go through that, so in teh fowlloing equation:
+To find the epipoles, since every line should go through that, so in the following equation:
 
 <img src="https://latex.codecogs.com/svg.image?0=\mathbf{y}_L&space;^T\mathbf{F}&space;\mathbf{y}_R" title="https://latex.codecogs.com/svg.image?0=\mathbf{y}_L ^T\mathbf{F} \mathbf{y}_R" />
 <br/>
@@ -169,6 +169,68 @@ To find the epipoles, since every line should go through that, so in teh fowlloi
 Refs: [1](https://www8.cs.umu.se/kurser/TDBD19/VT05/reconstruct-4.pdf), [2](http://www.robots.ox.ac.uk/~vgg/hzbook/code/)
 
 
+# Normalized 8-point Algorithm
+Problem with 8-point algorithm: Poor numerical conditioning, which makes results very sensitive to noise and can be fixed by rescaling the data.
+Idea: Transform image coordinates so that they are in the range: 
 
 
 
+
+The Normalized 8-point algorithm can be summarized in three steps:
+
+1. Normalize the point correspondences:
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Chat%7Bp_1%7D%3DB_1p_1%20%5C%5C%20%5Chat%7Bp_2%7D%3DB_2p_2" alt="https://latex.codecogs.com/svg.latex?\\
+\hat{p_1}=B_1p_1 
+\\
+\hat{p_2}=B_2p_2"/>
+
+<br/>
+<br/>
+<img src="https://latex.codecogs.com/svg.latex?%5Chat%7Bp_i%7D%3D%5Cfrac%7B%5Csqrt%7B2%7D%7D%7B%5Csigma%7D%20%28p_i-%5Cmu%29" alt="https://latex.codecogs.com/svg.latex?\hat{p_i}=\frac{\sqrt{2}}{\sigma} (p_i-\mu) " />
+<br/>
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cmu%3D%5Cbegin%7Bpmatrix%7D%20%5Cmu_x%5C%5C%20%5Cmu_y%20%5Cend%7Bpmatrix%7D%3D%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bi%3D1%7D%5E%7BN%7D%20p_i" alt="https://latex.codecogs.com/svg.latex?"  />
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?%5Csigma%3D%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bi%3D1%7D%5E%7BN%7D%20%7C%7Cp_i-%5Cmu%7C%7C%5E2" alt="https://latex.codecogs.com/svg.latex?\sigma=\frac{1}{N}\sum_{i=1}^{N} ||p_i-\mu||^2"  />
+
+
+<br/>
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Chat%7Bp_i%7D%3D%5Cbegin%7Bbmatrix%7D%20%5Cfrac%7B%5Csqrt%7B2%7D%7D%7B%5Csigma%7D%20%26%200%20%26%20-%5Cfrac%7B%5Csqrt%7B2%7D%7D%7B%5Csigma%7D%20%5Cmu_x%5C%5C%200%20%26%20%5Cfrac%7B%5Csqrt%7B2%7D%7D%7B%5Csigma%7D%20%26%20-%5Cfrac%7B%5Csqrt%7B2%7D%7D%7B%5Csigma%7D%5Cmu_y%20%5C%5C%200%20%26%200%20%26%201%20%5Cend%7Bbmatrix%7Dp_i" alt="https://latex.codecogs.com/svg.latex?\hat{p_i}=\begin{bmatrix}
+\frac{\sqrt{2}}{\sigma}  & 0 & -\frac{\sqrt{2}}{\sigma} \mu_x\\ 
+0 & \frac{\sqrt{2}}{\sigma}  & -\frac{\sqrt{2}}{\sigma}\mu_y \\ 
+0 & 0 & 1
+\end{bmatrix}p_i 
+" />
+
+
+
+
+<img src="" alt="" />
+<img src="" alt="" />
+
+
+
+2. Estimate normalized <img src="https://latex.codecogs.com/svg.latex?%5Chat%7BF%7D" alt="https://latex.codecogs.com/svg.latex?\hat{F}" /> with 8-point algorithm using normalized coordinates
+
+3. Compute unnormalized <img src="https://latex.codecogs.com/svg.latex?F" alt="https://latex.codecogs.com/svg.latex?F" /> from <img src="https://latex.codecogs.com/svg.latex?%5Chat%7BF%7D" alt="https://latex.codecogs.com/svg.latex?\hat{F}" />:
+
+
+<img src="https://latex.codecogs.com/svg.latex?F%3DB_2%5ET%5Chat%7BF%7DB_1" alt="https://latex.codecogs.com/svg.latex?F=B_2^T\hat{F}B_1" />
+
+# Extract Translation and Rotation from Fundamental Matrix
+
+if the coordinates of the principal points of each camera are known
+and the two cameras have the same focal length 𝑓 in pixels, then 𝑅, 𝑇, 𝑓 can
+determined uniquely
+
+
+Refs: [1](https://www.cse.unr.edu/~bebis/CS485/Handouts/hartley.pdf)

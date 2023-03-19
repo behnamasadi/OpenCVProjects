@@ -49,17 +49,48 @@ so the result is zero vector, also we can write any cross product as skew-symmet
 <br/>
 <img src="https://latex.codecogs.com/svg.image?\mathbf{E}=\left&space;\lfloor&space;T&space;\right&space;\rfloor_{3\times&space;3}&space;&space;&space;&space;&space;&space;R_{3\times&space;3}" title="https://latex.codecogs.com/svg.image?\mathbf{E}=\left \lfloor T \right \rfloor_{3\times 3} R_{3\times 3}" />
 
+# 8-point Algorithm
+
+## Minimal solution
+8 point correspondences are needed
+
+The 8-point algorithm assumes that the entries of E are all independent
+(which is not true since, for the calibrated case, they depend on 5 parameters (R and T))
+
+The solution of the 8-point algorithm is degenerate when the 3D points are coplanar.
+ Conversely, the 5-point algorithm works also for coplanar points
+
+## Over-determined solution
+n > 8 points 
+
+
+
+                                                              
+# 5-point Algorithm
+
+The 5-point algorithm uses the epipolar constraint considering the dependencies among all entries.
+
 
 Refs: [1](https://en.wikipedia.org/wiki/Essential_matrix)
 
 
 
+
+
 # Decompose Essential Matrix
+4 possible solutions of R and T"
 
-Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga54a2f5b3f8aeaf6c76d4a31dece85d5d),
 
 
-/*
+<img src="https://latex.codecogs.com/svg.latex?%5BR_1%2Ct%5D%2C%20%5BR_1%2C-t%5D%2C%20%5BR_2%2Ct%5D%2C%20%5BR_2%2C-t%5D." alt="https://latex.codecogs.com/svg.latex? [R_1,t], [R_1,-t], [R_2,t], [R_2,-t]." />
+
+
+There exists only one solution where points are in front of both cameras.
+(For detail please read chapter 9.6.2 Extraction of cameras from the essential matrix, Multiple View Geometry in Computer Vision (Second Edition))
+
+Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga54a2f5b3f8aeaf6c76d4a31dece85d5d)
+
+<!---
 @incollection{grandstrand:2004,
   author      = "Ove Grandstrand",
   title       = "Innovation and Intellectual Property Rights",
@@ -71,9 +102,10 @@ Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga54a2f5b3f8aea
   pages       = "266-290",
   chapter     = 10,
 }
-*/
+-->
 
-9.6.2 Extraction of cameras from the essential matrix
+
+
 
 
 

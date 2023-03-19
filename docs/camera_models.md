@@ -28,7 +28,10 @@ v = f\ d\ \theta\ \frac{y}{r}
 " />
 
 
+<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Balign*%7D%20L%28%5Ctilde%7Bx%7D%2C%5Ctilde%7By%7D%29%20%26%3D%20%5Cfrac%7Br_d%7D%7Br%7D%20%5Cbegin%7Bbmatrix%7D%20%5Ctilde%7Bx%7D%20%5C%5C%20%5Ctilde%7By%7D%20%5Cend%7Bbmatrix%7D%20%5C%5C%20r_d%20%26%3D%20M_1%28%5Ctheta_d%29%20%5C%5C%20%5Ctheta_d%20%26%3D%20%5Ctheta%281&plus;%20k_1%5Ctheta%5E2%20&plus;%20k_2%5Ctheta%5E4%20&plus;%20k_3%5Ctheta%5E6%20&plus;%20k_4%5Ctheta%5E8%29%20%5C%5C%20%5Ctheta%20%26%3D%20%5Carctan%28r%29%20%5C%5C%20r%20%26%3D%20%5Csqrt%7B%5Ctilde%7Bx%7D%5E2%20&plus;%20%5Ctilde%7By%7D%5E2%7D%20%5Cend%7Balign*%7D" alt="https://latex.codecogs.com/svg.latex?\begin{align*} L(\tilde{x},\tilde{y}) &= \frac{r_d}{r} \begin{bmatrix} \tilde{x} \\ \tilde{y} \end{bmatrix} \\ r_d &= M_1(\theta_d) \\ \theta_d &= \theta(1+ k_1\theta^2 + k_2\theta^4 + k_3\theta^6 + k_4\theta^8) \\ \theta &= \arctan(r) \\ r &= \sqrt{\tilde{x}^2 + \tilde{y}^2} \end{align*}" />
 
+
+Refs: [1](https://docs.nvidia.com/vpi/algo_ldc.html)
 
 
 
