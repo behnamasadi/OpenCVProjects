@@ -49,6 +49,10 @@ You can remove unnecessary images and containers by:
 
 read more [here](https://ros-developer.com/2017/11/08/docker/)
 
+# Using OpenCV Python API
+Install the conda packages:
+
+`conda install -c conda-forge opencv`
 
 
 # [Computer Vision](#)
@@ -89,6 +93,17 @@ read more [here](https://ros-developer.com/2017/11/08/docker/)
    * [Hand Eye Calibration](docs/hand_eye_calibration.md)   
    * [Normalized Image Coordinates](docs/normalized_image_coordinates.md)   
    * [Camera Models](docs/camera_models.md)   
+   * [Procrustes Analysis](docs/shape_analysis.md#procrustes-analysis)
+      * [Wahba's problem](docs/shape_analysis.md#wahba-s-problem)
+      * [Quaternion estimator algorithm (QUEST)](docs/shape_analysis.md#quaternion-estimator-algorithm--quest-)
+      * [Kabsch Algorithm](docs/shape_analysis.md#kabsch-algorithm)
+      * [Umeyama Algorithm](docs/shape_analysis.md#umeyama-algorithm)
+      * [Iterative Closest Point (ICP)](docs/shape_analysis.md#iterative-closest-point--icp-)
+      * [Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm](docs/shape_analysis.md#difference-between-kabsch--procrustes--umeyama-and-icp-algorithm)
+
+
+
+
 
 
 # [OpenCV API](#)

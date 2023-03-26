@@ -1,4 +1,41 @@
 # Normalized Image Coordinates
+
+Consider a camera matrix decomposed as <img src="https://latex.codecogs.com/svg.latex?P%20%3D%20K%5BR%20%7C%20t%5D" alt="https://latex.codecogs.com/svg.latex?P = K[R | t]" />,
+and let <img src="https://latex.codecogs.com/svg.latex?%5Cmathbf%7Bx%7D%20%3D%20P%20%5Cmathbf%7BX%7D" alt="https://latex.codecogs.com/svg.latex?\mathbf{x} = P \mathbf{X}" /> be a point in the image. If the calibration matrix <img src="https://latex.codecogs.com/svg.latex?K" alt="https://latex.codecogs.com/svg.latex?K" /> is known, then we
+may apply its inverse to the point <img src="https://latex.codecogs.com/svg.latex?%5Cmathbf%7Bx%7D" alt="https://latex.codecogs.com/svg.latex?\mathbf{x}" /> to obtain the point <img src="https://latex.codecogs.com/svg.latex?%5Chat%7B%5Cmathbf%7Bx%7D%7D%20%3DK%20%5E%7B-1%7D%20%5Cmathbf%7Bx%7D" alt="https://latex.codecogs.com/svg.latex?\hat{\mathbf{x}} =K ^{-1} \mathbf{x}" />. Then <img src="https://latex.codecogs.com/svg.latex?%5Chat%7B%5Cmathbf%7Bx%7D%7D%20%3D%5BR%7Ct%5D%5Cmathbf%7BX%7D" alt="https://latex.codecogs.com/svg.latex?\hat{\mathbf{x}} =[R|t]\mathbf{X}" />,
+where <img src="https://latex.codecogs.com/svg.latex?%5Chat%7B%5Cmathbf%7Bx%7D%7D" alt="https://latex.codecogs.com/svg.latex?\hat{\mathbf{x}}" /> is the image point expressed in normalized coordinates. It may be thought of
+as the image of the point <img src="https://latex.codecogs.com/svg.latex?%5Chat%7B%5Cmathbf%7BX%7D%7D" alt="https://latex.codecogs.com/svg.latex?\hat{\mathbf{X}}" /> with respect to a camera <img src="https://latex.codecogs.com/svg.latex?%5BR%7Ct%5D" alt="https://latex.codecogs.com/svg.latex?[R|t]" /> having the identity matrix I
+as calibration matrix. The camera matrix <img src="https://latex.codecogs.com/svg.latex?K%5E%7B-1%7DP%3D%5BR%7Ct%5D" alt="https://latex.codecogs.com/svg.latex?K^{-1}P=[R|t]" /> is called a **normalized camera
+matrix**, the effect of the known calibration matrix having been removed.
+Now, consider a pair of normalized camera matrices <img src="https://latex.codecogs.com/svg.latex?P%20%3D%20%5BI%20%7C%200%20%5D" alt="https://latex.codecogs.com/svg.latex?P = [I | 0 ]" /> and <img src="https://latex.codecogs.com/svg.latex?P%5E%7B%5Cprime%7D%20%3D%20%5BR%20%7C%20t%20%5D" alt="https://latex.codecogs.com/svg.latex?P^{\prime} = [R | t ]" />. The
+fundamental matrix corresponding to the pair of normalized cameras is customarily
+called the essential matrix, and has the form:
+
+<img src="https://latex.codecogs.com/svg.latex?E%3D%5Br%5D_%7B%5Ctimes%7DR%3DR%5BR%5ETt%5D_%7B%5Ctimes%7D." alt="https://latex.codecogs.com/svg.latex?E=[r]_{\times}R=R[R^Tt]_{\times}." />
+
+
+
+
+
+
+<img src="" alt="" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 normalize your image coordinate in pixel to the range [-1 ; 1]:
 
 

@@ -1,4 +1,31 @@
-# aligning two sets of points in 2D or 3D space
+- [Procrustes Analysis](#procrustes-analysis)
+  * [Wahba's problem](#wahba-s-problem)
+  * [Quaternion estimator algorithm (QUEST)](#quaternion-estimator-algorithm--quest-)
+  * [Kabsch Algorithm](#kabsch-algorithm)
+  * [Umeyama Algorithm](#umeyama-algorithm)
+  * [Iterative Closest Point (ICP)](#iterative-closest-point--icp-)
+  * [Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm]
+  
+# Procrustes Analysis
+Procrustes analysis is a method for aligning two sets of points in 2D or 3D space. The method aligns two sets of points by minimizing the sum of squares between the two sets of points. Procrustes analysis is widely used in shape analysis, computer vision, and statistics, among other fields.
+
+The basic idea of Procrustes analysis is to find the best-fit rigid transformation that aligns two sets of points. The method works as follows:
+
+Centroid Calculation: The centroid of each set of points is calculated and both sets of points are translated so that their centroids coincide. This step helps to remove the translation component of the transformation.
+
+Scaling Calculation: The scaling factor is calculated as the ratio of the sum of the squared Euclidean distances between the two sets of points and the sum of the squared Euclidean distances between the points in one set. This factor represents the optimal scaling that aligns the two sets of points.
+
+Rotation Matrix Calculation: The rotation matrix R is calculated using the method of orthogonal procrustes, which involves finding the best-fit orthogonal matrix that aligns the two sets of points.
+
+Translation Vector Calculation: The translation vector T is calculated as the difference between the centroids of the two sets of points. This vector represents the optimal translation that aligns the two sets of points.
+
+Final Transformation: The final transformation is a combination of the rotation matrix R, the scaling factor, and the translation vector T.
+
+Procrustes analysis has several important properties, including its ability to handle both rotation and scaling transformations, its efficiency, and its numerical stability. Additionally, the method is invariant to reflections, which is an important property in many applications.
+
+In conclusion, Procrustes analysis is a powerful and widely used method for aligning two sets of points in 2D or 3D space. It is widely used in shape analysis, computer vision, and statistics, among other fields, and has been the subject of extensive research and development.
+
+
 There are several algorithms for aligning two sets of points in 2D or 3D space, including:
 
 Iterative Closest Point (ICP) algorithm
@@ -13,7 +40,12 @@ Non-Rigid ICP (NR-ICP) algorithm
 Gauss-Newton optimization method
 These algorithms vary in terms of their complexity, accuracy, and computational requirements. The choice of algorithm depends on the specific requirements of the application and the nature of the data. Some algorithms are more suited to rigid transformations, while others are more suited to non-rigid transformations. Some algorithms are more computationally efficient, while others are more accurate. In general, there is no one-size-fits-all solution, and the choice of algorithm should be based on careful consideration of the specific requirements of the application.
 
-# Kabsch Algorithm
+
+
+## Wahba's problem
+## Quaternion estimator algorithm (QUEST)
+## Kabsch Algorithm
+
 The Kabsch algorithm is an efficient and numerically stable method for computing the optimal rigid transformation (i.e. translation and rotation) between two sets of points in 3D space. The algorithm is widely used in molecular biology, computer graphics, and robotics, among other fields.
 
 The basic idea of the Kabsch algorithm is to find the best-fit rigid transformation that aligns two sets of points, such that the root mean squared deviation between corresponding points is minimized. The method works as follows:
@@ -43,7 +75,8 @@ Umeyama's method, on the other hand, is a method for aligning shapes based on mi
 
 In conclusion, both Procrustes analysis and Umeyama's method are useful for shape analysis, but they differ in the way they align shapes and the type of transformations they estimate. Procrustes analysis is useful for comparing shapes, while Umeyama's method is useful for aligning shapes of different sizes and orientations.
 
-# Umeyama Algorithm
+## Umeyama Algorithm
+
 Umeyama's method is a method for aligning two sets of points in 2D or 3D space. The method aligns two sets of points by minimizing the Frobenius norm of the difference between the two sets of points. The Frobenius norm is a measure of the magnitude of a matrix and is defined as the square root of the sum of the squares of the matrix elements.
 
 The basic idea of Umeyama's method is to find the best-fit linear transformation that aligns two sets of points. The method works as follows:
@@ -66,26 +99,8 @@ Umeyama's method has several important properties, including its ability to hand
 
 In conclusion, Umeyama's method is a powerful and widely used method for aligning two sets of points in 2D or 3D space. It is widely used in computer graphics, robotics, and other fields, and has been the subject of extensive research and development.
 
-# Procrustes Analysis
-Procrustes analysis is a method for aligning two sets of points in 2D or 3D space. The method aligns two sets of points by minimizing the sum of squares between the two sets of points. Procrustes analysis is widely used in shape analysis, computer vision, and statistics, among other fields.
+## Iterative Closest Point (ICP)
 
-The basic idea of Procrustes analysis is to find the best-fit rigid transformation that aligns two sets of points. The method works as follows:
-
-Centroid Calculation: The centroid of each set of points is calculated and both sets of points are translated so that their centroids coincide. This step helps to remove the translation component of the transformation.
-
-Scaling Calculation: The scaling factor is calculated as the ratio of the sum of the squared Euclidean distances between the two sets of points and the sum of the squared Euclidean distances between the points in one set. This factor represents the optimal scaling that aligns the two sets of points.
-
-Rotation Matrix Calculation: The rotation matrix R is calculated using the method of orthogonal procrustes, which involves finding the best-fit orthogonal matrix that aligns the two sets of points.
-
-Translation Vector Calculation: The translation vector T is calculated as the difference between the centroids of the two sets of points. This vector represents the optimal translation that aligns the two sets of points.
-
-Final Transformation: The final transformation is a combination of the rotation matrix R, the scaling factor, and the translation vector T.
-
-Procrustes analysis has several important properties, including its ability to handle both rotation and scaling transformations, its efficiency, and its numerical stability. Additionally, the method is invariant to reflections, which is an important property in many applications.
-
-In conclusion, Procrustes analysis is a powerful and widely used method for aligning two sets of points in 2D or 3D space. It is widely used in shape analysis, computer vision, and statistics, among other fields, and has been the subject of extensive research and development.
-
-# Iterative Closest Point (ICP) algorithm
 The Iterative Closest Point (ICP) algorithm is a method for aligning two point clouds in 2D or 3D space. The method is widely used in computer vision, robotics, and computer graphics, among other fields. The basic idea of ICP is to iteratively find the best-fit rigid transformation that aligns the two point clouds.
 
 The ICP algorithm works as follows:
@@ -110,7 +125,7 @@ Regenerate response
 
 
 
-# Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm
+## Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm
 
 
 Kabsch, Procrustes, Umeyama, and Iterative Closest Point (ICP) algorithms are all techniques used for shape alignment or registration. They have some similarities, but also some important differences.

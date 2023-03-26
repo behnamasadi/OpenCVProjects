@@ -50,12 +50,12 @@ if we substitute them in the upper equation:
 <br/>
 <br/>
 
-we call the <img src="https://latex.codecogs.com/svg.image?\mathbf{C}^{-1}_L&space;\mathbf{E}&space;\mathbf{C}^{-1}_R" title="https://latex.codecogs.com/svg.image?\mathbf{C}^{-1}_L \mathbf{E} \mathbf{C}^{-1}_R" /> matrix **Fundamental Matrix**: 
+we call the <img src="https://latex.codecogs.com/svg.latex?%5Cmathbf%7BC%7D%5E%7B-T%7D_L%20%5Cmathbf%7BE%7D%20%5Cmathbf%7BC%7D%5E%7B-1%7D_R" title="https://latex.codecogs.com/svg.image?\mathbf{C}^{-T}_L \mathbf{E} \mathbf{C}^{-1}_R" /> matrix **Fundamental Matrix**: 
 
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.image?\mathbf{F}=\mathbf{C}^{-1}_L&space;\mathbf{E}&space;\mathbf{C}^{-1}_R" title="https://latex.codecogs.com/svg.image?\mathbf{F}=\mathbf{C}^{-1}_L \mathbf{E} \mathbf{C}^{-1}_R" />
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Cmathbf%7BF%7D%3D%5Cmathbf%7BC%7D%5E%7B-T%7D_L%20%5Cmathbf%7BE%7D%20%5Cmathbf%7BC%7D%5E%7B-1%7D_R%20%5C%5C%20%5Cmathbf%7BE%7D%3D%5Cmathbf%7BC%7D%5E%7BT%7D_L%20%5Cmathbf%7BF%7D%20%5Cmathbf%7BC%7D_R" title="https://latex.codecogs.com/svg.image?\\ \mathbf{F}=\mathbf{C}^{-T}_L \mathbf{E} \mathbf{C}^{-1}_R \\ \mathbf{E}=\mathbf{C}^{T}_L \mathbf{F} \mathbf{C}_R" />
 
 <br/>
 <br/>
