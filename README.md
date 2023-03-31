@@ -135,7 +135,7 @@ Install the conda packages:
    * [Structured Light Range Finding](src/structured_light_range_finding.cpp)  
    * [Estate Estimation with Kalman Filter](src/kalman_filter.cpp)  
    * [Drawing Frame Axes](src/drawing_drame_axes.cpp)     
-   
+   * [Writting video with choosing encoder using ffmpeg and libav](https://github.com/dataplayer12/video-writer)     
            
   
 
