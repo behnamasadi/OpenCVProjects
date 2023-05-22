@@ -56,7 +56,6 @@ Install the conda packages:
 
 
 # [Computer Vision](#)
-
    * [Edge Detection](docs/edge_detection.md)
    * [Histogram Analysis](docs/histogram_analysis.md)
    * [Pinhole Camera Model and Projection](docs/projection_camera_intrinsic.md)
@@ -133,7 +132,6 @@ Install the conda packages:
    * [Estate Estimation with Kalman Filter](src/kalman_filter.cpp)
    * [Drawing Frame Axes](src/drawing_drame_axes.cpp)
    * [Writing video with choosing encoder using ffmpeg and libav](https://github.com/dataplayer12/video-writer)
-  
 
 # [FFmpeg Commands](#)
 - [Available encoders and decoders](docs/ffmpeg.md#available-encoders-and-decoders)
@@ -151,9 +149,5 @@ Install the conda packages:
 
 # [Bundle adjustment and Structure from motion](#)
 - [Colmap](colmap/colmap.md)
-
-
-
-
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  
