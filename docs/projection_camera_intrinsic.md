@@ -125,7 +125,7 @@ R^T(X-t)
 
 
 
-Ref: [1](https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf)
+Ref: [1](https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf), [2](https://stackoverflow.com/questions/73340550/how-does-opencv-projectpoints-perform-transformations-before-projecting)
 
 <br/>
 <br/>
