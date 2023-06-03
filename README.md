@@ -101,6 +101,8 @@ Install the conda packages:
       * [Iterative Closest Point (ICP)](docs/shape_analysis.md#iterative-closest-point--icp-)
       * [Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm](docs/shape_analysis.md#difference-between-kabsch--procrustes--umeyama-and-icp-algorithm)
     *[Color Space CIE 1931](https://en.wikipedia.org/wiki/CIE_1931_color_space)  
+   * [Image registration](docs/image_registration.md)
+
 
 # [OpenCV API](#)
    * [Basic Operations](src/basic_operations.cpp)
