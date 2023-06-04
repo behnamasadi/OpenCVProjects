@@ -292,8 +292,7 @@ Example
 
 
 
-<img src="https://latex.codecogs.com/svg.latex?R_%7Btrain%7D%5E%7Bc%7D%3D%5Cbegin%7Bbmatrix%7D%200%20%26%200%20%26%201%5C%5C%200%20%26%20-1%20%26%200%5C%5C%201%20%26%200%20%26%200%20%5Cend%7Bbmatrix%7D
-"  alt="https://latex.codecogs.com/svg.latex?R_{train}^{c}=\begin{bmatrix}
+<img src="https://latex.codecogs.com/svg.latex?R_%7Btrain%7D%5E%7Bc%7D%3D%5Cbegin%7Bbmatrix%7D%200%20%26%200%20%26%201%5C%5C%200%20%26%20-1%20%26%200%5C%5C%201%20%26%200%20%26%200%20%5Cend%7Bbmatrix%7D"  alt="https://latex.codecogs.com/svg.latex?R_{train}^{c}=\begin{bmatrix}
 0 & 0 & 1\\ 
 0 & -1 & 0\\ 
 1 & 0  & 0
