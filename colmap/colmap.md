@@ -65,6 +65,33 @@ These two commands must be executed separately:
 
 Refs: [1](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation)
 
+## CUDA settings
+To see the current default version of installed CUDA:
+```
+sudo update-alternatives --display cuda
+```
+To change the default version pf CUDA:
+```
+sudo update-alternatives --config cuda
+```
+to see the version of the CUDA compiler:
+```
+ /usr/local/cuda/bin/nvcc --version
+ ```
+to set the prefered CUDA version:
+```
+to set the preferred executable for compiling CUDA language files
+```
+CUDACXX=/usr/local/cuda-12.1/bin/nvcc
+```
+export PATH="/usr/local/<cuda-version>/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/<cuda-version>/lib64:$LD_LIBRARY_PATH"
+```
+for instance:
+```
+export PATH="/usr/local/cuda-11.8/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
+```
 ## Colmap Installation
 
 Set the compilers:
