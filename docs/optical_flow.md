@@ -1,4 +1,37 @@
-# Optical Flow
+## Taylor of a function around point a:
+First lets review some math:
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?f%28x%29%3Df%28a%29&plus;f%27%28a%29%28x-a%29&plus;%5Cfrac%7B1%7D%7B2%7D%28x-a%29f%27%27%28a%29%28x-a%29&plus;%5Cfrac%7B1%7D%7B6%7Df%27%27%27%28a%29%28x-a%29%5E3&plus;..." alt="https://latex.codecogs.com/svg.latex?f(x)=f(a)+f'(a)(x-a)+\frac{1}{2}(x-a)f''(a)(x-a)+\frac{1}{6}f'''(a)(x-a)^3+..." />
+
+
+If we substitute
+
+<img src="https://latex.codecogs.com/svg.latex?x%20%3D%20a&plus;%5CDelta%20x" alt="https://latex.codecogs.com/svg.latex?x = a+\Delta x" />
+
+<br/>
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20f%28x%29%20%3D%20f%28a&plus;%5CDelta%20x%29%20%3D%20f%28a%29%20&plus;%20f%5E%7B%27%7D%28a%29%28a%20&plus;%20%5CDelta%20x-a%29%20&plus;%20%5Cfrac%7Bf%5E%7B%27%27%7D%28a%29%28a%20&plus;%20%5CDelta%20x-a%29%5E2%7D%7B2%21%7D%20&plus;%20%5Ctext%7B...%7D%20%5C%5C%20%3D%20f%28a%29%20&plus;f%5E%7B%27%7D%28a%29%5CDelta%20x&plus;%20%5Cfrac%7Bf%5E%7B%27%27%7D%28a%29%7D%7B2%21%7D%28%5CDelta%20x%29%5E2%20&plus;%20%5Ctext%7B...%7D" alt="https://latex.codecogs.com/svg.latex?\\
+f(x) = f(a+\Delta x) = f(a) + f^{'}(a)(a + \Delta x-a) + \frac{f^{''}(a)(a + \Delta x-a)^2}{2!} + \text{...}
+\\
+= f(a) +f^{'}(a)\Delta x+ \frac{f^{''}(a)}{2!}(\Delta x)^2 + \text{...}" />
+
+
+
+## Multivariable Taylor 
+
+
+<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Balign*%7D%20p_2%28x%2Cy%29%20%26%3D%20f%28a%2Cb%29%20&plus;%20D%20f%28a%2Cb%29_%7B1%5Ctimes2%7D%20%5Cleft%5B%20%5Cbegin%7Barray%7D%7Bc%7D%20x-a%20%5C%5C%20y-b%20%5Cend%7Barray%7D%20%5Cright%5D%20&plus;%20%5Cfrac%7Ba%7D%7B2%7D%20%5Cleft%5B%20%5Cbegin%7Barray%7D%7Bcc%7D%20x-a%20%26y-b%20%5Cend%7Barray%7D%20%5Cright%5D%20Hf%28a%2Cb%29_%7B2%5Ctimes2%7D%20%5Cleft%5B%20%5Cbegin%7Barray%7D%7Bc%7D%20x-a%20%5C%5C%20y-b%20%5Cend%7Barray%7D%20%5Cright%5D%20%5Cend%7Balign*%7D" alt="https://latex.codecogs.com/svg.latex?\begin{align*}   p_2(x,y) &= f(a,b) +  D f(a,b)_{1\times2}   \left[     \begin{array}{c}       x-a \\ y-b     \end{array}   \right]   + \frac{a}{2}   \left[     \begin{array}{cc}       x-a &y-b      \end{array}   \right]   Hf(a,b)_{2\times2}    \left[     \begin{array}{c}       x-a \\ y-b     \end{array}   \right]
+\end{align*}" />
+
+
+<br/>
+<br/>
+
+## Optical Flow
 
 Between two image frames which are taken at times <img src="https://latex.codecogs.com/svg.latex?t" alt="https://latex.codecogs.com/svg.latex?t" /> and  <img src="https://latex.codecogs.com/svg.latex?t&plus;%5CDelta%20t" alt="https://latex.codecogs.com/svg.latex?t+\Delta t" /> at every position following brightness constancy constraint:
 
@@ -9,6 +42,8 @@ Between two image frames which are taken at times <img src="https://latex.codeco
 Assuming the movement to be small, Taylor series of:
 
 <img src="https://latex.codecogs.com/svg.latex?I%28x&plus;%5CDelta%20x%2C%20y%20&plus;%20%5CDelta%20y%2C%20t%20&plus;%20%5CDelta%20t%29" alt="https://latex.codecogs.com/svg.latex?I(x+\Delta x, y + \Delta y, t + \Delta t)" /> 
+<br/>
+<br/>
 
 is:
 
@@ -17,6 +52,8 @@ is:
 
 <br/>
 <br/>
+
+
 
 
 <img src="https://latex.codecogs.com/svg.latex?%5Cfrac%7B%5Cpartial%20I%7D%7B%5Cpartial%20x%7D%5CDelta%20x&plus;%5Cfrac%7B%5Cpartial%20I%7D%7B%5Cpartial%20y%7D%5CDelta%20y&plus;%5Cfrac%7B%5Cpartial%20I%7D%7B%5Cpartial%20t%7D%5CDelta%20t%20%3D%200" alt="https://latex.codecogs.com/svg.latex?\frac{\partial I}{\partial x}\Delta x+\frac{\partial I}{\partial y}\Delta y+\frac{\partial I}{\partial t}\Delta t = 0" />
@@ -60,10 +97,13 @@ dividing by <img src="https://latex.codecogs.com/svg.latex?%5CDelta%20t" alt="ht
 <br/>
 <br/>
 
+## Aperture Problem
+
+This equation: 
+<img src="https://latex.codecogs.com/svg.latex?%7B%5Cdisplaystyle%20%5Cnabla%20I%5Ccdot%20%7B%5Cvec%20%7BV%7D%7D%3D-I_%7Bt%7D%7D" alt="https://latex.codecogs.com/svg.latex?{\displaystyle \nabla I\cdot {\vec {V}}=-I_{t}}" />
 
 
-This equation is known as the aperture problem of the optical flow, has two unknowns.  To find the optical flow another set of equations is needed, given by some additional constraint. All optical flow methods introduce additional conditions for estimating the actual flow.
-
+is known as the aperture problem of the optical flow, has two unknowns.  To find the optical flow another set of equations is needed, given by some additional constraint. All optical flow methods introduce additional conditions for estimating the actual flow.
 
 ## Lucas-Kanade Method
 
@@ -88,14 +128,22 @@ Lucas-Kanade method takes a `3x3` patch around the point. So all the 9 points ha
 <br/>
 
 
+to solve this problem:
 
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%7B%5Cdisplaystyle%20A%5E%7BT%7DAv%3DA%5E%7BT%7Db%7D%5C%5C%20%5C%5C%20%7B%5Cdisplaystyle%20%5Cmathrm%20%7Bv%7D%20%3D%28A%5E%7BT%7DA%29%5E%7B-1%7DA%5E%7BT%7Db%7D" alt="https://latex.codecogs.com/svg.latex?\\
+{\displaystyle A^{T}Av=A^{T}b}\\
+\\
+{\displaystyle \mathrm {v} =(A^{T}A)^{-1}A^{T}b}" />
+
+
+
+That is, it computes
 
 <img src="https://latex.codecogs.com/svg.latex?%7B%5Cdisplaystyle%20%7B%5Cbegin%7Bbmatrix%7DV_%7Bx%7D%5C%5C%5B10pt%5DV_%7By%7D%5Cend%7Bbmatrix%7D%7D%3D%7B%5Cbegin%7Bbmatrix%7D%5Csum%20_%7Bi%7DI_%7Bx%7D%28q_%7Bi%7D%29%5E%7B2%7D%26%5Csum%20_%7Bi%7DI_%7Bx%7D%28q_%7Bi%7D%29I_%7By%7D%28q_%7Bi%7D%29%5C%5C%5B10pt%5D%5Csum%20_%7Bi%7DI_%7By%7D%28q_%7Bi%7D%29I_%7Bx%7D%28q_%7Bi%7D%29%26%5Csum%20_%7Bi%7DI_%7By%7D%28q_%7Bi%7D%29%5E%7B2%7D%5Cend%7Bbmatrix%7D%7D%5E%7B-1%7D%7B%5Cbegin%7Bbmatrix%7D-%5Csum%20_%7Bi%7DI_%7Bx%7D%28q_%7Bi%7D%29I_%7Bt%7D%28q_%7Bi%7D%29%5C%5C%5B10pt%5D-%5Csum%20_%7Bi%7DI_%7By%7D%28q_%7Bi%7D%29I_%7Bt%7D%28q_%7Bi%7D%29%5Cend%7Bbmatrix%7D%7D%7D" alt="https://latex.codecogs.com/svg.latex?{\displaystyle {\begin{bmatrix}V_{x}\\[10pt]V_{y}\end{bmatrix}}={\begin{bmatrix}\sum _{i}I_{x}(q_{i})^{2}&\sum _{i}I_{x}(q_{i})I_{y}(q_{i})\\[10pt]\sum _{i}I_{y}(q_{i})I_{x}(q_{i})&\sum _{i}I_{y}(q_{i})^{2}\end{bmatrix}}^{-1}{\begin{bmatrix}-\sum _{i}I_{x}(q_{i})I_{t}(q_{i})\\[10pt]-\sum _{i}I_{y}(q_{i})I_{t}(q_{i})\end{bmatrix}}}" />
 
 <br/>
 <br/>
 
-<img src="" alt="https://latex.codecogs.com/svg.latex?" />
 
 
 

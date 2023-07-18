@@ -65,6 +65,85 @@ These two commands must be executed separately:
 
 Refs: [1](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation)
 
+## CUDA settings
+To see the current default version of installed CUDA:
+```
+sudo update-alternatives --display cuda
+```
+To change the default version pf CUDA:
+```
+sudo update-alternatives --config cuda
+```
+to see the version of the CUDA compiler:
+```
+ /usr/local/cuda/bin/nvcc --version
+ ```
+to set the prefered CUDA version:
+```
+to set the preferred executable for compiling CUDA language files
+```
+CUDACXX=/usr/local/cuda-12.1/bin/nvcc
+```
+export PATH="/usr/local/<cuda-version>/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/<cuda-version>/lib64:$LD_LIBRARY_PATH"
+```
+for instance:
+```
+export PATH="/usr/local/cuda-11.8/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
+```
+## Colmap Installation
+
+Set the compilers:
+
+```
+export CC=/usr/bin/gcc-9
+export CXX=/usr/bin/g++-9
+export CUDAHOSTCXX=/usr/bin/g++-9
+export PATH="/usr/local/cuda-11.8/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
+```
+
+Dependencies:
+ 
+```
+sudo apt-get install \
+    git \
+    cmake \
+    ninja-build \
+    build-essential \
+    libboost-program-options-dev \
+    libboost-filesystem-dev \
+    libboost-graph-dev \
+    libboost-system-dev \
+    libboost-test-dev \
+    libeigen3-dev \
+    libflann-dev \
+    libfreeimage-dev \
+    libmetis-dev \
+    libgoogle-glog-dev \
+    libgflags-dev \
+    libsqlite3-dev \
+    libglew-dev \
+    qtbase5-dev \
+    libqt5opengl5-dev \
+    libcgal-dev \
+    libceres-dev
+```
+
+Download and build colmap
+
+``` 
+git clone https://github.com/colmap/colmap
+
+cd colmap
+
+cmake -S . -B build -DCMAKE_CUDA_ARCHITECTURES=native -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CUDA_STANDARD=14  -DCMAKE_CUDA_STANDARD_REQUIRED=TRUE -DCMAKE_CXX_STANDARD_REQUIRED=TRUE -DCMAKE_INSTALL_PREFIX=~/usr
+
+cmake --build build -j6
+
+cmake --install build
+```
 
 # Running colmap
 

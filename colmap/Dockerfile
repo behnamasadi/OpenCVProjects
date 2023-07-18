@@ -17,7 +17,7 @@ RUN apt-get update && apt upgrade -y
 
 # 1) Dependencies
 RUN echo "************************ Dependencies ************************"
-RUN apt-get install -y build-essential cmake git openssh-server gdb pkg-config valgrind systemd-coredump apt-utils libeigen3-dev libsuitesparse-dev libfreeimage-dev libmetis-dev libgoogle-glog-dev libgflags-dev libglew-dev qtbase5-dev libqt5opengl5-dev libcgal-dev libatlas-base-dev libsuitesparse-dev libflann-dev libvtk7-dev libboost-all-dev libqhull-dev ffmpeg x11-apps mesa-utils pciutils
+RUN apt-get install -y build-essential cmake git openssh-server gdb pkg-config valgrind systemd-coredump apt-utils libeigen3-dev libsuitesparse-dev libfreeimage-dev libmetis-dev libgoogle-glog-dev libgflags-dev libglew-dev qtbase5-dev libqt5opengl5-dev libcgal-dev libatlas-base-dev libsuitesparse-dev libflann-dev libvtk7-dev libboost-all-dev libqhull-dev ffmpeg x11-apps mesa-utils pciutils libsqlite3-dev libboost-test-dev libboost-system-dev libboost-graph-dev libboost-filesystem-dev libboost-program-options-dev
 
 
 
