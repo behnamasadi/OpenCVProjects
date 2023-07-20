@@ -381,8 +381,57 @@ sudo apt install exif
 exif image.jpg
 ```
 
+# Setting encoder for a specific codec
+
+a codec refers to the specification of how data (audio, video, or other streams) is to be compressed and/or decompressed. An encoder, on the other hand, is the implementation that performs the actual compression according to a given codec specification.
 
 
+For many codecs, FFmpeg provides one or **more encoders** that implement those codecs. Sometimes, there's just one encoder for a codec, but for others, there might be multiple encoders, each with its own characteristics or advantages.
+
+Here's how you can find out the encoder for a specific codec in FFmpeg:
+
+1. List the codecs supported by your FFmpeg installation:
+```
+ffmpeg -codecs
+```
+2. List the encoders supported by your FFmpeg installation:
+```
+ffmpeg -encoders
+```
+
+To determine which encoder(s) correspond to a specific codec, you'll typically match the names or descriptions. However, note that the name of the encoder doesn't always precisely match the name of the codec.
+
+```
+ffmpeg -codecs | grep -i 'h.264'
+```
+will give you
+`H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (decoders: h264 h264_v4l2m2m h264_cuvid ) (encoders: libx264 libx264rgb h264_nvenc h264_omx h264_v4l2m2m h264_vaapi nvenc nvenc_h264 )`
+
+
+now the following will gve the encoders that support the `h.264` codec:
+```
+ffmpeg -encoders | grep -i 'h.264'
+```
+| encoders     | description                                                               |
+|:---------    |:-------------                                                             |
+|libx264       |       libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (codec h264)      |
+|libx264rgb    |       libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 RGB (codec h264)  |
+|h264_nvenc    |       NVIDIA NVENC H.264 encoder (codec h264)                             | 
+|h264_omx      |       OpenMAX IL H.264 video encoder (codec h264)                         | 
+|h264_v4l2m2m  |       V4L2 mem2mem H.264 encoder wrapper (codec h264)                     | 
+|h264_vaapi    |       H.264/AVC (VAAPI) (codec h264)                                      | 
+|nvenc         |       NVIDIA NVENC H.264 encoder (codec h264)                             |
+|nvenc_h264    |       NVIDIA NVENC H.264 encoder (codec h264)                             | 
+
+
+
+
+
+
+
+**Examples:**
+- H.264 Codec:
+Encoders: **libx264** (from the x264 project), **h264_nvenc** (NVIDIA's hardware-accelerated encoder), **h264_vaapi** (VAAPI-based encoder), **h264_omx** (OpenMAX IL-based encoder), etc.
 
 
 # Set the format (container) and codec for the output 
@@ -431,6 +480,7 @@ list of all formats:
 ```
 ffmpeg -formats
 ```
+
 ## x265 vs HEVC
 
 HEVC (High Efficiency Video Coding): 
