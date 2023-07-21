@@ -58,3 +58,5 @@ cv.imshow("Original Image", image)
 cv.imshow("equalized histogram  Image", equalizeHist_image)
 cv.waitKey(0)
 cv.destroyAllWindows()
+
+# https://docs.opencv.org/3.4/d1/db7/tutorial_py_histogram_begins.html

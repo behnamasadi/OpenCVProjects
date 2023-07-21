@@ -1,4 +1,2 @@
-//https://github.com/letmaik/pyvirtualcam
-//https://github.com/kaustubh-sadekar/OmniCV-Lib
-
-
+# https://github.com/letmaik/pyvirtualcam
+# https://github.com/kaustubh-sadekar/OmniCV-Lib

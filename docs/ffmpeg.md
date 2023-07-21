@@ -305,6 +305,12 @@ fps filter is used here to say that we need 1 frame every 5 seconds
 ```
 ffmpeg -i colmap.mp4 -vf "fps=1/5" out%d.jpg
 ```
+### extractplanes
+
+
+```
+ffmpeg -i xing.mp4 -vf "extractplanes=y" -c:v rawvideo -f nut -| ffplay -
+```
 
 
 # ffprobe
