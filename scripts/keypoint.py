@@ -1,20 +1,20 @@
 import numpy as np
-import cv2 as cv
+import cv2
 from matplotlib import pyplot as plt
 
 
 img_path = "/home/behnam/workspace/OpenCVProjects/images/opticalflow/bt_0.png"
-img = cv.imread(img_path)
+img = cv2.imread(img_path)
 
 
 ############################ ORB ############################
-detector = cv.ORB_create()
+detector = cv2.ORB_create()
 img_pts = detector.detect(img, None)
 img_pts, img_descriptor = detector.compute(img, img_pts)
 
 
 # draw only keypoints location,not size and orientation
-prevImg_marked = cv.drawKeypoints(
+prevImg_marked = cv2.drawKeypoints(
     img, img_pts, None, color=(0, 255, 0), flags=0)
 
 plt.imshow(prevImg_marked), plt.show()
@@ -32,27 +32,42 @@ for i in img_pts:
 
 ############################ FastFeatureDetector ############################
 
-img = cv.imread(img_path)
-detector = cv.FastFeatureDetector_create(threshold=25, nonmaxSuppression=True)
+img = cv2.imread(img_path)
+# detector = cv2.FastFeatureDetector_create(threshold=25, nonmaxSuppression=True)
+detector = cv2.ORB_create()
 
-img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 img_pts = detector.detect(img, None)
 
 
-img_marked = cv.drawKeypoints(
-    img, img_pts, None, color=(0, 0, 255), flags=0)
+# cv2.DRAW_MATCHES_FLAGS_DEFAULT,
+# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS,
+# cv2.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG,
+# cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS
+
+
+img_marked = cv2.drawKeypoints(
+    img, img_pts, None, color=(0, 0, 255), flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 plt.imshow(img_marked), plt.show()
 
 
 ############################ convert vector of keypoints to vector of points  ############################
 
+point = img_pts[0]
+
+x = point.pt[0]
+y = point.pt[1]
+(x, y) = point.pt
+
+
 # This method converts vector of keypoints to vector of points -> Array of (x,y) coordinates of each keypoint
 
 
-pts = cv2.KeyPoint_convert(kp)
+pts = cv2.KeyPoint_convert(img_pts)
+print(pts)
 
-pts = np.float([key_point.pt for key_point in kp]).reshape(-1, 1, 2)
+pts = np.float64([key_point.pt for key_point in img_pts]).reshape(-1, 1, 2)
 
 
 ############################ goodFeaturesToTrack ############################
@@ -65,8 +80,8 @@ feature_params = dict(maxCorners=100,
                       minDistance=7,
                       blockSize=7)
 
-keypoints = cv.goodFeaturesToTrack(img_gray, mask=None,
-                                   **feature_params)
+keypoints = cv2.goodFeaturesToTrack(img_gray, mask=None,
+                                    **feature_params)
 
 print(type(keypoints))
 for i in keypoints:

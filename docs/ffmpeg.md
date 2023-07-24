@@ -133,8 +133,10 @@ When to use which:
 If you're dealing with a single stream (like just video or just audio) and applying simple filters, -vf or -af is likely sufficient.
 If you're working with multiple streams, chaining filters, or combining/separating different inputs and outputs, filter_complex is the way to go.
 
-## 2.7 Setting Number of threads
-set number of threads:
+## 2.7 Setting Number of Threads
+
+Set number of threads:
+
 ```
 -threads <N>
 ```
@@ -158,7 +160,7 @@ format=gray
 ```
 changing scale:
 
-### split
+### 2.8.2 split
 
 split filter can be used to route a single input to multiple outputs. This is useful when you want to apply different filters to the same input without decoding it multiple times.
 basic explanation of how the split filter works:
@@ -178,7 +180,7 @@ ffmpeg -i Big_Buck_Bunny_1080_10s_2MB.mp4 -filter_complex "split=2[v1][v2];[v1]v
 - split=2[v1][v2]: This splits the input video stream into two identical outputs, [v1] and [v2].
 
 
-### scale
+### 2.8.3 scale
 
 ```
 scale=w:h
@@ -188,7 +190,7 @@ Note: The scale filter can also automatically calculate a dimension while preser
 ffmpeg -i input.mp4 -vf scale=192:-1 out%d.jpg
 ```
 
-### select
+###  2.8.4 select
 
 #### Selecting Key Frames
 For instance to select key frames (I-frames):
@@ -247,11 +249,13 @@ ffmpeg -i input_video.mp4 -vf "select='not(mod(n\,10))'"  -vsync vfr -frame_pts 
 ```
 
 
-### histeq
+###  2.8.5 histeq
 
-### nlmeans
+###  2.8.6 nlmeans
 
-### median
+Refs: [1](https://www.dirk-farin.net/projects/nlmeans/index.html)
+
+###  2.8.7 median
 
 ```
 median=radius=5
@@ -271,18 +275,18 @@ ffmpeg -i Big_Buck_Bunny_1080_10s_2MB.mp4 -filter_complex "split=2[v1][v2];[v1]m
 
 
 
-### blurdetect
+###  2.8.8 blurdetect
 
-### hqdn3d
+###  2.8.9 hqdn3d
 
-### smooth
+###  2.8.10 smooth
 
-### convolution
+###  2.8.11 convolution
 ```
 convolution='0 -1 0 -1 5 -1 0 -1 0:0 -1 0 -1 5 -1 0 -1 0:0 -1 0 -1 5 -1 0 -1 0:0 -1 0 -1 5 -1 0 -1 0'
 ```
 
-### transpose
+###  2.8.12 transpose
 The following will rotate the video
 ```
 ffmpeg -i input.mp4 -vf "transpose=2,transpose=2" output.mp4
@@ -300,20 +304,22 @@ If you don't want to re-encode your video AND your player can handle rotation me
 ffmpeg -i input.mp4 -map_metadata 0 -metadata:s:v rotate="180" -codec copy output.mp4
 ```
 
-### fps
+###  2.8.13 fps
 fps filter is used here to say that we need 1 frame every 5 seconds
 ```
 ffmpeg -i colmap.mp4 -vf "fps=1/5" out%d.jpg
 ```
-### extractplanes
+###  2.8.14 extractplanes
 
 
 ```
 ffmpeg -i xing.mp4 -vf "extractplanes=y" -c:v rawvideo -f nut -| ffplay -
 ```
 
+###  2.8.15 lavfi
 
-# ffprobe
+ 
+# 3. ffprobe
 ffprobe report:
 
 ```
@@ -351,7 +357,7 @@ ffprobe -show_streams  Big_Buck_Bunny_1080_10s_2MB.mp4
 
 
 
-# ffmpeg metadata
+# 4. ffmpeg metadata
 Extract metadata:
 
 ```
@@ -360,7 +366,7 @@ exiftool Big_Buck_Bunny_1080_10s_2MB.mp4 >metadata.txt
 ```
 
 
-## Using ffmpeg to copy metadata
+## 4.1. Using ffmpeg to copy metadata
 
 
 ffmpeg, by default, makes all metadata from the first input file available, to the output file muxer, for writing. -map_metadata allows to override that, by either pointing to a different input, or by telling ffmpeg to discard input global metadata (value of -1).
@@ -381,13 +387,13 @@ The `-metadata` option is for manipulating the metadata. If you just want to cop
 ```	
 ffmpeg -i input.mp4 -map_metadata 0 -c copy output.mp4
 ```
-## Image metadata exif
+## 4.2. Image metadata exif
 ```
 sudo apt install exif
 exif image.jpg
 ```
 
-# Setting encoder for a specific codec
+# 5. Setting encoder for a specific codec
 
 a codec refers to the specification of how data (audio, video, or other streams) is to be compressed and/or decompressed. An encoder, on the other hand, is the implementation that performs the actual compression according to a given codec specification.
 
@@ -440,7 +446,7 @@ ffmpeg -encoders | grep -i 'h.264'
 Encoders: **libx264** (from the x264 project), **h264_nvenc** (NVIDIA's hardware-accelerated encoder), **h264_vaapi** (VAAPI-based encoder), **h264_omx** (OpenMAX IL-based encoder), etc.
 
 
-# Set the format (container) and codec for the output 
+# 6. Set the format (container) and codec for the output 
 
 When converting audio and video files with ffmpeg, you do not have to specify the input and output formats. The input file format is auto-detected, and the output format is guessed from the file extension.
 
@@ -487,7 +493,7 @@ list of all formats:
 ffmpeg -formats
 ```
 
-## x265 vs HEVC
+## 6.1 x265 vs HEVC
 
 HEVC (High Efficiency Video Coding): 
 
@@ -512,7 +518,7 @@ ffmpeg -i input.mp4 -c:v libx265 -crf 28 output.mp4
 
 Here, `-c:v libx265` tells FFmpeg to use the x265 library to encode the video stream in the HEVC format. The `-crf` option adjusts the quality, with lower values providing higher quality (and larger file sizes) and higher values providing lower quality (and smaller file sizes).
 
-## codec copy
+## 6.2 codec copy
 
 the `-codec copy` or its equivalents (-c copy, -c:v copy, -c:a copy, etc.)  option tells FFmpeg to copy the input streams (audio, video, and possibly other streams like subtitles) directly to the output without re-encoding them. It is a way to change the container format without altering the actual content of the streams. This operation is often referred to as "remuxing" or "stream copying."
 
@@ -569,7 +575,7 @@ Filtering requires the input video to be fully decoded into raw video, then the 
 ```
 
 
-# map
+# 7. map
 
 In FFmpeg, the -map option is used to specify which streams from the input files should be included in the output file.
 
@@ -631,7 +637,7 @@ This command will generate a PNG image (filtergraph.png) that represents the fil
 Please note that graph2dot is a utility provided with FFmpeg's source code and might not be installed by default when you install FFmpeg using some package managers. You might need to obtain it from FFmpeg's source and possibly make it executable.
 
 
-# Determining Pixel Format
+# 8. Determining Pixel Format
 
 ```
 ffprobe -v error  -show_entries stream=pix_fmt  input_video.mp4
