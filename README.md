@@ -57,6 +57,7 @@ Install the conda packages:
 
 # [Computer Vision](#)
    * [Edge Detection](docs/edge_detection.md)
+   * [Image Filtering Convolution](docs/image_filtering_convolution.md)
    * [Histogram Analysis](docs/histogram_analysis.md)
    * [Keypoints Detector and Descriptor](docs/keypoints_detector_and_descriptor.md)
    * [Pinhole Camera Model and Projection](docs/projection_camera_intrinsic.md)
@@ -73,6 +74,7 @@ Install the conda packages:
    * [Extraction of Camera Motion](docs/extraction_of_camera_motion.md)
    * [Fundamental Matrix](docs/fundamental_matrix.md)
    * [Image Rectification](docs/image_rectification.md)
+   * [Image Registration](docs/image_registration.md)
    * [Correspondence Problem](docs/correspondence_problem.md)
    * [Stereo Vision](docs/stereo_vision.md)
    * [Photogrammetry](docs/photogrammetry.md)
@@ -80,7 +82,7 @@ Install the conda packages:
    * [Parallax](docs/parallax.md)
    * [Optical Flow](docs/optical_flow.md)
    * [Visual Odometry](docs/visual_odometry.md)
-   * [Ego Motion](docs/ego-motion.md)
+   * [Ego Motion](docs/ego_motion.md)
    * [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)
    * [Laser Triangulation](docs/laser_triangulation.md)
    * [Estate Estimation with Kalman Filter](docs/kalman_filter.md)
@@ -101,8 +103,15 @@ Install the conda packages:
       * [Umeyama Algorithm](docs/shape_analysis.md#umeyama-algorithm)
       * [Iterative Closest Point (ICP)](docs/shape_analysis.md#iterative-closest-point--icp-)
       * [Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm](docs/shape_analysis.md#difference-between-kabsch--procrustes--umeyama-and-icp-algorithm)
-    *[Color Space CIE 1931](https://en.wikipedia.org/wiki/CIE_1931_color_space)  
-   * [Image registration](docs/image_registration.md)
+   * [Color Space](docs/color_spaces.md)  
+   * [Color Calibration](docs/color_calibration.md)
+   * [Dynamic Range](docs/dynamic_range.md)  
+   * [White Balance](docs/ehite balance.md)  
+   * [Signal To Noise Ratio](docs/signal_to_noise_ratio.md)  
+   
+   
+   
+
 
 
 # [OpenCV API](#)
@@ -186,5 +195,6 @@ Install the conda packages:
 
 # [Bundle adjustment and Structure from motion](#)
 - [Colmap](colmap/colmap.md)
+- [instant-ngp](docs/instant_ngp.md)
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  

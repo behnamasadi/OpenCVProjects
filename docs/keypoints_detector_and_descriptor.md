@@ -140,7 +140,6 @@ detector = cv.FastFeatureDetector_create(threshold=25, nonmaxSuppression=True)
 img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 img_pts = detector.detect(img, None)
 
-
 img_marked = cv.drawKeypoints(
     img, img_pts, None, color=(0, 0, 255), flags=0)
 
@@ -155,10 +154,8 @@ In the drawKeypoints function, using the flag DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPO
 prevImg_marked = cv.drawKeypoints(
     img, img_pts, None, color=(0, 255, 0), flags=0)
 
-plt.imshow(prevImg_marked), plt.show()
-
-
-
+plt.imshow(prevImg_marked)
+plt.show()
 ```
 
 
@@ -193,8 +190,21 @@ once keypoints are detected and described, we must match these keypoints between
 The brute-force matcher compares each descriptor in one image with every descriptor in the other image, computing a distance measure to determine the closest match.
 
 ## 5.1.1 Distance Types
-- `L2 Norm`: Euclidean distance, used mainly for floating-point descriptors like SIFT and SURF.
-- `Hamming Distance`: Used for binary string-based descriptors like `ORB, BRIEF, and BRISK`. It counts the number of differing bits between two binary strings.
+- `L2 Norm` : `cv.NORM_L2` Euclidean distance, used mainly for floating-point descriptors like SIFT and SURF.
+By default, it is `cv.NORM_L2`. It is good for SIFT, SURF etc (`cv.NORM_L1 is` also there). 
+
+```
+bf = cv2.BFMatcher(cv2.cv.NORM_L2, crossCheck=True)
+```
+
+
+- `Hamming Distance`: `cv.NORM_HAMMING` Used for binary string-based descriptors like `ORB, BRIEF, and BRISK`. It counts the number of differing bits between two binary strings. If ORB is using `WTA_K == 3` or `4`, which takes 3 or 4 points to produce BRIEF descriptor, `cv.NORM_HAMMING2` should be used.
+
+
+```
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+```
+
 - `Cross Check`: An option in the BFMatcher that ensures mutual matching. For two keypoints to be considered a match, the keypoint in the first image must match the keypoint in the second image, and vice-versa.
 
 ## 5.2. FlannBasedMatcher (Fast Library for Approximate Nearest Neighbors)

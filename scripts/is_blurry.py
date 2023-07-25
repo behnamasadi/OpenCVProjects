@@ -1,27 +1,77 @@
 import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 
 
-def is_blurry(image_path, threshold=300):
+def is_blurry(image, threshold=300):
     """
     Determine if the image is blurry based on the variance of the Laplacian.
-
-    Parameters:
-    - image_path (str): Path to the image.
-    - threshold (float): Variance threshold below which the image is considered blurry.
-
-    Returns:
-    - bool: True if the image is blurry, False otherwise.
     """
-    image = cv2.imread(
-        image_path, cv2.IMREAD_GRAYSCALE)  # Read image in grayscale
-    laplacian_var = cv2.Laplacian(image, cv2.CV_64F).var()
-    print(laplacian_var)
-    return laplacian_var < threshold
+
+    laplacian = cv2.Laplacian(image, cv2.CV_64F)
+
+    print(laplacian)
+    # Compute the variance
+    laplacian_variance = np.var(laplacian)
+
+    print(laplacian_variance)
+    return laplacian_variance < threshold
 
 
-image_path = '/home/behnam/Pictures/colmap_projects/GroupeE_Maigrauge/images/9395.0.png'
-if is_blurry(image_path):
+project_root = "/home/behnam/workspace/OpenCVProjects/"
+
+image_path = '/images/lena.jpg'
+
+# Read image in grayscale
+image = cv2.imread(project_root+image_path, cv2.IMREAD_GRAYSCALE)
+
+assert image is not None, "check image path"
+
+
+image_gaussian_blur = cv2.GaussianBlur(image, (5, 5), 0)
+image_median = cv2.medianBlur(image, 5)
+image_bilateral_filter = cv2.bilateralFilter(image, 9, 75, 75)
+
+mean = np.ones((5, 5), np.float32)/25
+image_mean = cv2.filter2D(image, -1, mean)
+
+
+plt.subplot(321), plt.imshow(image), plt.title('Original')
+plt.xticks([]), plt.yticks([])
+
+
+plt.subplot(322), plt.imshow(image_mean), plt.title('mean')
+plt.xticks([]), plt.yticks([])
+
+
+plt.subplot(323), plt.imshow(image_median), plt.title('image_median')
+plt.xticks([]), plt.yticks([])
+
+
+plt.subplot(324), plt.imshow(
+    image_bilateral_filter), plt.title('image_bilateral_filter')
+plt.xticks([]), plt.yticks([])
+
+
+plt.subplot(325), plt.imshow(
+    image_gaussian_blur), plt.title('image_gaussian_blur')
+plt.xticks([]), plt.yticks([])
+
+
+plt.show()
+
+if is_blurry(image):
+    print("The image is blurry.")
+else:
+    print("The image is not blurry.")
+
+
+if is_blurry(image_mean):
+    print("The image is blurry.")
+else:
+    print("The image is not blurry.")
+
+if is_blurry(image_gaussian_blur):
     print("The image is blurry.")
 else:
     print("The image is not blurry.")
