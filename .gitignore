@@ -1,6 +1,9 @@
 build/*
+data/kitti/05/image_0/*
+data/kitti/05/image_1/*
+*/__pycache__/*
+.vscode/*
 *.user
 *.kdev4
 *.autosave
 src/sandbox.cpp
-.vscode/*

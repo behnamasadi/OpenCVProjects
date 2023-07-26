@@ -1,35 +1,36 @@
-import cv2
-import datetime
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import pandas as pd
+# Dataset
+
+1. `ground truth poses` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_poses.zip)
+2. `left images`, `right images` and `time stamp` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_gray.zip)
+3. `cameras calibration file` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_calib.zip)
 
 
-import numpy as np
-import matplotlib.pyplot as plt
-from pytransform3d import rotations as pr
-from pytransform3d import transformations as pt
-from pytransform3d.transform_manager import TransformManager
+```python
+ground_truth_poses = base_path+'data/kitti/poses/05.txt'
+left_images_path = base_path + 'data/kitti/05/image_0'
+time_stamp_path = base_path + 'data/kitti/05/times.txt'
+cameras_file_path = base_path + 'data/kitti/05/calib.txt'
+```
 
 
-# http://www.cvlibs.net/download.php?file=data_odometry_poses.zip
-ground_truth_poses = '/home/behnam/Downloads/data_odometry_gray/data_odometry_poses/dataset/poses/00.txt'
 
-# http://www.cvlibs.net/download.php?file=data_odometry_gray.zip
-left_images_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/image_0'
-time_stamp_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/times.txt'
+# Ground Truth Poses
+each row of the data has 12 column, 12 comes from flattening a `3x4` transformation matrix of the left:
 
+```
+r11 r12 r13 tx r21 r22 r23 ty r31 r32 r33 tz
+```
 
-# http://www.cvlibs.net/download.php?file=data_odometry_calib.zip
-cameras_file_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/calib.txt'
+```
+poses = pd.read_csv( ground_truth_poses, delimiter=' ', header=None)
+first_pose = np.array(poses.iloc[0]).reshape((3, 4)).round(2)
+print(first_pose)
+```
+    
 
-
-######################### Ground Truth Poses #########################
-# r11 r12 r13 tx r21 r22 r23 ty r31 r32 r33 tz
-# 12 comes from flattening a 3x4 transformation matrix of the left
 # stereo camera with respect to the global coordinate frame.
-# Ref: https://stackoverflow.com/questions/60639665/visual-odometry-kitti-dataset
+
+Refs: [1](https://stackoverflow.com/questions/60639665/visual-odometry-kitti-dataset)
 
 poses = pd.read_csv(
     ground_truth_poses, delimiter=' ', header=None)
@@ -234,3 +235,4 @@ for i, img_name in enumerate(left_image_files):
 
     cv2.imshow('trajectory', traj)
     k = cv2.waitKey(1)
+

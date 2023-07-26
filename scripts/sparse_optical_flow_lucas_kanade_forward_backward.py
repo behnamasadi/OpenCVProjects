@@ -17,11 +17,28 @@ class App:
         self.detect_interval = 1
         self.tracks = []
         self.cam = cv2.VideoCapture(video_src)
+
+        self.cam.set(cv2.CAP_PROP_FOURCC,
+                     cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+
+        self.width = 1920
+        self.height = 1080
+
+        self.width = 320
+        self.height = 240
+
+        self.width = 320*2
+        self.height = 240*2
+
+        # self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        # self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+
         self.frame_idx = 0
 
     def run(self):
         while True:
             ret, frame = self.cam.read()
+            frame = cv2.resize(frame, (self.width, self.height))
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             vis = frame.copy()
 
