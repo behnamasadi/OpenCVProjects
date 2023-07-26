@@ -144,138 +144,103 @@ That is, it computes
 <br/>
 <br/>
 
+# OpenCV OpticalFlow API
+
+## SparseOpticalFlow 
+Abstract base class for calculating sparse optical-flow.
+
+## SparsePyrLKOpticalFlow
+
+`buildOpticalFlowPyramid`: Constructs the image pyramid which can be passed to `calcOpticalFlowPyrLK`
+
+<img src="images/Pyramid_Level_0.png" />
+<br/>  
+<img src="images/Pyramid_Level_1.png" />  
+<br/>  
+<img src="images/Pyramid_Level_2.png" />  
+<br/>  
+<img src="images/Pyramid_Level_3.png" />  
+
 
 ```
-# params for corner detection
-feature_params = dict(maxCorners=100,
-                      qualityLevel=0.3,
-                      minDistance=7,
-                      blockSize=7)
-
-
-p0 = cv.goodFeaturesToTrack(prevImg_gray, mask=None,
-                            **feature_params)
-
-p1 = cv.goodFeaturesToTrack(nextImg_gray, mask=None,
-                            **feature_params)
-
-
-lk_params = dict(winSize=(21, 21), criteria=(
-    cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 30, 0.01)),
-
-opticalFlowNextPts, status, err = cv.calcOpticalFlowPyrLK(prevImg_gray, nextImg_gray, p0, p1)
-
-detector = cv.ORB_create()
-
-prevPts = detector.detect(prevImg_gray, None)
-nextPts = detector.detect(nextImg_gray, None)
-
-
-good_new = opticalFlowNextPts[status == 1]
-# good_old = prevPts[status == 1]
-
-
-prevPts2f = cv.KeyPoint.convert(prevPts)
-nextPts2f = cv.KeyPoint.convert(nextPts)
-
-
-print("prevPts2f:", type(prevPts2f))
-print("nextPts2f:", type(nextPts2f))
-
-
-# OPTFLOW_USE_INITIAL_FLOW uses initial estimations, stored in nextPts; if the flag is not set, then prevPts is copied to nextPts and is considered the initial estimate.
-opticalFlowNextPts, status, err = cv.calcOpticalFlowPyrLK(
-    prevImg_gray, nextImg_gray, prevPts2f, nextPts2f, cv.OPTFLOW_USE_INITIAL_FLOW)
-
-
-print("opticalFlowNextPts:", type(opticalFlowNextPts))
-
-
-opticalFlowNextPts = opticalFlowNextPts.reshape(-1, 1, 2)
-print("opticalFlowNextPts:", opticalFlowNextPts.shape)
-
-# # print(err)
-
-
-# # print(len(nextPts))
-
-
-# print("len(status):", len(status))
-# print("status:", status)
-
-# # print(len(prevPts))
-
-# print(len(opticalFlowNextPts))
-
-
-# foo = cv.KeyPoint_convert(opticalFlowNextPts)
-
-# print("foo:", foo)
-
-
-good_new = opticalFlowNextPts[status == 1]
-
-prevPts2f = prevPts2f.reshape(-1, 1, 2)
-
-print("prevPts2f.shape:", prevPts2f.shape)
-
-
-good_old = prevPts2f[status == 1]
-
-
-# Create some random colors
-color = np.random.randint(0, 255, (1000, 3))
-
-# Create a mask image for drawing purposes
-mask = np.zeros_like(prevImg_gray)
-# draw the tracks
-for i, (new, old) in enumerate(zip(good_new, good_old)):
-    a, b = new.ravel()
-    c, d = old.ravel()
-
-    print(a, b, c, d)
-    mask = cv.line(mask, (int(a), int(b)),
-                   (int(c), int(d)), color[i].tolist(), 2)
-    nextImg_gray = cv.circle(
-        nextImg_gray, (int(a), int(b)), 5, color[i].tolist(), -1)
-img = cv.add(nextImg_gray, mask)
-
-cv.imshow('frame', img)
-k = cv.waitKey(0) & 0xff
-
-
-# # # pts = cv2.KeyPoint_convert(kp)
-# # # import numpy as np
-
-# # # pts = np.float([key_point.pt for key_point in kp]).reshape(-1, 1, 2)
-# # # p1, st, err = cv.calcOpticalFlowPyrLK(prevImg, nextImg, p0, None, **lk_params)
-
-
-# # # prevPts, prevDes = detector.compute(prevImg, prevPts)
-# # # nextPts, nextDes = detector.compute(prevImg, prevPts)
-
-
-# # # # draw only keypoints location,not size and orientation
-# # # prevImg_marked = cv.drawKeypoints(
-# # #     prevImg, prevPts, None, color=(0, 255, 0), flags=0)
-
-# # # # plt.imshow(prevImg_marked), plt.show()
-
-
-# # nextImg_marked = cv.drawKeypoints(
-# #     nextImg, nextPts, None, color=(0, 255, 0), flags=0)
-
-# # # plt.imshow(nextImg_marked), plt.show()
-
-
-# # # detector=cv2.FastFeatureDetector_create(threshold=25, nonmaxSuppression=True)):
-
+ret, pyramid = cv2.buildOpticalFlowPyramid(
+    img, winSize, maxLevel, withDerivatives=False, pyrBorder=cv2.BORDER_REFLECT)
 ```
 
+`withDerivatives`:set to precompute gradients for the every pyramid level. If pyramid is constructed without the gradients then calcOpticalFlowPyrLK will calculate them internally.
 
 
 
 
 
+The class can calculate an optical flow for a sparse feature set using the iterative Lucas-Kanade method with pyramids.
 
 
+- `nextPts`: output vector of 2D points (floating-point coordinates) containing the calculated new positions of input features in the second image;
+when OPTFLOW_USE_INITIAL_FLOW flag is passed, the vector must have the same size as in the input.
+
+
+- `status`: output status vector (of unsigned chars); each element of the vector is set to 1
+if the flow for the corresponding features has been found, otherwise, it is set to 0.
+
+
+- `err`: output vector of errors; each element of the vector is set to an error for the corresponding feature,
+type of the error measure can be set in flags parameter; if the flow wasn't found then the error is not defined (use the status parameter to find such cases).
+
+- `maxLevel`: 0-based maximal pyramid level number; if set to 0, pyramids are not used (single level), if set to 1, two levels are used, and so on;
+if pyramids are passed to input then algorithm will use as many levels as pyramids have but no more than maxLevel.
+
+
+Refs: [1](https://github.com/npinto/opencv/blob/master/samples/python2/lk_track.py), [2](https://github.com/npinto/opencv/blob/master/samples/python2/lk_homography.py)
+
+## DenseOpticalFlow
+Abstract base class for calculating dense optical-flow.
+
+### FarnebackOpticalFlow 
+Farnebäck Optical Flow (`cv2.FarnebackOpticalFlow_create()`):
+
+Algorithm developed by Gunnar Farnebäck.
+Based on polynomial expansion to approximate neighboring pixel displacements.
+Typically faster than more recent methods, but may not be as accurate for complex scenes or large displacements.
+Good compromise between accuracy and speed for real-time applications.
+
+### DualTVL1OpticalFlow
+
+Dual TV L1 Optical Flow (`cv2.DualTVL1OpticalFlow_create()`):
+
+Based on the Total Variation (TV) regularization, which tends to produce cleaner flow fields.
+Often provides smoother and more coherent flow than Farnebäck, but at the cost of computational efficiency.
+Can handle larger displacements than Farnebäck.
+Has several parameters that can be tweaked, which may require tuning for specific applications.
+
+### DenseOpticalFlow
+DeepFlow (`cv2.optflow.createOptFlow_DeepFlow()`):
+
+Uses smoothness assumptions as in classical methods but also takes advantage of descriptor matching, which can be seen as a regularized, dense version of sparse matching techniques.
+Generally provides high-quality results but can be slower.
+
+### SimpleFlow
+SimpleFlow (`cv2.optflow.createOptFlow_SimpleFlow()`):
+
+Designed to be a more straightforward, non-regularized version of the DeepFlow algorithm.
+It might be faster than DeepFlow but could provide less accurate results due to the absence of regularization.
+
+### PCA-Flow, PCA-Layers, and SPARSE-PCA
+
+PCA-Flow, PCA-Layers, and SPARSE-PCA (`cv2.optflow.createOptFlow_PCAFlow()` and related methods):
+
+Uses principal component analysis to compute optical flow.
+Tends to be experimental and might be better suited for specific scenes or scenarios.
+
+### DIS Optical Flow
+DIS Optical Flow (`cv2.optflow.createOptFlow_DIS()`):
+
+Stands for Dense Inverse Search.
+Designed to be faster and more efficient, especially with parallel processing capabilities.
+Provides competitive accuracy with other state-of-the-art methods but with faster performance.
+
+
+
+Each of these algorithms has its strengths and weaknesses, and the choice depends on the application's specific requirements, such as computational efficiency, accuracy, and the nature of the video sequences.
+
+For a comparative analysis tailored to a particular scenario or application, one would typically evaluate each method on sample data to measure factors like accuracy, computational time, robustness to noise, and visual quality of the flow fields.

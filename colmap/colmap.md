@@ -239,6 +239,10 @@ colmap sequential_matcher \
 
 Refs: [1](https://colmap.github.io/tutorial.html#feature-matching-and-geometric-verification)
 
+### Hierarchical Mapper
+`hierarchical_mapper`: Sparse 3D reconstruction / mapping of the dataset using hierarchical SfM after performing feature extraction and matching. This parallelizes the reconstruction process by partitioning the scene into overlapping submodels and then reconstructing each submodel independently. Finally, the overlapping submodels are merged into a single reconstruction. It is recommended to run a few rounds of point triangulation and bundle adjustment after this step.
+
+
 ## Sparse 3D Reconstruction
 
 Then run the mapper:
@@ -496,3 +500,9 @@ By leveraging the Manhattan world assumption, computer vision algorithms can eff
 
 Refs: [1](https://colmap.github.io/faq.html#manhattan-world-alignment), [2](https://github.com/colmap/colmap/issues/1743), [3](https://grail.cs.washington.edu/projects/manhattan/manhattan.pdf)
 
+
+## Multiple View Triangulation
+
+`feature_importer` and `matches_importer`
+
+Refs: [1](https://robotics.stackexchange.com/questions/16132/multiple-view-triangulation-method-used-by-colmap), [2](https://github.com/colmap/colmap/issues/688)
