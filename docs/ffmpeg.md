@@ -692,14 +692,16 @@ There are other formats like yuv420sp, where "sp" stands for "semi-planar." In s
 Understanding the difference between planar and other formats is essential when working at a low level with video data, like in video decoders or specific image processing tasks.
 In general, if you're working with tools like FFmpeg and you see yuv420p, it's referring to the 4:2:0 chroma subsampling with the data stored in a planar format. If you just see yuv420, it's often safe to assume it means the same thing unless the context suggests otherwise.
 
-
-
-
-
-
-
 Refs: [1](https://linuxize.com/post/how-to-install-ffmpeg-on-ubuntu-20-04/), [2](https://ffmpeg.org/ffmpeg-filters.html#scdet-1)
 
+
+# 9. Create Video From Images
+You can use `-pattern_type glob`:
+
+```
+ffmpeg -framerate 30 -pattern_type glob -i '*.png' -c:v libx264 -pix_fmt yuv420p out.mp4
+```
+Refs: [1](https://stackoverflow.com/questions/24961127/how-to-create-a-video-from-images-with-ffmpeg)
 
 
 

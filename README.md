@@ -83,6 +83,7 @@ Install the conda packages:
    * [Parallax](docs/parallax.md)
    * [Optical Flow](docs/optical_flow.md)
    * [Visual Odometry](docs/visual_odometry.md)
+   * [KITTI Visual Odometry](docs/kitti_visual_odometry.md)     
    * [Ego Motion](docs/ego_motion.md)
    * [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)
    * [Laser Triangulation](docs/laser_triangulation.md)
@@ -109,10 +110,6 @@ Install the conda packages:
    * [Dynamic Range](docs/dynamic_range.md)  
    * [White Balance](docs/white_balance.md)  
    * [Signal To Noise Ratio](docs/signal_to_noise_ratio.md)  
-   
-   
-   
-
 
 
 # [OpenCV API](#)
@@ -173,7 +170,7 @@ Install the conda packages:
    * [Virtual Camera](scripts/virtual_camera.py)
 
 # [Bundle adjustment and Structure from motion](#)
-- [Colmap](colmap/colmap.md)
+- [Colmap](docs/colmap.md)
 - [instant-ngp](docs/instant_ngp.md)
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  

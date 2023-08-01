@@ -328,6 +328,47 @@ Refs: [1](https://github.com/jamesbrink/docker-opengl)
 
 ## Reconstruct Sparse/Dense Model From Known Camera Poses
 
+```
+├── cameras.txt
+├── images
+│   ├── 00000.png
+│   ├── 00001.png
+│   ├── 00002.png
+│   └── 00003.png
+├── images.txt
+└── points3D.txt
+```
+
+`cameras.txt`:
+
+```
+# Camera list with one line of data per camera:
+#   CAMERA_ID, MODEL, WIDTH, HEIGHT, PARAMS[]
+# Number of cameras: 3
+1 SIMPLE_PINHOLE 3072 2304 2559.81 1536 1152
+2 PINHOLE 3072 2304 2560.56 2560.56 1536 1152
+3 SIMPLE_RADIAL 3072 2304 2559.69 1536 1152 -0.0218531
+```
+
+`images.txt`:
+
+```
+# Image list with two lines of data per image:
+#   IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME
+#   POINTS2D[] as (X, Y, POINT3D_ID)
+# Number of images: 2, mean observations per image: 2
+1 0.695104 0.718385 -0.024566 0.012285 -0.046895 0.005253 -0.199664 1 00000.png
+
+2 0.696445 0.717090 -0.023185 0.014441 -0.041213 0.001928 -0.134851 1 00001.png
+
+3 0.697457 0.715925 -0.025383 0.018967 -0.054056 0.008579 -0.378221 1 00002.png
+
+4 0.698777 0.714625 -0.023996 0.021129 -0.048184 0.004529 -0.313427 1 00003.png
+```
+
+`points3D.txt`: This file should be empty.
+
+
 Refs: [1](https://colmap.github.io/faq.html#reconstruct-sparse-dense-model-from-known-camera-poses)
 
 ## Merge Disconnected Models
@@ -506,3 +547,21 @@ Refs: [1](https://colmap.github.io/faq.html#manhattan-world-alignment), [2](http
 `feature_importer` and `matches_importer`
 
 Refs: [1](https://robotics.stackexchange.com/questions/16132/multiple-view-triangulation-method-used-by-colmap), [2](https://github.com/colmap/colmap/issues/688)
+
+
+
+## Camera Models
+- SIMPLE_PINHOLE: `f,cx,cy`
+- PINHOLE: `fx,fy,cx,cy`
+- SIMPLE_RADIAL: `f,cx,cy,k`
+- SIMPLE_RADIAL_FISHEYE: `f,cx,cy,k`
+- RADIAL: `f,cx,cy,k1,k2`
+- RADIAL_FISHEYE: `f,cx,cy,k1,k2`
+- OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2`
+- OPENCV_FISHEYE:`fx,fy,cx,cy,k1,k2,k3` 
+- FULL_OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,k5,k6` 
+- FOV:`fx,fy,cx,cy,omega`
+- THIN_PRISM_FISHEYE: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,sx1,sy1`
+
+Refs: [1](https://colmap.github.io/cameras.html)
+

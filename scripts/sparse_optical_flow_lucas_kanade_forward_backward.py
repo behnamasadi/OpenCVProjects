@@ -21,14 +21,14 @@ class App:
         self.cam.set(cv2.CAP_PROP_FOURCC,
                      cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
-        self.width = 1920
-        self.height = 1080
+        # self.width = 1920
+        # self.height = 1080
 
-        self.width = 320
-        self.height = 240
+        # self.width = 320
+        # self.height = 240
 
-        self.width = 320*2
-        self.height = 240*2
+        # self.width = 320*2
+        # self.height = 240*2
 
         # self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         # self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
@@ -38,7 +38,7 @@ class App:
     def run(self):
         while True:
             ret, frame = self.cam.read()
-            frame = cv2.resize(frame, (self.width, self.height))
+            #frame = cv2.resize(frame, (self.width, self.height))
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             vis = frame.copy()
 
