@@ -40,21 +40,23 @@ plt.subplot(321), plt.imshow(image), plt.title('Original')
 plt.xticks([]), plt.yticks([])
 
 
-plt.subplot(322), plt.imshow(image_mean), plt.title('mean')
+plt.subplot(322), plt.imshow(image_mean), plt.title(
+    'mean, image is: ' + ("blury" if is_blurry(image_mean) else "sharp"))
 plt.xticks([]), plt.yticks([])
 
 
-plt.subplot(323), plt.imshow(image_median), plt.title('image_median')
+plt.subplot(323), plt.imshow(image_median), plt.title(
+    'median, image is: ' + ("blury" if is_blurry(image_median) else "sharp"))
 plt.xticks([]), plt.yticks([])
 
 
 plt.subplot(324), plt.imshow(
-    image_bilateral_filter), plt.title('image_bilateral_filter')
+    image_bilateral_filter), plt.title('bilateral filter, image is: ' + ("blury" if is_blurry(image_bilateral_filter) else "sharp"))
 plt.xticks([]), plt.yticks([])
 
 
 plt.subplot(325), plt.imshow(
-    image_gaussian_blur), plt.title('image_gaussian_blur')
+    image_gaussian_blur), plt.title('gaussian blur, image is: ' + ("blury" if is_blurry(image_gaussian_blur) else "sharp"))
 plt.xticks([]), plt.yticks([])
 
 

@@ -237,7 +237,7 @@ std::cout<<static_cast<unsigned>(img.at<uchar>( cv::Point(column,row))     )<<st
 
 ## Projection Matrix and Frame Transformation
 
-Projection matrix refers to the pinhole camera model, a camera matrix <img src="https://latex.codecogs.com/svg.image?\text{P}_{3 \times 4}" alt="https://latex.codecogs.com/svg.image?\text{P}_{3 \times 4}" /> is used to denote a projective mapping from world coordinates to pixel coordinates. If the camera and world share the **same coordinate system**:
+Projection matrix refers to the pinhole camera model, a camera matrix <img src="https://latex.codecogs.com/svg.image?\text{P}_{3%20\times%204}" alt="https://latex.codecogs.com/svg.image?\text{P}_{3 \times 4}" /> is used to denote a projective mapping from world coordinates to pixel coordinates. If the camera and world share the **same coordinate system**:
 
 
 <br/>

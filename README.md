@@ -77,13 +77,11 @@ Install the conda packages:
    * [Image Registration](docs/image_registration.md)
    * [Correspondence Problem](docs/correspondence_problem.md)
    * [Stereo Vision](docs/stereo_vision.md)
-   * [Reprojection Error](docs/reprojection_error.md)   
-   * [Photogrammetry](docs/photogrammetry.md)
-   * [Structure From Motion](docs/structure_from_motion.md)
    * [Parallax](docs/parallax.md)
    * [Optical Flow](docs/optical_flow.md)
    * [Visual Odometry](docs/visual_odometry.md)
    * [KITTI Visual Odometry](docs/kitti_visual_odometry.md)     
+   * [Visual Inertial Odometry](docs/VIO.md)   
    * [Ego Motion](docs/ego_motion.md)
    * [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)
    * [Laser Triangulation](docs/laser_triangulation.md)
@@ -170,7 +168,18 @@ Install the conda packages:
    * [Virtual Camera](scripts/virtual_camera.py)
 
 # [Bundle adjustment and Structure from motion](#)
-- [Colmap](docs/colmap.md)
-- [instant-ngp](docs/instant_ngp.md)
+- [Colmap](docs/colmap.md)  
+- [instant-ngp](docs/instant_ngp.md)  
+- [Bundle Adjustment](docs/bundle_adjustment.md)
+- [Reprojection Error](docs/reprojection_error.md)   
+- [Photogrammetry](docs/photogrammetry.md)  
+- [Structure From Motion](docs/structure_from_motion.md)  
+
+# [SLAM]
+[Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)
+[g2o](docs/g2o.md)
+[SLAM](docs/slam.md)
+
+
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  

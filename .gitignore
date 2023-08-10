@@ -7,3 +7,4 @@ data/kitti/05/image_1/*
 *.kdev4
 *.autosave
 src/sandbox.cpp
+scripts/temp/*

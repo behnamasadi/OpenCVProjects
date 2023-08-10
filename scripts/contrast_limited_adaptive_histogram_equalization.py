@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 
 path_base = "/home/behnam/workspace/OpenCVProjects"
-# image_path = "/images/Unequalized_Hawkes_Bay_NZ.jpg"
-image_path = "/images/00001.png"
+image_path = "/images/Unequalized_Hawkes_Bay_NZ.jpg"
+# image_path = "/images/00001.png"
 
 
 image = cv2.imread(path_base+image_path,  cv2.IMREAD_GRAYSCALE)
