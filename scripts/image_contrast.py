@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # https://pixelcraft.photo.blog/2022/06/01/the-image-histogram-vi-contrast-and-clipping/
 # https://docs.opencv.org/3.4/d1/db7/tutorial_py_histogram_begins.html
-
+# https://www.cambridgeincolour.com/tutorials/histograms1.htm
 
 # Read the image
 

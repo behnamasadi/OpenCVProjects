@@ -176,9 +176,9 @@ Install the conda packages:
 - [Structure From Motion](docs/structure_from_motion.md)  
 
 # [SLAM]
-[Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)
-[g2o](docs/g2o.md)
-[SLAM](docs/slam.md)
+[Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)  
+[g2o](docs/g2o.md)  
+[SLAM](docs/slam.md)  
 
 
 
