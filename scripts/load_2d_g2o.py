@@ -32,3 +32,11 @@ def load_2d_g2o(filename):
 
 # Usage
 # nodes, edges = load_2d_g2o('your_filename.g2o')
+
+
+def main(filename):
+    load_2d_g2o(filename)
+
+
+if (__name__ == "__main__"):
+    main("foo")
