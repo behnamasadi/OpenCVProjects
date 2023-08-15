@@ -120,3 +120,39 @@ Refs: [1](https://github.com/alishobeiri/Monocular-Video-Odometery/blob/master/m
 - Matrix Lie Groups for Robotics
 Refs: [1](https://www.youtube.com/watch?v=NHXAnvv4mM8&list=PLdMorpQLjeXmbFaVku4JdjmQByHHqTd1F&index=8)   
 
+
+## python-graphslam
+
+Refs: [1](https://github.com/JeffLIrion/python-graphslam), [2](https://python-graphslam.readthedocs.io/en/stable/)
+
+
+
+## add apriltag to loop closure
+
+Refs: [1](https://berndpfrommer.github.io/tagslam_web/)
+
+
+
+## DROID-SLAM
+
+## Hierarchical-Localization
+
+## image-matching-webui
+
+## LightGlue
+
+## Nerf-SLAM
+
+## DenseSFM
+
+Refs: [1](https://github.com/tsattler/visuallocalizationbenchmark)
+
+## Pixel-Perfect Structure-from-Motion
+Refs: [1](https://github.com/cvg/pixel-perfect-sfm)
+
+## ODM
+```
+docker run -ti --rm -v /home/$USER/workspace/odm_projects/datasets/code/:/datasets/code opendronemap/odm --project-path /datasets
+```
+[Datasets](https://www.opendronemap.org/odm/datasets/)
+

@@ -565,3 +565,10 @@ Refs: [1](https://robotics.stackexchange.com/questions/16132/multiple-view-trian
 
 Refs: [1](https://colmap.github.io/cameras.html)
 
+
+## Rig bundle Adjuster
+
+Refs: [1](https://github.com/colmap/colmap/issues/891)
+
+
+

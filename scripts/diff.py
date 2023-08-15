@@ -22,17 +22,17 @@ frame_index = 0
 w = 1920
 h = 1080
 
-threshold = 4.0
+threshold = 8
 
 clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8, 8))
 
 
 # Load the video
 cap = cv2.VideoCapture(
-    '/home/behnam/Pictures/colmap_projects/GroupeE_Maigrauge/video/video_1.mp4')
+    '/media/behnam/behnam/Flights/20230814_Flybotix_Parking/004/recording_0/RGB/video.mp4')
 
 
-path = "/home/behnam/Pictures/colmap_projects/GroupeE_Maigrauge/images/"
+path = "/media/behnam/behnam/Flights/tmp/"
 print(f"number of frames:  ", cap.get(cv2.CAP_PROP_FRAME_COUNT))
 print(f"frame rate: ", cap.get(cv2.CAP_PROP_FPS))
 print(f"resolution is:  ", cap.get(
@@ -100,7 +100,7 @@ while True:
         image_clahe = clahe.apply(gray_image)
 
         # cv2.imwrite(path+str(frame_id)+".png", image_clahe)
-        blur, val = is_blurry(image_clahe, threshold=300)
+        blur, val = is_blurry(image_clahe, threshold=200)
 
         if (not blur):
             file_extension = ".png"

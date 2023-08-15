@@ -81,3 +81,11 @@ print("Optimized 3D Points:", optimized_points_3d)
 Note that this example is straightforward and uses synthetic data for demonstration purposes. In real-world scenarios, you would need to perform feature matching, handle multiple cameras, deal with distortion, and use iterative optimization methods for better convergence.
 
 For more complex and practical implementations, it's recommended to use established libraries like OpenCV, which provide robust and efficient bundle adjustment functionalities.
+
+
+## CMVS-PMVS
+Refs: [1](https://github.com/pmoulon/CMVS-PMVS)
+
+
+## openMVG
+Refs: [1](https://opensourcephotogrammetry.blogspot.com/)
