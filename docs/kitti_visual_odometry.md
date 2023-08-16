@@ -1,8 +1,8 @@
 # Dataset
 
-1. `ground truth poses` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_poses.zip)
-2. `left images`, `right images` and `time stamp` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_gray.zip)
-3. `cameras calibration file` can be download from [here](http://www.cvlibs.net/download.php?file=data_odometry_calib.zip)
+1. `ground truth poses` can be downloaded from [here](http://www.cvlibs.net/download.php?file=data_odometry_poses.zip)
+2. `left images`, `right images` and `time stamp` can be downloaded from [here](http://www.cvlibs.net/download.php?file=data_odometry_gray.zip)
+3. `cameras calibration file` can be downloaded from [here](http://www.cvlibs.net/download.php?file=data_odometry_calib.zip)
 
 
 ```python
@@ -12,10 +12,14 @@ time_stamp_path = base_path + 'data/kitti/05/times.txt'
 cameras_file_path = base_path + 'data/kitti/05/calib.txt'
 ```
 
+# Sensor setup 
+<img src="images/setup_top_view.png" />
 
+
+Refs: [1](https://www.cvlibs.net/datasets/kitti/setup.php)
 
 # Ground Truth Poses
-each row of the data has 12 column, 12 comes from flattening a `3x4` transformation matrix of the left:
+each row of the data has 12 columns, 12 come from flattening a `3x4` transformation matrix of the left:
 
 ```
 r11 r12 r13 tx r21 r22 r23 ty r31 r32 r33 tz
