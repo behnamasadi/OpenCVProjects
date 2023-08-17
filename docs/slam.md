@@ -42,8 +42,24 @@ our error function is:
 
 <img src="https://latex.codecogs.com/svg.latex?%5C%5C%20J_%7Bij%7D%3D%5Cbegin%7Bbmatrix%7D%200%20%26%20...%20%26%200%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jx%7D%7B%20%5Cpartial%20_%7Bi%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jx%7D%7B%20%5Cpartial%20_%7Bi%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20x%7D%7B%20%5Cpartial%20_%7Bi%7D%20%5Ctheta%7D%20%260%20%26...%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jx%7D%7B%20%5Cpartial%20_%7Bj%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jx%7D%7B%20%5Cpartial%20_%7Bj%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20x%7D%7B%20%5Cpartial%20_%7Bj%7D%20%5Ctheta%7D%20%26...%20%260%5C%5C%200%20%26%20...%20%26%200%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jy%7D%7B%20%5Cpartial%20_%7Bi%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jy%7D%7B%20%5Cpartial%20_%7Bi%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20y%7D%7B%20%5Cpartial%20_%7Bi%7D%20%5Ctheta%7D%20%260%20%26...%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jy%7D%7B%20%5Cpartial%20_%7Bj%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_jy%7D%7B%20%5Cpartial%20_%7Bj%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20y%7D%7B%20%5Cpartial%20_%7Bj%7D%20%5Ctheta%7D%26%20...%20%26%200%5C%5C%200%20%26%20...%20%26%200%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%5Ctheta%7D%7B%20%5Cpartial%20_%7Bi%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%5Ctheta%7D%7B%20%5Cpartial%20_%7Bi%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20%5Ctheta%7D%7B%20%5Cpartial%20_%7Bi%7D%20%5Ctheta%7D%20%260%20%26...%26%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%5Ctheta%7D%7B%20%5Cpartial%20_%7Bj%7D%20x%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%5Ctheta%7D%7B%20%5Cpartial%20_%7Bj%7D%20y%7D%20%26%20%5Cfrac%7B%5Cpartial%20%5E%7Bi%7D_j%20%5Ctheta%7D%7B%20%5Cpartial%20_%7Bj%7D%20%5Ctheta%7D%20%26...%20%26%200%5C%5C%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?\\ J_{ij}=\begin{bmatrix} 0 & ... & 0 & \frac{\partial ^{i}_jx}{ \partial _{i} x}      &  \frac{\partial ^{i}_jx}{ \partial _{i} y}  & \frac{\partial ^{i}_j x}{ \partial _{i} \theta} &0 &... & \frac{\partial ^{i}_jx}{ \partial _{j} x}      &  \frac{\partial ^{i}_jx}{ \partial _{j} y}  & \frac{\partial ^{i}_j x}{ \partial _{j} \theta}  &... &0\\ 0 & ... & 0 & \frac{\partial ^{i}_jy}{ \partial _{i} x} &  \frac{\partial ^{i}_jy}{ \partial _{i} y}  & \frac{\partial ^{i}_j y}{ \partial _{i} \theta} &0   &...& \frac{\partial ^{i}_jy}{ \partial _{j} x} &  \frac{\partial ^{i}_jy}{ \partial _{j} y}  & \frac{\partial ^{i}_j y}{ \partial _{j} \theta}& ...     & 0\\ 0 & ... & 0 & \frac{\partial ^{i}_j\theta}{ \partial _{i} x}      &  \frac{\partial ^{i}_j\theta}{ \partial _{i} y}  & \frac{\partial ^{i}_j \theta}{ \partial _{i} \theta} &0 &...&\frac{\partial ^{i}_j\theta}{ \partial _{j} x}      &  \frac{\partial ^{i}_j\theta}{ \partial _{j} y}  & \frac{\partial ^{i}_j \theta}{ \partial _{j} \theta} &...  & 0\\ \end{bmatrix}" />
 
+
 <br/>
 <br/>
+
+<img src="https://latex.codecogs.com/svg.latex?A_%7Bi%2Cj%7D%3D%5Cbegin%7Bbmatrix%7D%20-cos%28%5Ctheta_i%29%20%26%20-sin%28%5Ctheta_i%29%20%26%20-sin%28%5Ctheta_i%29%28x_j-x_i%29&plus;cos%28%5Ctheta_i%29%28y_j-y_i%29%5C%5C%20sin%28%5Ctheta_i%29%20%26%20-cos%28%5Ctheta_i%29%20%26%20-cos%28%5Ctheta_i%29%28x_j-x_i%29%20-%20sin%28%5Ctheta_i%29%28y_j-y_i%29%5C%5C%200%20%26%200%20%26%20-1%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?A_{i,j}=\begin{bmatrix} -cos(\theta_i) & -sin(\theta_i)  & -sin(\theta_i)(x_j-x_i)+cos(\theta_i)(y_j-y_i)\\ sin(\theta_i) & -cos(\theta_i) & -cos(\theta_i)(x_j-x_i) - sin(\theta_i)(y_j-y_i)\\ 0 & 0 & -1 \end{bmatrix}" />
+
+<br/>
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?B_%7Bi%2Cj%7D%3D%5Cbegin%7Bbmatrix%7D%20cos%28%5Ctheta_i%29%20%26%20-sin%28%5Ctheta_i%29%20%26%200%5C%5C%20-sin%28%5Ctheta_i%29%20%26%20cos%28%5Ctheta_i%29%20%26%200%5C%5C%200%20%26%200%20%26%201%20%5Cend%7Bbmatrix%7D" alt="https://latex.codecogs.com/svg.latex?B_{i,j}=\begin{bmatrix} cos(\theta_i) & -sin(\theta_i)  & 0\\  -sin(\theta_i) & cos(\theta_i) & 0\\  0 & 0 & 1 \end{bmatrix}" />
+
+<br/>
+<br/>
+
+
+
+
 <img src="images/J_i_j.png"  width= "50%"  height= "50%"/>
 
 <br/>
@@ -57,6 +73,8 @@ our error function is:
 <br/>
 <br/>
 <img src="images/building_the_linear_system.png" width= "50%"  height= "50%" />
+
+
 
 
 
