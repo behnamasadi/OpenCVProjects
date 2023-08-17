@@ -18,6 +18,10 @@ winSize = (15, 15)  # Window size
 
 # withDerivatives:set to precompute gradients for the every pyramid level. If pyramid is constructed without the gradients then calcOpticalFlowPyrLK will calculate them internally.
 
+
+########################################## examples how to use it properly: ##########################################
+# https://cpp.hotexamples.com/examples/-/-/calcOpticalFlowPyrLK/cpp-calcopticalflowpyrlk-function-examples.html
+################################################################################################
 # Build the pyramid
 ret, pyramid = cv2.buildOpticalFlowPyramid(
     img, winSize, maxLevel, withDerivatives=False, pyrBorder=cv2.BORDER_REFLECT)
