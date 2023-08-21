@@ -12,7 +12,9 @@ import numpy as np
 import os
 import sys
 
-np.set_printoptions(threshold=sys.maxsize)
+# np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(suppress=True, formatter={
+                    'float_kind': '{:0.4f}'.format}, threshold=sys.maxsize)
 
 
 def getNode(nodes, id):
@@ -51,7 +53,11 @@ def update_node(node, dx):
     return node
 
 
-g2o_file = os.path.abspath("./data/slam/input_INTEL_g2o.g2o")
+# g2o_file = os.path.abspath("./data/slam/input_INTEL_g2o.g2o")
+g2o_file = os.path.abspath("./data/slam/input_M3500_g2o.g2o")
+# g2o_file = os.path.abspath("./data/slam/input_MITb_g2o.g2o")
+
+
 nodes, edges = load_2d_g2o(filename=g2o_file)
 
 
@@ -59,12 +65,12 @@ x_cords = [node["state"][0] for node in nodes]
 y_cords = [node["state"][1] for node in nodes]
 theta = [node["state"][2] for node in nodes]
 
-plt.plot(x_cords, y_cords)
+plt.plot(x_cords, y_cords, color="blue")
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.title('Nodes from g2o file')
 plt.grid(True)
-# plt.show()
+
 
 # ensure our orientations are bounded between -pi and pi
 
@@ -76,6 +82,7 @@ A_i_j = np.zeros([3, 3])
 B_i_j = np.zeros([3, 3])
 
 while dx_norm > 1e-2:
+    # for i in [1]:
     # our matrices for Hx=-b
     b = np.zeros([3*len(x_cords), 1])
     H = np.zeros([3*len(x_cords), 3*len(x_cords)])
@@ -133,7 +140,7 @@ while dx_norm > 1e-2:
 
         # Jacobian of current relative in respect to NODE 2
 
-        B_i_j = np.array([[np.cos(theta1), -np.sin(theta2), 0],
+        B_i_j = np.array([[np.cos(theta1), np.sin(theta1), 0],
                           [-np.sin(theta1), np.cos(theta1), 0], [0, 0, 1]])
 
         # print("B_i_j:", B_i_j)
@@ -169,37 +176,54 @@ while dx_norm > 1e-2:
                                             [err_pos_y], [err_theta]])
 
         # print(result)
+        # print("A_i_j:\n", A_i_j)
 
         result = result.squeeze()
 
         b[3*id1:3*id1+3, 0] = b[3*id1:3*id1+3, 0] + result
 
-  #      print("b", b[3*id1:3*id1+3, 0])
+        # print("b1", b[3*id1:3*id1+3, 0])
 
         result = B_i_j.T @ info @ np.array([[err_pos_x],
                                            [err_pos_y], [err_theta]])
+
+        # print("B_i_j:\n", B_i_j)
+
         result = result.squeeze()
 
  #       print(result)
 
         b[3*id2:3*id2+3, 0] = b[3*id2:3*id2+3, 0] + result
 
-#        print("b", b[3*id2:3*id2+3, 0])
+        # print("b2", b[3*id2:3*id2+3, 0])
+        # print("err_pos_x,err_pos_y,err_theta", err_pos_x, err_pos_y, err_theta)
 
 
 #  fix the first node to be known
     H[0:3, 0:3] = H[0:3, 0:3] + 1e6*np.eye(3)
     # solve the linear system
     # x = H\b
-    x = np.linalg.solve(H, -b)
+    x = np.linalg.solve(H, b)
 
-    print(x)
-    print(x.shape)
+    # print(x)
+    # print(x.shape)
 
     dx_norm = np.linalg.norm(x)
     iteration = iteration + 1
-    print(f'iter {iteration} with delta = {dx_norm}\n', iteration, dx_norm)
+    print(f'iter {iteration} with delta = {dx_norm}')
 
     # update our nodes
     for index, node in enumerate(nodes):
         node = update_node(node, x[3*index:3*index+3, 0])
+
+
+x_cords = [node["state"][0] for node in nodes]
+y_cords = [node["state"][1] for node in nodes]
+theta = [node["state"][2] for node in nodes]
+
+plt.plot(x_cords, y_cords, color="red")
+# plt.xlabel('X')
+# plt.ylabel('Y')
+# plt.title('Nodes from g2o file')
+plt.grid(True)
+plt.show()
