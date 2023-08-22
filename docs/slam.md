@@ -119,8 +119,7 @@ Refs: [1](https://github.com/goldbattle/simple_2d_slam)
 - Robust Pose-graph Optimization
 Refs: [1](https://www.youtube.com/watch?v=zOr9HreMthY)
 
-- Factor Graph - 5 Minutes with Cyrill
-Refs: [1](https://www.youtube.com/watch?v=uuiaqGLFYa4&t=145s)
+
 
 - Awesome Visual Odometry
 Refs: [1](https://github.com/chinhsuanwu/awesome-visual-odometry)
