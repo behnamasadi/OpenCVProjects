@@ -45,10 +45,16 @@ Now by using (6):
 <img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CU_t%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,U_t) dX_{t-1}" />
 
 
-sin X_t-1 has no dependency on U_t, we cam omit it:
+sin X_t-1 has no dependency on U_t, we can omit it:
 <br/>
 <br/>
 <img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CZ_%7Bt-1%7D%2CU_%7Bt-1%7D%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,Z_{t-1},U_{t-1}) dX_{t-1}" />
+
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29Bel%28X_%7Bt-1%7D%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})Bel(X_{t-1}) dX_{t-1}" />
+
 
 
 # Property of  Covariance
