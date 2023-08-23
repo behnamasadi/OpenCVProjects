@@ -8,7 +8,9 @@
 \text{3. }P(A,B)=\sum P(A,B,C_i)=\sum P(A|B,C_i)P(B,C_i)=\sum P(A|B,C_i)P(C_i|B)P(B) \\ \text{4. } P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum P(A|B,C_i)P(C_i|B)P(B)}{P(B)} =\sum P(A|B,C_i)P(C_i|B)" />
 
 
-
+Markov property:
+<br/>
+<br/>
 <img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Ctext%7B5.%20%7D%20P%28Z_t%7CX_%7B0%3At%7D%2CZ_%7B0%3At-1%7D%2C%20U_%7B1%3At%7D%29%3DP%28Z_t%7CX_t%29%20%5C%5C%20%5Ctext%7B6.%20%7D%20P%28X_t%7CX_%7B1%3At-1%7D%2CZ_%7B1%3At-1%7D%2C%20U_%7B1%3At%7D%29%3DP%28X_t%7CU_t%29" alt="https://latex.codecogs.com/svg.latex?\\ \text{5. } P(Z_t|X_{0:t},Z_{0:t-1}, U_{1:t})=P(Z_t|X_t) \\ \text{6. } P(X_t|X_{1:t-1},Z_{1:t-1}, U_{1:t})=P(X_t|U_t)" />
 
 
@@ -29,9 +31,24 @@ Using (2) we will have:
 <br/>
 <img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_C%20%2C%20%5Cunderbrace%7BZ_t%7D_B%29%3D%5Cfrac%7BP%28B%7CA%2CC%29P%28A%7CC%29%7D%7BP%28B%7CC%29%7D%3D%5Ceta%20P%28B%7CA%2CC%29P%28A%7CC%29%3D%5Ceta%20P%28Z_t%7CX_t%2CU_1%2C%20Z_1%2C...%2CU_t%29P%28X_t%7CU_1%2C%20Z_1%2C...%2CU_t%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_C , \underbrace{Z_t}_B)=\frac{P(B|A,C)P(A|C)}{P(B|C)}=\eta P(B|A,C)P(A|C)=\eta P(Z_t|X_t,U_1, Z_1,...,U_t)P(X_t|U_1, Z_1,...,U_t)" />
 
+now using (5),
 
 
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29P%28X_t%7CU_1%2C%20Z_1%2C...%2CU_t%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)P(X_t|U_1, Z_1,...,U_t)" />
 
+Now by using (4):
+
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_1%2C%20Z_1%2C...%2CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CU_t%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_1, Z_1,...,U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,U_t) dX_{t-1}" />
+
+Now by using (6):
+
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CU_t%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,U_t) dX_{t-1}" />
+
+
+sin X_t-1 has no dependency on U_t, we cam omit it:
+<br/>
+<br/>
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CZ_%7Bt-1%7D%2CU_%7Bt-1%7D%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,Z_{t-1},U_{t-1}) dX_{t-1}" />
 
 
 # Property of  Covariance
