@@ -54,8 +54,8 @@ def update_node(node, dx):
 
 
 # g2o_file = os.path.abspath("./data/slam/input_INTEL_g2o.g2o")
-g2o_file = os.path.abspath("./data/slam/input_M3500_g2o.g2o")
-# g2o_file = os.path.abspath("./data/slam/input_MITb_g2o.g2o")
+# g2o_file = os.path.abspath("./data/slam/input_M3500_g2o.g2o")
+g2o_file = os.path.abspath("./data/slam/input_MITb_g2o.g2o")
 
 
 nodes, edges = load_2d_g2o(filename=g2o_file)
