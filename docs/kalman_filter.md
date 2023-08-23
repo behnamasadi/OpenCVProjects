@@ -20,15 +20,19 @@
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_B%20%2C%20%5Cunderbrace%7BZ_t%7D_C%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_B , \underbrace{Z_t}_C)"  />
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_C%20%2C%20%5Cunderbrace%7BZ_t%7D_B%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_C , \underbrace{Z_t}_B)"  />
 <br/>
 <br/>
-Using **2** we will have:
-
-<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_B%20%2C%20%5Cunderbrace%7BZ_t%7D_C%29%3D%5Cfrac%7BP%28B%7CA%2CC%29P%28A%7CC%29%7D%7BP%28B%7CC%29%7D%3D%5Ceta%20P%28B%7CA%2CC%29P%28A%7CC%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_B , \underbrace{Z_t}_C)=\frac{P(B|A,C)P(A|C)}{P(B|C)}=\eta P(B|A,C)P(A|C)"  />
+Using (2) we will have:
 
 <br/>
 <br/>
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_C%20%2C%20%5Cunderbrace%7BZ_t%7D_B%29%3D%5Cfrac%7BP%28B%7CA%2CC%29P%28A%7CC%29%7D%7BP%28B%7CC%29%7D%3D%5Ceta%20P%28B%7CA%2CC%29P%28A%7CC%29%3D%5Ceta%20P%28Z_t%7CX_t%2CU_1%2C%20Z_1%2C...%2CU_t%29P%28X_t%7CU_1%2C%20Z_1%2C...%2CU_t%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_C , \underbrace{Z_t}_B)=\frac{P(B|A,C)P(A|C)}{P(B|C)}=\eta P(B|A,C)P(A|C)=\eta P(Z_t|X_t,U_1, Z_1,...,U_t)P(X_t|U_1, Z_1,...,U_t)" />
+
+
+
+
+
 
 # Property of  Covariance
 
