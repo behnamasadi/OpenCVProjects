@@ -9,7 +9,18 @@
 
 
 
+<img src="https://latex.codecogs.com/svg.latex?%5C%5C%20%5Ctext%7B5.%20%7D%20P%28Z_t%7CX_%7B0%3At%7D%2CZ_%7B0%3At-1%7D%2C%20U_%7B1%3At%7D%29%3DP%28Z_t%7CX_t%29%20%5C%5C%20%5Ctext%7B6.%20%7D%20P%28X_t%7CX_%7B1%3At-1%7D%2CZ_%7B1%3At-1%7D%2C%20U_%7B1%3At%7D%29%3DP%28X_t%7CU_t%29" alt="https://latex.codecogs.com/svg.latex?\\ \text{5. } P(Z_t|X_{0:t},Z_{0:t-1}, U_{1:t})=P(Z_t|X_t) \\ \text{6. } P(X_t|X_{1:t-1},Z_{1:t-1}, U_{1:t})=P(X_t|U_t)" />
+
+
+<br/>
+<br/>
+
 <img src="https://latex.codecogs.com/svg.image?Bel(x_t)=\eta&space;P(z_t|x_t)\int&space;P(x_t|U_{t-1},x_{t-1})&space;Bel(x_{t-1})dx_{t-1}" title="https://latex.codecogs.com/svg.image?Bel(x_t)=\eta P(z_t|x_t)\int P(x_t|U_{t-1},x_{t-1}) Bel(x_{t-1})dx_{t-1}" />
+
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3DP%28%5Cunderbrace%7BX_t%7D_A%7C%5Cunderbrace%7BU_1%2C%20Z_1%2C...%2CU_t%7D_B%20%2C%20%5Cunderbrace%7BZ_t%7D_C%29" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=P(\underbrace{X_t}_A|\underbrace{U_1, Z_1,...,U_t}_B , \underbrace{Z_t}_C)"  />
 
 
 # Property of  Covariance
