@@ -173,3 +173,5 @@ docker run -ti --rm -v /home/$USER/workspace/odm_projects/datasets/code/:/datase
 ```
 [Datasets](https://www.opendronemap.org/odm/datasets/)
 
+## GTSAM
+Refs: [1](https://www.youtube.com/watch?v=zOr9HreMthY)
