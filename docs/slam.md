@@ -230,20 +230,12 @@ Refs: [1](https://github.com/gisbi-kim/modern-slam-tutorial-python)
 - Monocular-Video-Odometery
 Refs: [1](https://github.com/alishobeiri/Monocular-Video-Odometery/blob/master/monovideoodometery.py)
   
-- Matrix Lie Groups for Robotics
-Refs: [1](https://www.youtube.com/watch?v=NHXAnvv4mM8&list=PLdMorpQLjeXmbFaVku4JdjmQByHHqTd1F&index=8)   
 
-- Factor Graph - 5 Minutes with Cyrill
-Refs: [1](https://www.youtube.com/watch?v=uuiaqGLFYa4&t=145s)
-
-- GTSAM: Georgia Tech Smoothing and Mapping Library  
-Refs [1](https://gtsam.org/), [2](https://github.com/borglab/gtsam)
 
 - DBoW2: library for indexing and converting images into a bag-of-word representation  
 Refs: [1](https://github.com/dorian3d/DBoW2)
 
-- iSAM: Incremental Smoothing and Mapping  
-Refs: [1](https://openslam-org.github.io/iSAM)
+
 
 
 
@@ -267,7 +259,6 @@ Refs: [1](https://berndpfrommer.github.io/tagslam_web/)
 
 ## LightGlue
 
-## Nerf-SLAM
 
 ## DenseSFM
 
@@ -282,5 +273,3 @@ docker run -ti --rm -v /home/$USER/workspace/odm_projects/datasets/code/:/datase
 ```
 [Datasets](https://www.opendronemap.org/odm/datasets/)
 
-## GTSAM
-Refs: [1](https://www.youtube.com/watch?v=zOr9HreMthY)

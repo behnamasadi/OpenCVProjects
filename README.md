@@ -141,27 +141,26 @@ Install the conda packages:
    * [Drawing Frame Axes](src/drawing_drame_axes.cpp)
    * [Writing video with choosing encoder using ffmpeg and libav](https://github.com/dataplayer12/video-writer)
 
-# [FFmpeg Commands](#)
+# [FFmpeg Commands](#)  
+
 - [Available encoders and decoders](docs/ffmpeg.md#available-encoders-and-decoders)
-
-
-- [1. FFmpeg Common Options](docs/ffmpeg.md#1-ffmpeg-common-options)
-- [2. FFmpeg Filters](docs/ffmpeg.md#2-ffmpeg-filters)
-  * [2.1 Available Filters](docs/ffmpeg.md#21-available-filters)
-  * [2.2 Send Output of FFmpeg Directly to FFplay](docs/ffmpeg.md#22-send-output-of-ffmpeg-directly-to-ffplay)
-  * [2.3 Apply a Filter](docs/ffmpeg.md#23-apply-a-filter)
-  * [2.4 Filter Graph](#docs/ffmpeg.md24-filter-graph)
-  * [2.5 Filter Complex](docs/ffmpeg.md#25-filter-complex)
-  * [2.6 Filter Complex vs Filter Graph](docs/ffmpeg.md#26-filter-complex-vs-filter-graph)
-  * [2.7 Setting Number of Threads](docs/ffmpeg.md#27-setting-number-of-threads)
-  * [2.8 Commonly Used FFmpeg Filters](docs/ffmpeg.md#28-commonly-used-ffmpeg-filters)
-- [3. ffprobe](docs/ffmpeg.md#3-ffprobe)
-- [4. ffmpeg metadata](docs/ffmpeg.md#4-ffmpeg-metadata)
-- [5. Setting encoder for a specific codec](docs/ffmpeg.md#5-setting-encoder-for-a-specific-codec)
-- [6. Set the format (container) and codec for the output](docs/ffmpeg.md#6-set-the-format--container--and-codec-for-the-output)
-- [7. map](docs/ffmpeg.md#7-map)
-- [graph2dot](docs/ffmpeg.md#graph2dot)
-- [8. Determining Pixel Format](docs/ffmpeg.md#8-determining-pixel-format)
+- [1. FFmpeg Common Options](docs/ffmpeg.md#1-ffmpeg-common-options)  
+- [2. FFmpeg Filters](docs/ffmpeg.md#2-ffmpeg-filters)  
+  * [2.1 Available Filters](docs/ffmpeg.md#21-available-filters)  
+  * [2.2 Send Output of FFmpeg Directly to FFplay](docs/ffmpeg.md#22-send-output-of-ffmpeg-directly-to-ffplay)  
+  * [2.3 Apply a Filter](docs/ffmpeg.md#23-apply-a-filter)  
+  * [2.4 Filter Graph](#docs/ffmpeg.md24-filter-graph)  
+  * [2.5 Filter Complex](docs/ffmpeg.md#25-filter-complex)  
+  * [2.6 Filter Complex vs Filter Graph](docs/ffmpeg.md#26-filter-complex-vs-filter-graph)  
+  * [2.7 Setting Number of Threads](docs/ffmpeg.md#27-setting-number-of-threads)  
+  * [2.8 Commonly Used FFmpeg Filters](docs/ffmpeg.md#28-commonly-used-ffmpeg-filters)  
+- [3. ffprobe](docs/ffmpeg.md#3-ffprobe)  
+- [4. ffmpeg metadata](docs/ffmpeg.md#4-ffmpeg-metadata)  
+- [5. Setting encoder for a specific codec](docs/ffmpeg.md#5-setting-encoder-for-a-specific-codec)  
+- [6. Set the format (container) and codec for the output](docs/ffmpeg.md#6-set-the-format--container--and-codec-for-the-output)  
+- [7. map](docs/ffmpeg.md#7-map)  
+- [graph2dot](docs/ffmpeg.md#graph2dot)  
+- [8. Determining Pixel Format](docs/ffmpeg.md#8-determining-pixel-format) 
 
 
 # [Virtual Camera](#)
@@ -169,17 +168,22 @@ Install the conda packages:
 
 # [Bundle adjustment and Structure from motion](#)
 - [Colmap](docs/colmap.md)  
-- [instant-ngp](docs/instant_ngp.md)  
 - [Bundle Adjustment](docs/bundle_adjustment.md)
 - [Reprojection Error](docs/reprojection_error.md)   
 - [Photogrammetry](docs/photogrammetry.md)  
 - [Structure From Motion](docs/structure_from_motion.md)  
 
-# [SLAM]
+# [SLAM](#)
+[SLAM](docs/slam.md)  
 [Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)  
 [g2o](docs/g2o.md)  
-[SLAM](docs/slam.md)  
+[NeRF-SLAM](docs/NeRF-SLAM.md)  
+[GTSAM](docs/GTSAM.md)  
+
+# [Lie Groups](#)
+[Matrix Lie Groups for Robotics](docs/matrix_lie_groups.md)
 
 
-
+# [Instant NGP]
+- [instant-ngp](docs/instant_ngp.md)  
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  
