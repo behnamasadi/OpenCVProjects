@@ -164,7 +164,7 @@ Install the conda packages:
 
 
 # [Virtual Camera](#)
-   * [Virtual Camera](scripts/virtual_camera.py)
+- [Virtual Camera](scripts/virtual_camera.py)
 
 # [Bundle adjustment and Structure from motion](#)
 - [Colmap](docs/colmap.md)  
@@ -181,9 +181,10 @@ Install the conda packages:
 [GTSAM](docs/GTSAM.md)  
 
 # [Lie Groups](#)
-[Matrix Lie Groups for Robotics](docs/matrix_lie_groups.md)
+- [Matrix Lie Groups for Robotics](docs/matrix_lie_groups.md)
 
 
-# [Instant NGP]
-- [instant-ngp](docs/instant_ngp.md)  
+# [Instant NGP](#)
+- [instant-ngp](docs/instant_ngp.md)
+  
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  
