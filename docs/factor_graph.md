@@ -114,12 +114,10 @@ This is a simplified example, but the core steps remain the same even as you sca
 
 
 
-Certainly! Below is a Python example that demonstrates variable elimination in a simple Bayesian network. We have three binary variables `A` , `B`, and  `C`  with the following conditional probability tables:
+Certainly! Below is a Python example that demonstrates variable elimination in a simple Bayesian network. We have three binary variables `A`, `B`, and  `C`  with the following conditional probability tables:
 
 
-<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%5C%5C%20P%28A%3D1%29%20%3D%200.8%2C%20P%28A%3D0%29%20%3D%200.2%20%5C%5C%20P%28B%3D1%20%7C%20A%3D1%29%20%3D%200.7%2C%20P%28B%3D0%20%7C%20A%3D1%29%20%3D%200.3%20%5C%5C%20P%28B%3D1%20%7C%20A%3D0%29%20%3D%200.1%2C%20P%28B%3D0%20%7C%20A%3D0%29%20%3D%200.9%20%5C%5C%20P%28C%3D1%20%7C%20B%3D1%29%20%3D%200.9%2C%20P%28C%3D0%20%7C%20B%3D1%29%20%3D%200.1%20%5C%5C%20P%28C%3D1%20%7C%20B%3D0%29%20%3D%200.2%2C%20P%28C%3D0%20%7C%20B%3D0%29%20%3D%200.8%20%5C%5C%20%5Cend%7Bmatrix%7D%5Cright.
-" alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} \\  P(A=1) = 0.8, P(A=0) = 0.2  \\  P(B=1 | A=1) = 0.7, P(B=0 | A=1) = 0.3 \\  P(B=1 | A=0) = 0.1, P(B=0 | A=0) = 0.9  \\  P(C=1 | B=1) = 0.9, P(C=0 | B=1) = 0.1 \\  P(C=1 | B=0) = 0.2, P(C=0 | B=0) = 0.8  \\ 
-\end{matrix}\right." />
+<img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%5C%5C%20P%28A%3D1%29%20%3D%200.8%2C%20P%28A%3D0%29%20%3D%200.2%20%5C%5C%20P%28B%3D1%20%7C%20A%3D1%29%20%3D%200.7%2C%20P%28B%3D0%20%7C%20A%3D1%29%20%3D%200.3%20%5C%5C%20P%28B%3D1%20%7C%20A%3D0%29%20%3D%200.1%2C%20P%28B%3D0%20%7C%20A%3D0%29%20%3D%200.9%20%5C%5C%20P%28C%3D1%20%7C%20B%3D1%29%20%3D%200.9%2C%20P%28C%3D0%20%7C%20B%3D1%29%20%3D%200.1%20%5C%5C%20P%28C%3D1%20%7C%20B%3D0%29%20%3D%200.2%2C%20P%28C%3D0%20%7C%20B%3D0%29%20%3D%200.8%20%5C%5C%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} \\  P(A=1) = 0.8, P(A=0)  0.2  \\  P(B=1 | A=1) = 0.7, P(B=0 | A=1) = 0.3 \\  P(B=1 | A=0) = 0.1, P(B=0 | A=0) = 0.9  \\  P(C=1 | B=1) = 0.9, P(C=0 | B=1) = 0.1 \\  P(C=1 | B=0) = 0.2, P(C=0 | B=0) = 0.8  \\  \end{matrix}\right." />
 
 
 
@@ -180,7 +178,7 @@ So,<img src="https://latex.codecogs.com/svg.latex?P%28A%3D1%20%7C%20C%3D1%29" al
 
 
 
-read more [1](https://www.youtube.com/watch?v=FDNB0A61PGE), [2](https://www.youtube.com/watch?v=dkgLUCCyrIU&list=PLdBx38JxhMNsJ4QcZ7OaIaSE1HBYNs-7u)
+read more [1](https://www.youtube.com/watch?v=FDNB0A61PGE), [2](https://www.youtube.com/watch?v=dkgLUCCyrIU&list=PLdBx38JxhMNsJ4QcZ7OaIaSE1HBYNs-7u), [3](https://www.cs.toronto.edu/~axgao/cs486686_f21/lecture_notes/Lecture_10_on_Uncertainty_and_Probability.pdf) ,[4](https://cs.uwaterloo.ca/~a23gao/cs486686_f18/slides/lec11_semantics_of_bayes_net_typednotes.pdf)
 
 # Mahalanobis distance
 
