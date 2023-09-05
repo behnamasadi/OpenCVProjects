@@ -33,7 +33,7 @@ In the visualized graph, you'll see:
 This is a very simple example, and real-world factor graphs can be much more complex. Factor graphs are particularly useful in belief propagation and other inference algorithms, where the structure of the graph helps to systematically update beliefs about the variables based on observed data and the relationships encoded by the factors.
 
 
-Refs: [1](https://www.youtube.com/watch?v=tm4E1o11kG), [2](https://www.youtube.com/watch?v=JmR2YpkLNt0), [3](https://www.youtube.com/watch?v=Q313pTMAdcM), [4](https://www.youtube.com/watch?v=zOr9HreMthY)
+Refs: [1][https://www.youtube.com/watch?v=tm4E1o11kGo], [2](https://www.youtube.com/watch?v=JmR2YpkLNt0), [3](https://www.youtube.com/watch?v=Q313pTMAdcM), [4](https://www.youtube.com/watch?v=zOr9HreMthY)
 
 ## Message passing algorithm
 
