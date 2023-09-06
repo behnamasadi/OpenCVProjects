@@ -82,9 +82,9 @@ Here's a basic outline of how variable elimination works:
 
 6. **Normalization**: Divide the unnormalized marginal by the sum over all its values to get a proper probability distribution.
 
-### Example
 
-Let's consider a simple example with three variables<img src="https://latex.codecogs.com/svg.latex?A%2C%20B%2C%20%5Ctext%7B%20and%20%7D%20C" alt="https://latex.codecogs.com/svg.latex?A, B, \text{ and } C" />, where you want to find <img src="https://latex.codecogs.com/svg.latex?P%28A%7CC%3Dc%29" alt="https://latex.codecogs.com/svg.latex?P(A|C=c)" /> given <img src="https://latex.codecogs.com/svg.latex?P%28A%7CC%3Dc%29" alt="https://latex.codecogs.com/svg.latex?P(A|C=c)" /> as evidence.
+
+Let's consider a simple example with three variables<img src="https://latex.codecogs.com/svg.latex?A%2C%20B%2C%20%5Ctext%7B%20and%20%7D%20C" alt="https://latex.codecogs.com/svg.latex?A, B, \text{ and } C" />, where you want to find <img src="https://latex.codecogs.com/svg.latex?P%28A%7CC%3Dc%29" alt="https://latex.codecogs.com/svg.latex?P(A|C=c)" /> given <img src="https://latex.codecogs.com/svg.latex?C%3Dc" alt="https://latex.codecogs.com/svg.latex?C=c" /> as evidence.
 
 
 
@@ -115,16 +115,141 @@ Steps:
 This is a simplified example, but the core steps remain the same even as you scale to larger, more complicated networks. Variable elimination is a foundational technique in probabilistic graphical models, and is used in various applications like natural language processing, robotics, medical diagnosis, and many more.
 
 
+## Example
 
-Certainly! Below is a Python example that demonstrates variable elimination in a simple Bayesian network. We have three binary variables `A`, `B`, and  `C`  with the following conditional probability tables:
 
+###  Given Conditional Probability Tables (CPTs)
 
 <img src="https://latex.codecogs.com/svg.latex?%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%5C%5C%20P%28A%3D1%29%20%3D%200.8%2C%20P%28A%3D0%29%20%3D%200.2%20%5C%5C%20P%28B%3D1%20%7C%20A%3D1%29%20%3D%200.7%2C%20P%28B%3D0%20%7C%20A%3D1%29%20%3D%200.3%20%5C%5C%20P%28B%3D1%20%7C%20A%3D0%29%20%3D%200.1%2C%20P%28B%3D0%20%7C%20A%3D0%29%20%3D%200.9%20%5C%5C%20P%28C%3D1%20%7C%20B%3D1%29%20%3D%200.9%2C%20P%28C%3D0%20%7C%20B%3D1%29%20%3D%200.1%20%5C%5C%20P%28C%3D1%20%7C%20B%3D0%29%20%3D%200.2%2C%20P%28C%3D0%20%7C%20B%3D0%29%20%3D%200.8%20%5C%5C%20%5Cend%7Bmatrix%7D%5Cright." alt="https://latex.codecogs.com/svg.latex?\left\{\begin{matrix} \\  P(A=1) = 0.8, P(A=0)  0.2  \\  P(B=1 | A=1) = 0.7, P(B=0 | A=1) = 0.3 \\  P(B=1 | A=0) = 0.1, P(B=0 | A=0) = 0.9  \\  P(C=1 | B=1) = 0.9, P(C=0 | B=1) = 0.1 \\  P(C=1 | B=0) = 0.2, P(C=0 | B=0) = 0.8  \\  \end{matrix}\right." />
 
-
-
-
 We are interested in calculating  <img src="https://latex.codecogs.com/svg.latex?P%28A%20%7C%20C%3D1%29" alt="https://latex.codecogs.com/svg.latex?P(A | C=1)" />.
+
+
+
+
+### Steps of Variable Elimination
+
+1. **Step 4: Elimination of B**  
+The intermediate factor <img src="https://latex.codecogs.com/svg.latex?f_4" alt="https://latex.codecogs.com/svg.latex?f_4" /> is computed by summing over the variable <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />. This is represented mathematically as:
+
+<img src="https://latex.codecogs.com/svg.latex?f_4%28A%2C%20C%3D1%29%20%3D%20%5Csum_%7BB%7D%20%5B%20P%28A%29%20%5Ctimes%20P%28B%7CA%29%20%5Ctimes%20P%28C%3D1%7CB%29" alt="https://latex.codecogs.com/svg.latex?f_4(A, C=1) = \sum_{B} [ P(A) \times P(B|A) \times P(C=1|B)
+" />
+
+
+
+
+The reason the marginalization equation becomes specific in the context of this example lies in the structure of the underlying probabilistic model and the conditional independence relationships it encodes.
+
+The original equation you provided for marginalization assumes that <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" /> is conditionally dependent on both <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" /> and <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />:
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%2C%20C%29%20%3D%20%5Csum_B%20%5B%20P%28C%7CA%2C%20B%29%20%5Ctimes%20P%28B%7CA%29%20%5Ctimes%20P%28A%29" alt="https://latex.codecogs.com/svg.latex?P(A, C) = \sum_B [ P(C|A, B) \times P(B|A) \times P(A)" />
+
+
+
+
+
+In the example, however, <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" />is conditionally independent of <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" /> given <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />. In other words, once you know <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />, knowing <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" /> doesn't give you any additional information about <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" />. Mathematically, this means:
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28C%7CA%2C%20B%29%20%3D%20P%28C%7CB%29" alt="https://latex.codecogs.com/svg.latex?P(C|A, B) = P(C|B)" />
+
+
+Because of this conditional independence, the marginalization formula simplifies to:
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%2C%20C%29%20%3D%20%5Csum_B%20%5B%20P%28C%7CB%29%20%5Ctimes%20P%28B%7CA%29%20%5Ctimes%20P%28A%29%20%5D" alt="https://latex.codecogs.com/svg.latex?P(A, C) = \sum_B [ P(C|B) \times P(B|A) \times P(A) ]" />
+
+
+
+This equation sums over all the possible values of <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />, weighting them by their conditional probabilities given <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" /> and the likelihood of <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" /> given<img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />, to compute the joint distribution <img src="https://latex.codecogs.com/svg.latex?P%28A%2C%20C%29" alt="https://latex.codecogs.com/svg.latex?P(A, C)" />.
+
+
+So, the specific form of the marginalization equation is due to the conditional independence relationships specified in the original problem. In this case, the probability of <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" /> only depends directly on <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />, and not on <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" />, when <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" /> is known. This allows us to use 
+<img src="https://latex.codecogs.com/svg.latex?P%28C%7CB%29" alt="https://latex.codecogs.com/svg.latex?P(C|B)" /> in place of <img src="https://latex.codecogs.com/svg.latex?P%28C%7CA%2C%20B%29" alt="https://latex.codecogs.com/svg.latex?P(C|A, B)" /> in the formula.
+
+### Few Reminder 
+#### Conditionally Independent
+
+If <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" /> and <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" /> are conditionally independent of <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" />, written symbolically as: 
+
+
+<img src="https://latex.codecogs.com/svg.latex?%7B%5Cdisplaystyle%20%28A%5Cperp%20%5C%21%5C%21%5C%21%5Cperp%20B%7CC%29%7D" alt="https://latex.codecogs.com/svg.latex?{\displaystyle (A\perp \!\!\!\perp B|C)}" />
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%2CB%7CC%29%3DP%28A%7CC%29P%28B%7CC%29" alt="https://latex.codecogs.com/svg.latex?P(A,B|C)=P(A|C)P(B|C)" />
+
+
+
+
+<br/>
+<br/>
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%7CB%2CC%29%3DP%28A%7CC%29" alt="https://latex.codecogs.com/svg.latex?P(A|B,C)=P(A|C)" />
+
+####
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%20%2C%20B%20%2C%20C%29%20%3D%20P%28A%7CB%2CC%29.P%28B%7CC%29.P%20%28C%29" alt="https://latex.codecogs.com/svg.latex?P(A , B , C) = P(A|B,C).P(B|C).P (C)" />
+
+For the general case, we have n variables
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28X_n%20%2C%20X_%7Bn-1%7D%20%2C%20...%20%2C%20X_2%20%2C%20X_1%29%3D%5Cprod_%7Bn%7D%5E%7Bi%3D1%7DP%28X_i%20%7C%20X_%7Bi-1%7D%2C%20...%20%2C%20X_2%20%2C%20X_1%29%20%5C%5C%20%3D%20P%28X_n%7CX_%7Bn-1%7D%2C%20...%20%2C%20X_2%20%2C%20X_1%20%29%5Ccdot%20...%20%5Ccdot%20P%28X_2%20%7CX_1%29.P%28X_1%29"   alt="https://latex.codecogs.com/svg.latex?P(X_n , X_{n-1}  , ... , X_2 , X_1)=\prod_{n}^{i=1}P(X_i | X_{i-1}, ... , X_2 , X_1) \\ = P(X_n|X_{n-1}, ... , X_2 , X_1 )\cdot ... \cdot P(X_2 |X_1).P(X_1)"/>
+
+
+
+
+
+Getting back to our example, when ` A=0` and ` C=1`:
+
+
+<img src="https://latex.codecogs.com/svg.latex?f_4%28A%3D0%2C%20C%3D1%29%20%3D%200.2%20%5Ctimes%200.1%20%5Ctimes%200.9%20&plus;%200.2%20%5Ctimes%200.9%20%5Ctimes%200.2%20%3D%200.018%20&plus;%200.036%20%3D%200.054" alt="https://latex.codecogs.com/svg.latex?f_4(A=0, C=1) = 0.2 \times 0.1 \times 0.9 + 0.2 \times 0.9 \times 0.2 = 0.018 + 0.036 = 0.054
+" />
+
+Similarly, when `A=1 ` and `C=1 `:
+
+
+<img src="https://latex.codecogs.com/svg.latex?f_4%28A%3D1%2C%20C%3D1%29%20%3D%200.8%20%5Ctimes%200.7%20%5Ctimes%200.9%20&plus;%200.8%20%5Ctimes%200.3%20%5Ctimes%200.2%20%3D%200.504%20&plus;%200.048%20%3D%200.552" alt="https://latex.codecogs.com/svg.latex?f_4(A=1, C=1) = 0.8 \times 0.7 \times 0.9 + 0.8 \times 0.3 \times 0.2 = 0.504 + 0.048 = 0.552
+" />
+
+
+2. **Step 6: Normalization**  
+To find <img src="https://latex.codecogs.com/svg.latex?P%28A%20%7C%20C%3D1%29" alt="https://latex.codecogs.com/svg.latex?P(A | C=1) " />, we need to normalize <img src="https://latex.codecogs.com/svg.latex?f_4" alt="https://latex.codecogs.com/svg.latex?f_4" /> so that the probabilities sum to 1.
+
+
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%3D0%20%7C%20C%3D1%29%20%3D%20%5Cfrac%7Bf_4%28A%3D0%2C%20C%3D1%29%7D%7Bf_4%28A%3D0%2C%20C%3D1%29%20&plus;%20f_4%28A%3D1%2C%20C%3D1%29%7D%20%3D%20%5Cfrac%7B0.054%7D%7B0.054%20&plus;%200.552%7D%20%5Capprox%200.088" alt="https://latex.codecogs.com/svg.latex?P(A=0 | C=1) = \frac{f_4(A=0, C=1)}{f_4(A=0, C=1) + f_4(A=1, C=1)} = \frac{0.054}{0.054 + 0.552} \approx 0.088" />
+
+
+
+<br/>
+<br/>
+
+
+<img src="https://latex.codecogs.com/svg.latex?P%28A%3D1%20%7C%20C%3D1%29%20%3D%20%5Cfrac%7Bf_4%28A%3D1%2C%20C%3D1%29%7D%7Bf_4%28A%3D0%2C%20C%3D1%29%20&plus;%20f_4%28A%3D1%2C%20C%3D1%29%7D%20%3D%20%5Cfrac%7B0.552%7D%7B0.054%20&plus;%200.552%7D%20%5Capprox%200.912" alt="https://latex.codecogs.com/svg.latex?P(A=1 | C=1) = \frac{f_4(A=1, C=1)}{f_4(A=0, C=1) + f_4(A=1, C=1)} = \frac{0.552}{0.054 + 0.552} \approx 0.912" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Below is a Python example that demonstrates variable elimination in a simple Bayesian network. We have three binary variables <img src="https://latex.codecogs.com/svg.latex?A" alt="https://latex.codecogs.com/svg.latex?A" />, <img src="https://latex.codecogs.com/svg.latex?B" alt="https://latex.codecogs.com/svg.latex?B" />, and  <img src="https://latex.codecogs.com/svg.latex?C" alt="https://latex.codecogs.com/svg.latex?C" />  with the following conditional probability tables:
 
 ```python
 def normalize(prob_dist):
