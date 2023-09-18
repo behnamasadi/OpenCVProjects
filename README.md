@@ -176,6 +176,7 @@ Install the conda packages:
 # [SLAM](#)
 [SLAM](docs/slam.md)  
 [Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)  
+[Graph SLAM](docs/graph_slam.md)
 [g2o](docs/g2o.md)  
 [NeRF-SLAM](docs/NeRF-SLAM.md)  
 [Factor Graph](docs/factor_graph.md)  
