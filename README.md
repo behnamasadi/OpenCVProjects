@@ -63,6 +63,7 @@ Install the conda packages:
    * [Pinhole Camera Model and Projection](docs/projection_camera_intrinsic.md)
    * [Direct Linear Transformation](docs/direct_linear_transformation.md)
    * [Zhang's Camera Calibration Algorithm](docs/zhang_camera_calibration_algorithm.md)
+   * [Extrinsic Calibration of Camera to LIDAR](https://www.dropbox.com/s/arhpp59d502fuks/2023IROS_fu.pdf?dl=0   
    * [Image Resolution and Calibration Parameter](docs/image_resolution_and_calibration_parameter.md)
    * [Affine Transformation](docs/affine_transformation.md)
    * [Perspective Transformation](docs/perspective_transform.md)
@@ -176,7 +177,7 @@ Install the conda packages:
 # [SLAM](#)
 [SLAM](docs/slam.md)  
 [Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)  
-[Graph SLAM](docs/graph_slam.md)
+[Graph SLAM](docs/graph_slam.md)  
 [g2o](docs/g2o.md)  
 [NeRF-SLAM](docs/NeRF-SLAM.md)  
 [Factor Graph](docs/factor_graph.md)  
