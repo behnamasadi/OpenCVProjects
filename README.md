@@ -181,6 +181,10 @@ Install the conda packages:
 [NeRF-SLAM](docs/NeRF-SLAM.md)  
 [Factor Graph](docs/factor_graph.md)  
 [GTSAM](docs/GTSAM.md)  
+[Active Exposure Control for Robust Visual Odometry in HDR Environments](docs/active_exposure_control_HDR_environments.md)  
+
+
+
 
 # [Lie Groups](#)
 - [Matrix Lie Groups for Robotics](docs/matrix_lie_groups.md)
