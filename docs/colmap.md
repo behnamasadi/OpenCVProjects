@@ -568,7 +568,92 @@ Refs: [1](https://colmap.github.io/cameras.html)
 
 ## Rig bundle Adjuster
 
-Refs: [1](https://github.com/colmap/colmap/issues/891)
+<img src="images/camera_rig.png" alt="camera_rig" width="40%" height="40%" />
+
+
+
+
+An example configuration of a single camera rig:
+
+```
+ [
+   {
+     "ref_camera_id": 1,
+     "cameras":
+     [
+       {
+           "camera_id": 1,
+           "image_prefix": "left1_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [1, 0, 0, 0]
+       },
+       {
+           "camera_id": 2,
+           "image_prefix": "left2_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 1, 0, 0]
+       },
+       {
+           "camera_id": 3,
+           "image_prefix": "right1_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 0, 1, 0]
+       },
+       {
+           "camera_id": 4,
+           "image_prefix": "right2_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 0, 0, 1]
+       }
+     ]
+   }
+ ]
+
+ The "camera_id" and "image_prefix" fields are required, whereas the
+ "rel_tvec" and "rel_qvec" fields optionally specify the relative
+ extrinsics of the camera rig in the form of a translation vector and a
+ rotation quaternion. The relative extrinsics rel_qvec and rel_tvec transform
+ coordinates from rig to camera coordinate space. If the relative extrinsics
+ are not provided then they are automatically inferred from the
+ reconstruction.
+
+ This file specifies the configuration for a single camera rig and that you
+ could potentially define multiple camera rigs. The rig is composed of 4
+ cameras: all images of the first camera must have "left1_image" as a name
+ prefix, e.g., "left1_image_frame000.png" or "left1_image/frame000.png".
+ Images with the same suffix ("_frame000.png" and "/frame000.png") are
+ assigned to the same snapshot, i.e., they are assumed to be captured at the
+ same time. Only snapshots with the reference image registered will be added
+ to the bundle adjustment problem. The remaining images will be added with
+ independent poses to the bundle adjustment problem. The above configuration
+ could have the following input image file structure:
+
+    /path/to/images/...
+        left1_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        left2_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        right1_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        right2_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+```
+
+you can call `rig_bundle_adjuster` to run bundle adjuster for a known rig mode.
+
+Refs: [1](https://github.com/colmap/colmap/issues/891), [2](https://github.com/colmap/colmap/issues/1624)
 
 
 
