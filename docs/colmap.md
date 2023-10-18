@@ -568,7 +568,7 @@ Refs: [1](https://colmap.github.io/cameras.html)
 
 ## Rig bundle Adjuster
 
-<imag src="images/camera_rig.png" alt="camera_rig" />
+<img src="images/camera_rig.png" alt="camera_rig" />
 
 
 
