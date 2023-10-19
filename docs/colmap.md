@@ -379,6 +379,10 @@ colmap model_merger \
     --input_path2 /path/to/sub-model2 \
     --output_path /path/to/merged-model
 ```
+
+The two folders should contain the output of the reconstruction process, i.e., either the `cameras.bin, images.bin, points3D.bin `files or the `cameras.txt, images.txt, points3D.txt` files.
+
+
 To improve the quality of the alignment between the two sub-models, it is recommended to run another global bundle adjustment after the merge: 
 
 ```
