@@ -212,6 +212,26 @@ Warning: The GPU implementation of SIFT simply does not support estimating **aff
 
 Refs: [1](https://colmap.github.io/faq.html#increase-number-of-matches-sparse-3d-points)
 
+## Guided Matching
+
+
+`SiftMatching.guided_matching` is an option used to enable or disable guided matching for feature matches.
+
+Guided matching is used primarily in the context of epipolar geometry. Given an image pair and the essential matrix `E` that relates them, the epipolar constraint states that for any point in the first image, its corresponding match in the second image should lie on a specific line known as the epipolar line. This constraint can be derived from the essential matrix `E`.
+
+Guided matching leverages this epipolar constraint to refine feature matches. Here's what happens when you enable `SiftMatching.guided_matching`:
+
+1. Initial matches between two images are found based on the SIFT descriptors.
+2. Using the matches, an essential matrix `E` is estimated.
+3. With the estimated `E`, the epipolar lines in the second image for each feature in the first image are computed.
+4. Matches that don't lie close to these epipolar lines are considered as mismatches and are discarded.
+5. The result is a refined set of matches that adhere better to the epipolar geometry.
+
+Guided matching is especially useful in cases where there might be many false matches, as it uses the geometric relationship between the matched points to further refine and filter the matches.
+
+If `SiftMatching.guided_matching` is set to `true`, guided matching will be applied; if set to `false`, it won't be applied.
+
+
 ## Feature Matching
 
 ### Exhaustive Matching   
@@ -390,6 +410,41 @@ colmap bundle_adjuster \
     --input_path /path/to/merged-model \
     --output_path /path/to/refined-merged-model
 ```
+
+## Merge two Colmap Databases
+
+Merging two COLMAP databases can be useful when you have processed different subsets of a dataset separately and want to bring the results together into a single database. To merge two COLMAP databases, follow these steps:
+
+1. **Backup Databases**: 
+   
+   Before making any changes, always backup your databases to prevent any unintended data loss.
+
+2. **Use COLMAP's `database_merger` Tool**:
+
+   COLMAP provides a tool named `database_merger` specifically for merging two databases.
+
+   ```bash
+   colmap database_merger \
+       --database_path1 path/to/database1.db \
+       --database_path2 path/to/database2.db \
+       --output_path path/to/merged_database.db
+   ```
+
+   Replace `path/to/database1.db`, `path/to/database2.db`, and `path/to/merged_database.db` with your actual paths. 
+
+   This command will merge the contents of `database1.db` and `database2.db` into `merged_database.db`.
+
+3. **Inspect the Merged Database**:
+
+   After merging, you should check the resulting database to ensure that the data has been merged correctly. You can use COLMAP's GUI to open the database and inspect its contents.
+
+4. **Proceed with Reconstruction**:
+
+   If everything looks good, you can continue with the reconstruction process using the merged database.
+
+Note: Ensure that the two databases you are merging are compatible. They should ideally be created with the same version of COLMAP and should not have overlapping images or camera IDs. If there are conflicts between the two databases, the merging process might produce unexpected results.
+
+
   
 
 ## Extending COLMAP
@@ -575,8 +630,6 @@ Refs: [1](https://colmap.github.io/cameras.html)
 <img src="images/camera_rig.png" alt="camera_rig" width="40%" height="40%" />
 
 
-
-
 An example configuration of a single camera rig:
 
 ```
@@ -655,9 +708,24 @@ An example configuration of a single camera rig:
             ...
 ```
 
-you can call `rig_bundle_adjuster` to run bundle adjuster for a known rig mode.
+you can call `rig_bundle_adjuster` to run bundle adjuster for a known rig mode:
+
+```bash
+colmap rig_bundle_adjuster --input_path $DATASET_PATH/sparse/0 --output_path $DATASET_PATH/sparse/rig --rig_config_path $DATASET_PATH/rig_config.json
+```
+
+Example in the [documentation](https://github.com/colmap/colmap/blob/main/src/colmap/exe/sfm.cc)  
+
+Example of parameters in the  [test file](https://github.com/colmap/colmap/blob/main/src/colmap/scene/camera_rig_test.cc)  
+
+
 
 Refs: [1](https://github.com/colmap/colmap/issues/891), [2](https://github.com/colmap/colmap/issues/1624)
 
 
+## Colmap SLAM
+
+
+Paper: [COLMAP-SLAM: A FRAMEWORK FOR VISUAL ODOMETRY](https://isprs-archives.copernicus.org/articles/XLVIII-1-W1-2023/317/2023/isprs-archives-XLVIII-1-W1-2023-317-2023.pdf)  
+[code](https://github.com/3DOM-FBK/COLMAP_SLAM)
 
