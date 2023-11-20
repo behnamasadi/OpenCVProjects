@@ -2,7 +2,7 @@
 
 ## Installation using docker
 ### 1. Building the Image
-There is docker file for this project where contains all dependencies and you build the image with :   
+There is docker file for this project that contains all dependencies and you build the image with :   
 `docker build -t sfm .`
 
 to quickly check your nvidia docker, run:
@@ -11,7 +11,7 @@ to quickly check your nvidia docker, run:
 
 
 ### 2. Creating the container
-Create a container where you mount you image dataset into your container: 
+Create a container where you mount your image dataset into your container: 
 
 `docker run --gpus all --name <continer-name> -v <image-dataset-path-on-host>:<path-in-the-container> -it <docker-image-name>`
 
@@ -78,7 +78,7 @@ to see the version of the CUDA compiler:
 ```
  /usr/local/cuda/bin/nvcc --version
  ```
-to set the prefered CUDA version:
+to set the preferred CUDA version:
 ```
 to set the preferred executable for compiling CUDA language files
 ```
@@ -151,11 +151,11 @@ create a project folder i.e. `south-building`. This directory must contain a fol
 
 `find . -maxdepth 1 -iname "*.jpg" | xargs -L1 -I{} convert -resize 20% "{}" _resized/"{}"`
 
-First set the path:
+First, set the path:
 
 `DATASET_PATH=/sfm/image_dataset/south-building`
 
-and create dense and sparse directory:
+and create dense and sparse directories:
 
 ```
 mkdir $DATASET_PATH/sparse
@@ -175,7 +175,7 @@ colmap feature_extractor  \
 
 If you have your camera parameter you specify them:
 
-set you camera parameters:
+set your camera parameters:
 ```
 CAM=fx,fy,cx,cy,k1,k2,k3,k4
 ```
@@ -212,6 +212,26 @@ Warning: The GPU implementation of SIFT simply does not support estimating **aff
 
 Refs: [1](https://colmap.github.io/faq.html#increase-number-of-matches-sparse-3d-points)
 
+## Guided Matching
+
+
+`SiftMatching.guided_matching` is an option used to enable or disable guided matching for feature matches.
+
+Guided matching is used primarily in the context of epipolar geometry. Given an image pair and the essential matrix `E` that relates them, the epipolar constraint states that for any point in the first image, its corresponding match in the second image should lie on a specific line known as the epipolar line. This constraint can be derived from the essential matrix `E`.
+
+Guided matching leverages this epipolar constraint to refine feature matches. Here's what happens when you enable `SiftMatching.guided_matching`:
+
+1. Initial matches between two images are found based on the SIFT descriptors.
+2. Using the matches, an essential matrix `E` is estimated.
+3. With the estimated `E`, the epipolar lines in the second image for each feature in the first image are computed.
+4. Matches that don't lie close to these epipolar lines are considered mismatches and are discarded.
+5. The result is a refined set of matches that adhere better to the epipolar geometry.
+
+Guided matching is especially useful in cases where there might be many false matches, as it uses the geometric relationship between the matched points to further refine and filter the matches.
+
+If `SiftMatching.guided_matching` is set to `true`, guided matching will be applied; if set to `false`, it won't be applied.
+
+
 ## Feature Matching
 
 ### Exhaustive Matching   
@@ -223,8 +243,8 @@ colmap exhaustive_matcher \
 ```
 ### Sequential Matching
 
-If your images are in a sequential order and consecutive frames have visual overlap, consecutively captured images can be matched against each other. This matching mode has built-in loop detection based on a vocabulary tree.
-Every N-th image (`loop_detection_period`) is matched against its visually most similar images (`loop_detection_num_images`). Image file names must be ordered sequentially (e.g., `image0001.jpg, image0002.jpg`, etc.), images are explicitly ordered according to their file names. Note that loop detection requires a pre-trained vocabulary tree, that can be downloaded from [Here](https://demuc.de/colmap/).
+If your images are in sequential order and consecutive frames have visual overlap, consecutively captured images can be matched against each other. This matching mode has built-in loop detection based on a vocabulary tree.
+Every N-th image (`loop_detection_period`) is matched against its visually most similar images (`loop_detection_num_images`). Image file names must be ordered sequentially (e.g., `image0001.jpg, image0002.jpg`, etc.), and images are explicitly ordered according to their file names. Note that loop detection requires a pre-trained vocabulary tree, that can be downloaded from [Here](https://demuc.de/colmap/).
 
 ```
 colmap sequential_matcher \
@@ -390,6 +410,41 @@ colmap bundle_adjuster \
     --input_path /path/to/merged-model \
     --output_path /path/to/refined-merged-model
 ```
+
+## Merge two Colmap Databases
+
+Merging two COLMAP databases can be useful when you have processed different subsets of a dataset separately and want to bring the results together into a single database. To merge two COLMAP databases, follow these steps:
+
+1. **Backup Databases**: 
+   
+   Before making any changes, always backup your databases to prevent any unintended data loss.
+
+2. **Use COLMAP's `database_merger` Tool**:
+
+   COLMAP provides a tool named `database_merger` specifically for merging two databases.
+
+   ```bash
+   colmap database_merger \
+       --database_path1 path/to/database1.db \
+       --database_path2 path/to/database2.db \
+       --output_path path/to/merged_database.db
+   ```
+
+   Replace `path/to/database1.db`, `path/to/database2.db`, and `path/to/merged_database.db` with your actual paths. 
+
+   This command will merge the contents of `database1.db` and `database2.db` into `merged_database.db`.
+
+3. **Inspect the Merged Database**:
+
+   After merging, you should check the resulting database to ensure that the data has been merged correctly. You can use COLMAP's GUI to open the database and inspect its contents.
+
+4. **Proceed with Reconstruction**:
+
+   If everything looks good, you can continue with the reconstruction process using the merged database.
+
+Note: Ensure that the two databases you are merging are compatible. They should ideally be created with the same version of COLMAP and should not have overlapping images or camera IDs. If there are conflicts between the two databases, the merging process might produce unexpected results.
+
+
   
 
 ## Extending COLMAP
@@ -571,10 +626,15 @@ Refs: [1](https://colmap.github.io/cameras.html)
 
 
 ## Rig bundle Adjuster
+What the rig bundle adjuster does is it takes a 3D reconstruction as input and performs some form of constrained bundle adjustment. The constraint here comes from using a multi-camera rig. During reconstruction, Colmap does not enforce relative pose constraints between images taken at the same point in time by the different cameras in the multi-camera rig. This is done as a post-processing step by the rig bundle adjuster.
+To this end, you first need to define the multi-camera rig (as explained in the documentation starting in the above code snippet).
+
+Note that the purpose of the rig bundle adjuster is not pose graph optimization. Rather it tries to ensure a rigid movement of the multi-camera rig, i.e., the relative pose between two cameras in the rig should stay the same over all snapshots (images taken by the multi-camera rig at the same point in time).
+This is not the same as pose graph optimization, where relative poses between images are used as measurements.
+
+Refs: [1](https://github.com/colmap/colmap/issues/891)
 
 <img src="images/camera_rig.png" alt="camera_rig" width="40%" height="40%" />
-
-
 
 
 An example configuration of a single camera rig:
@@ -655,9 +715,25 @@ An example configuration of a single camera rig:
             ...
 ```
 
-you can call `rig_bundle_adjuster` to run bundle adjuster for a known rig mode.
+you can call `rig_bundle_adjuster` to run the bundle adjuster for a known rig mode:
 
-Refs: [1](https://github.com/colmap/colmap/issues/891), [2](https://github.com/colmap/colmap/issues/1624)
+```bash
+colmap rig_bundle_adjuster --input_path $DATASET_PATH/sparse/0 --output_path $DATASET_PATH/sparse/rig --rig_config_path $DATASET_PATH/rig_config.json
+```
+
+Example in the [documentation](https://github.com/colmap/colmap/blob/main/src/colmap/exe/sfm.cc)  
+
+Example of parameters in the  [test file](https://github.com/colmap/colmap/blob/main/src/colmap/scene/camera_rig_test.cc)  
 
 
+
+Refs: [1](https://github.com/colmap/colmap/issues/1624), [2](https://pdfs.semanticscholar.org/b01d/3c3cd7b43e58a344c8ea40d08aa87d63b13f.pdf)
+
+
+
+## Colmap SLAM
+
+
+Paper: [COLMAP-SLAM: A FRAMEWORK FOR VISUAL ODOMETRY](https://isprs-archives.copernicus.org/articles/XLVIII-1-W1-2023/317/2023/isprs-archives-XLVIII-1-W1-2023-317-2023.pdf)  
+[code](https://github.com/3DOM-FBK/COLMAP_SLAM)
 
