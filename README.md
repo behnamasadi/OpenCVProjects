@@ -63,7 +63,7 @@ Install the conda packages:
    * [Pinhole Camera Model and Projection](docs/projection_camera_intrinsic.md)
    * [Direct Linear Transformation](docs/direct_linear_transformation.md)
    * [Zhang's Camera Calibration Algorithm](docs/zhang_camera_calibration_algorithm.md)
-   * [Extrinsic Calibration of Camera to LIDAR](https://www.dropbox.com/s/arhpp59d502fuks/2023IROS_fu.pdf?dl=0   
+   * [Extrinsic Calibration of Camera to LIDAR](https://www.dropbox.com/s/arhpp59d502fuks/2023IROS_fu.pdf?dl=0)   
    * [Image Resolution and Calibration Parameter](docs/image_resolution_and_calibration_parameter.md)
    * [Affine Transformation](docs/affine_transformation.md)
    * [Perspective Transformation](docs/perspective_transform.md)
@@ -77,7 +77,7 @@ Install the conda packages:
    * [Image Rectification](docs/image_rectification.md)
    * [Image Registration](docs/image_registration.md)
    * [Correspondence Problem](docs/correspondence_problem.md)
-   * [Stereo Vision](docs/stereo_vision.md)
+   * [Stereo Vision, Disparity Map](docs/stereo_vision_disparity_map.md)
    * [Parallax](docs/parallax.md)
    * [Optical Flow](docs/optical_flow.md)
    * [Visual Odometry](docs/visual_odometry.md)
@@ -183,7 +183,7 @@ Install the conda packages:
 [Factor Graph](docs/factor_graph.md)  
 [GTSAM](docs/GTSAM.md)  
 [Active Exposure Control for Robust Visual Odometry in HDR Environments](docs/active_exposure_control_HDR_environments.md)  
-
+[Resilient Autonomy in Perceptually-degraded Environments](https://www.youtube.com/watch?v=L0PQKxU8cps)
 
 
 

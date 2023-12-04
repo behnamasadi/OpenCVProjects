@@ -16,6 +16,8 @@ Image contrast refers to the difference in luminance or color that makes objects
 <img src="images/histogram_sample.jpg" />
 
 
+[code](../scripts/histogram/image_contrast.py)
+
 # High and Low Key Images
 
 **High Key Images:**  High key images predominantly consist of light tones and whites, with very few mid-tones and shadows. Dark shadows, if present, are minimal.
@@ -173,6 +175,9 @@ Creating new image which has new uniform distribution. The primary idea behind *
 
 Refs: [1](https://automaticaddison.com/difference-between-histogram-equalization-and-histogram-matching/)
 
+
+[code](../scripts/histogram/histogram_equalization.py)
+
 # Adaptive Histogram Equalization (AHE):
 To counter the issues of standard HE, AHE was introduced.
 Instead of applying HE on the whole image, AHE divides the image into smaller, non-overlapping regions or tiles. HE is then applied to each of these small tiles.
@@ -192,6 +197,8 @@ This contrast limiting reduces the amplification of noise in the image.
 After the contrast-limiting step, the neighboring tiles are combined using bilinear interpolation to remove any artificially induced boundaries, making the enhancement smooth.
 
 
+[code](../scripts/histogram/contrast_limited_adaptive_histogram_equalization.py)
+
 
 # Gamma Correction
 
@@ -206,7 +213,7 @@ Refs: <a href="https://en.wikipedia.org/wiki/Gamma_correction#Methods_to_perform
 
 
 
-
+[code](../scripts/histogram/calc_histogram.py)
 
 
 
