@@ -18,17 +18,17 @@ We cross product both side by <img src="https://latex.codecogs.com/svg.image?T" 
 
 <br/>
 <br/>
-For any vector cross product of with itselt is zero:
+For any vector cross product of with itself is zero:
 <br/>
 <br/>
 <img src="https://latex.codecogs.com/svg.image?T&space;\times&space;T=0" title="https://latex.codecogs.com/svg.image?T \times T=0" />
 <br/>
 <br/>
 
-We dot product both side by <img src="https://latex.codecogs.com/svg.image?O_L" title="https://latex.codecogs.com/svg.image?O_L" />:
+We dot product both side by <img src="https://latex.codecogs.com/svg.latex?O_%7BL_%7B1%5Ctimes%203%7D%7D%5ET" title="https://latex.codecogs.com/svg.image?O_{L_{1\times 3}}^T" />:
 <br/>
 <br/>
-<img src="https://latex.codecogs.com/svg.image?O_L.(T\times&space;O_L)=O_L.(T\times&space;RO_R)&space;" title="https://latex.codecogs.com/svg.image?O_L.(T\times O_L)=O_L.(T\times RO_R) " />
+<img src="https://latex.codecogs.com/svg.latex?O_%7BL%7D%5ET.%28T%5Ctimes%20O_L%29%3DO_%7BL%7D%5ET.%28T%5Ctimes%20RO_R%29" title="https://latex.codecogs.com/svg.image?O_{L}^T.(T\times O_L)=O_{L}^T.(T\times RO_R) " />
 <br/>
 <br/>
 on the lhs, <img src="https://latex.codecogs.com/svg.image?O_L" title="https://latex.codecogs.com/svg.image?O_L" />   is perpendicular to <img src="https://latex.codecogs.com/svg.image?T\times&space;O_L" title="https://latex.codecogs.com/svg.image?T\times O_L" />
@@ -37,7 +37,7 @@ so the result is zero vector, also we can write any cross product as skew-symmet
 <br/>
 
 
-<img src="https://latex.codecogs.com/svg.image?0=O_L^T&space;&space;\left&space;\lfloor&space;T&space;\right&space;\rfloor_{3\times&space;3}&space;&space;&space;&space;&space;&space;R_{3\times&space;3}&space;O_R&space;" title="https://latex.codecogs.com/svg.image?0=O_L^T \left \lfloor T \right \rfloor_{3\times 3} R_{3\times 3} O_R " />
+<img src="https://latex.codecogs.com/svg.latex?0_%7B1%20%5Ctimes%201%7D%3DO_%7BL_%7B1%5Ctimes%203%7D%7D%5ET%20%5Cleft%20%5Clfloor%20T%20%5Cright%20%5Crfloor_%7B3%5Ctimes%203%7D%20R_%7B3%5Ctimes%203%7D%20O_%7BR_%7B3%20%5Ctimes%201%7D%20%7D" title="https://latex.codecogs.com/svg.image?0_{1 \times 1}=O_{L_{1\times 3}}^T \left \lfloor T \right \rfloor_{3\times 3} R_{3\times 3} O_{R_{3 \times 1} }" />
 
 
 <br/>
