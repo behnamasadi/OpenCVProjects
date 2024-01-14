@@ -66,19 +66,53 @@ def rotationMatrix(roll, pitch, yaw):
     return R
 
 
-def creatingEllipsoidInWorldCoordinate(center_x, center_y, center_z, a=2,   b=3,   c=1.6):
-    phiStepSize = 0.10
-    thetaStepSize = 0.20
+def createChessBoardInWorldCoordinate(center_x, center_y, center_z, squareSize=0.2, numberOfRows=6, numberOfCols=7):
+    objectPointsInObjectCoordinate = []
     objectPointsInWorldCoordinate = []
 
-    for phi in np.arange(-np.pi,  np.pi,  phiStepSize):
-        for theta in np.arange(-np.pi / 2, np.pi / 2, thetaStepSize):
-            X = a * np.cos(theta) * np.cos(phi)+center_x
-            Y = b * np.cos(theta) * np.sin(phi)+center_y
-            Z = c * np.sin(theta)+center_z
-            objectPointsInWorldCoordinate.append(np.array([X, Y, Z]))
+    for r in range(numberOfRows):
+        for c in range(numberOfCols):
+            # Points in object coordinate system (origin at one corner of the chessboard)
+            objectPoint = np.array(
+                [r * squareSize, 0.0, c * squareSize], dtype=np.float32)
+            objectPointsInObjectCoordinate.append(objectPoint)
 
-    return np.array(objectPointsInWorldCoordinate)
+            # Points in world coordinate system (offset by center_x, center_y, center_z)
+            worldPoint = objectPoint + \
+                np.array([center_x, center_y, center_z], dtype=np.float32)
+            objectPointsInWorldCoordinate.append(worldPoint)
+
+    return np.array(objectPointsInObjectCoordinate), np.array(objectPointsInWorldCoordinate)
+
+
+# camera intrinsic parameters
+focalLength = 2.0
+numberOfPixelInHeight = 600
+numberOfPixelInWidth = 600
+
+heightOfSensor = 10
+widthOfSensor = 10
+
+my = (numberOfPixelInHeight) / heightOfSensor
+U0 = (numberOfPixelInHeight) / 2
+
+mx = (numberOfPixelInWidth) / widthOfSensor
+V0 = (numberOfPixelInWidth) / 2
+
+
+K = np.array([
+             [focalLength * mx, 0, V0],
+             [0, focalLength * my, U0],
+             [0, 0, 1]
+             ])
+
+
+print("K:\n", K)
+
+distCoeffs = np.array([0.0, 0.0, 0.0, 0.0])
+
+
+# camera extrinsic parameters
 
 
 roll_cam0 = -np.pi / 2
@@ -140,62 +174,66 @@ ax.set_xlim((-5, 5))
 ax.set_ylim((-5, 5))
 ax.set_zlim((0, 5))
 
-objectPointsInWorldCoordinate = creatingEllipsoidInWorldCoordinate(
-    center_x=0, center_y=4, center_z=1.1, a=2,   b=3/5,   c=1.6/5)
 
-ax.scatter(objectPointsInWorldCoordinate[:, 0],
-           objectPointsInWorldCoordinate[:, 1], objectPointsInWorldCoordinate[:, 2])
-
-
-# camera intrinsic parameters
+centers_x = [0, 0.5]
+centers_y = [4, 4.2]
+centers_z = [1.1, 1.3]
 
 
-focalLength = 2.0
-numberOfPixelInHeight = 600
-numberOfPixelInWidth = 600
+objectPoints = []
+imagePoints1 = []
+imagePoints2 = []
 
-heightOfSensor = 10
-widthOfSensor = 10
+for center_x, center_y, center_z in zip(centers_x, centers_y, centers_z):
+    # Generate object points
+    print(center_x, center_y, center_z)
 
-my = (numberOfPixelInHeight) / heightOfSensor
-U0 = (numberOfPixelInHeight) / 2
+    objectPointsInObjectCoordinate, objectPointsInWorldCoordinate = createChessBoardInWorldCoordinate(
+        center_x, center_y, center_z, squareSize=0.2, numberOfRows=5, numberOfCols=7)
 
-mx = (numberOfPixelInWidth) / widthOfSensor
-V0 = (numberOfPixelInWidth) / 2
+    ax.scatter(objectPointsInWorldCoordinate[:, 0],
+               objectPointsInWorldCoordinate[:, 1], objectPointsInWorldCoordinate[:, 2])
 
+    ############################## projecting points into cam0 and cam1 to find the corresponding projection point   ##############################
 
-K = np.array([
-             [focalLength * mx, 0, V0],
-             [0, focalLength * my, U0],
-             [0, 0, 1]
-             ])
+    imagePoints_cam0, jacobian = cv2.projectPoints(
+        objectPointsInWorldCoordinate, np.linalg.inv(rotationMatrix_cam0), -t_cam0, K, distCoeffs)
 
+    imagePoints_cam1, jacobian = cv2.projectPoints(
+        objectPointsInWorldCoordinate, np.linalg.inv(rotationMatrix_cam1), -t_cam1, K, distCoeffs)
 
-print("K:\n", K)
+    ###################################################################################################
+    objectPoints.append(objectPointsInObjectCoordinate)
+    imagePoints1.append(imagePoints_cam0.reshape(-1, 1, 2))
+    imagePoints2.append(imagePoints_cam1.reshape(-1, 1, 2))
 
-distCoeffs = np.array([0.0, 0.0, 0.0, 0.0])
+    ############################## creating image from projected points in  ##############################
 
+    leftImage = np.zeros([numberOfPixelInHeight, numberOfPixelInWidth])
+    for pixel_coordinate in imagePoints_cam0:
+        U = int(pixel_coordinate[0, 0])
+        V = int(pixel_coordinate[0, 1])
+        leftImage[V, U] = 1
 
-imagePoints_cam0, jacobian = cv2.projectPoints(
-    objectPointsInWorldCoordinate, np.linalg.inv(rotationMatrix_cam0), -t_cam0, K, distCoeffs)
+    rightImage = np.zeros([numberOfPixelInHeight, numberOfPixelInWidth])
+    for pixel_coordinate in imagePoints_cam1:
+        U = int(pixel_coordinate[0, 0])
+        V = int(pixel_coordinate[0, 1])
+        rightImage[V, U] = 1
 
+    # essential_matrix_estimation
+    cv2.imshow('leftImage', leftImage)
+    cv2.imshow('rightImage', rightImage)
 
-leftImage = np.zeros([numberOfPixelInHeight, numberOfPixelInWidth])
-for pixel_coordinate in imagePoints_cam0:
-    U = int(pixel_coordinate[0, 0])
-    V = int(pixel_coordinate[0, 1])
-    leftImage[V, U] = 1
+    # cv2.imwrite('leftImage_'+str(center_x)+".jpg", leftImage)
+    # plt.show()
+    # Wait for a key press and check if it is the Escape key
+    key = cv2.waitKey(0)
+    if key == 27:  # ASCII value of Escape key is 27
+        cv2.destroyAllWindows()  # Close all OpenCV windows
+        continue  # Continue to the next iteration of the loop
 
-
-imagePoints_cam1, jacobian = cv2.projectPoints(
-    objectPointsInWorldCoordinate, np.linalg.inv(rotationMatrix_cam1), -t_cam1, K, distCoeffs)
-
-rightImage = np.zeros([numberOfPixelInHeight, numberOfPixelInWidth])
-for pixel_coordinate in imagePoints_cam1:
-    U = int(pixel_coordinate[0, 0])
-    V = int(pixel_coordinate[0, 1])
-    rightImage[V, U] = 1
-
+# since we know exact pose of camera we can find the pose of cam1 in cam0
 
 cam1_in_cam0 = tm.get_transform("cam1", "cam0")
 print("cam1_in_cam0:\n", cam1_in_cam0)
@@ -207,16 +245,49 @@ print("T:\n", t_cam1-t_cam0)
 R = cam1_in_cam0[0:3, 0:3]
 T = cam1_in_cam0[0:3, 3]
 
+print("######################## ground truth ########################")
+
+
 print(R)
 print(T)
 
 
-######################## stereoCalibrate ########################
+######################## we use stereoCalibrate to find  the pose of cam1 in cam0 ########################
 
-# cv.stereoCalibrate(	objectPoints, imagePoints1, imagePoints2, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, imageSize[, R[, T[, E[, F[, flags[, criteria]]]]]]	) ->	retval, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F
+# objectPoints = [objectPointsInObjectCoordinate]
+# imagePoints1 = [imagePoints_cam0.reshape(-1, 1, 2)]
+# imagePoints2 = [imagePoints_cam1.reshape(-1, 1, 2)]
 
 
-######################## stereoRectify ########################
+# Camera matrices and distortion coefficients (assuming no distortion in simulation)
+cameraMatrix1 = K.copy()
+cameraMatrix2 = K.copy()
+distCoeffs1 = np.zeros(4)
+distCoeffs2 = np.zeros(4)
+
+# Image size
+imageSize = (numberOfPixelInWidth, numberOfPixelInHeight)
+
+# Perform stereo calibration
+retval, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F = cv2.stereoCalibrate(
+    objectPoints,
+    imagePoints1,
+    imagePoints2,
+    cameraMatrix1, distCoeffs1,
+    cameraMatrix2, distCoeffs2,
+    imageSize,
+    flags=cv2.CALIB_FIX_INTRINSIC
+)
+
+print("########################  stereoCalibrate ########################")
+print("Stereo Calibration Output:")
+print("Rotation matrix (R):\n", R)
+print("Translation vector (T):\n", T)
+print("Essential matrix (E):\n", E)
+print("Fundamental matrix (F):\n", F)
+
+
+print("######################## stereoRectify ########################")
 
 
 R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(
@@ -235,12 +306,6 @@ print("P1: projects points given in the rectified first camera coordinate system
 print("P2: projects points given in the rectified first camera coordinate system into the rectified second camera's image.:\n", P2)
 
 
-# essential_matrix_estimation
-cv2.imshow('leftImage', leftImage)
-cv2.imshow('rightImage', rightImage)
-plt.show()
-
-
 ######################## initUndistortRectifyMap ########################
 
 
@@ -251,5 +316,3 @@ map1, map2 = cv2.initUndistortRectifyMap(
 print("map1 :\n", map1.shape)
 
 print("map2 :\n", map2.shape)
-
-cv2.waitKey(0)
