@@ -288,8 +288,8 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/src/sandbox.cpp")
 	target_link_libraries(sandbox ${OpenCV_LIBS})
 endif()
 
-add_executable(visual_odometry src/vo/visual_odometry.cpp)
-target_link_libraries(visual_odometry ${OpenCV_LIBS})
+# add_executable(visual_odometry src/vo/visual_odometry.cpp)
+# target_link_libraries(visual_odometry ${OpenCV_LIBS})
 
-add_executable(visodo src/vo/visodo.cpp)
-target_link_libraries(visodo ${OpenCV_LIBS})
+# add_executable(visodo src/vo/visodo.cpp)
+# target_link_libraries(visodo ${OpenCV_LIBS})

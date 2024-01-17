@@ -1,9 +1,8 @@
 #include "csv.h"
+#include "transformation.hpp"
 #include <iomanip>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
-#include "transformation.hpp"
-
 
 std::vector<cv::Point3d>
 readPoints(std::string pathToPointFile = "../data/points.csv") {
@@ -38,7 +37,6 @@ readPoints(std::string pathToPointFile = "../data/points.csv") {
 
   return objectPoints;
 }
-
 
 cv::Mat
 findFundamentalMatrix(std::vector<cv::Point2d> &imagePointsLeftCamera,
@@ -352,14 +350,15 @@ void project3DPoint() {
       tyLeft, tzLeft, txRight, tyRight, tzRight;
 
   rollLeft = 0;
-  pitchLeft = +M_PI / 36;
-  //pitchLeft = +M_PI / 4;
+  pitchLeft = +M_PI / 20;
+  // pitchLeft = +M_PI / 36;
+  // pitchLeft = 0;
   yawLeft = 0;
 
   rollRight = 0;
-  pitchRight = -M_PI / 36;
-  //pitchRight = -M_PI / 4;
-
+  // pitchRight = -M_PI / 36;
+  // pitchRight = 0;
+  pitchRight = -M_PI / 20;
   yawRight = 0;
 
   txLeft = -0.5;
@@ -509,6 +508,41 @@ void project3DPoint() {
   //  form cv::Mat imagePointLeftCamInMatFrom = cv::Mat_<double>(3, 1); cv::Mat
   //  imagePointRightCamInMatFrom = cv::Mat_<double>(3, 1);
 
+  // Compute SVD of the fundamental matrix
+  cv::SVD svd(fundamentalMatrixOpenCV);
+
+  // The epipoles are in the null space of the fundamental matrix and its
+  // transpose The null space is the last column of the Vt matrix in the SVD
+  cv::Mat left_epipole = svd.vt.row(2); // For the fundamental matrix
+  cv::Mat right_epipole =
+      svd.u.col(2); // For the transpose of the fundamental matrix
+
+  // Print the size, type, and contents of the epipoles
+  std::cout << "Left Epipole Size: " << left_epipole.size() << std::endl;
+  std::cout << "Left Epipole Type: " << left_epipole.type() << std::endl;
+  std::cout << "Left Epipole Channels: " << left_epipole.channels()
+            << std::endl;
+  std::cout << "Left Epipole: " << left_epipole << std::endl;
+
+  std::cout << "Right Epipole Size: " << right_epipole.size() << std::endl;
+  std::cout << "Right Epipole Type: " << right_epipole.type() << std::endl;
+  std::cout << "Right Epipole Channels: " << right_epipole.channels()
+            << std::endl;
+  std::cout << "Right Epipole: " << right_epipole << std::endl;
+
+  std::cout << "---------------" << left_epipole.at<float>(0, 0) << std::endl;
+  std::cout << "---------------" << left_epipole.at<float>(1, 0) << std::endl;
+  std::cout << "---------------" << left_epipole.at<float>(2, 0) << std::endl;
+
+  // Normalize the epipoles (since they are homogeneous coordinates)
+  left_epipole = left_epipole / left_epipole.at<float>(2);
+  right_epipole = right_epipole / right_epipole.at<float>(2);
+
+  // Output the epipoles
+  std::cout << "Left Epipole: " << left_epipole << std::endl;
+  std::cout << "Right Epipole: " << right_epipole << std::endl;
+
+  // Drawing epipolar lines
   for (std::size_t i = 0; i < rightLines.size(); i++) {
 
     std::cout << rightLines.at(i) << std::endl;
@@ -517,6 +551,8 @@ void project3DPoint() {
     double a = l.val[0];
     double b = l.val[1];
     double c = l.val[2];
+
+    std::cout << "a: " << a << " b: " << b << " c: " << c << std::endl;
 
     /*ax+by+c=0*/
     double x0, y0, x1, y1;
@@ -552,6 +588,8 @@ void project3DPoint() {
     double a = l.val[0];
     double b = l.val[1];
     double c = l.val[2];
+
+    std::cout << "a: " << a << " b: " << b << " c: " << c << std::endl;
 
     /*ax+by+c=0*/
     double x0, y0, x1, y1;
