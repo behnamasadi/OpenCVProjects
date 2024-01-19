@@ -3,7 +3,7 @@
  Essential matrix <img src="https://latex.codecogs.com/svg.image?\mathbf{E}" title="https://latex.codecogs.com/svg.image?\mathbf{E}" /> is a <img src="https://latex.codecogs.com/svg.image?3\times&space;3&space;" title="https://latex.codecogs.com/svg.image?3\times 3 " /> that relates optical center of cameras
 <img src="images/Epipolar_geometry.svg" />
 
-We can relate any two frame by a rotation matrix and a translation vector:
+We can relate any two frames by a rotation matrix and a translation vector:
 <br/>
 <br/>
 <img src="https://latex.codecogs.com/svg.image?O_L=RO_R&plus;T&space;" title="https://latex.codecogs.com/svg.image?O_L=RO_R+T " />
@@ -127,7 +127,7 @@ where `S` is skew-symmetric matrix.
 It is possible to bring every skew-symmetric matrix to a block diagonal form by a special orthogonal transformation:
 
 
-<img src="https://latex.codecogs.com/svg.latex?A%3DQ \Sigma Q%5ET" alt="https://latex.codecogs.com/svg.latex?A=Q\Sigma Q^T" />
+<img src="https://latex.codecogs.com/svg.latex?A=Q\Sigma%20Q^T" alt="https://latex.codecogs.com/svg.latex?A=Q\Sigma Q^T" />
 
 <br/>
 <br/>
