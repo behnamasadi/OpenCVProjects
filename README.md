@@ -169,10 +169,13 @@ Install the conda packages:
 
 # [Bundle adjustment and Structure from motion](#)
 - [Colmap](docs/colmap.md)  
-- [Bundle Adjustment](docs/bundle_adjustment.md)
-- [Reprojection Error](docs/reprojection_error.md)   
-- [Photogrammetry](docs/photogrammetry.md)  
-- [Structure From Motion](docs/structure_from_motion.md)  
+- [Photogrammetry](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#photogrammetry)  
+- [Structure from Motion (SfM)](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#structure-from-motion--sfm-)  
+- [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
+- [Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)  
+
+
+  
 
 # [SLAM](#)
 [SLAM](docs/slam.md)  
