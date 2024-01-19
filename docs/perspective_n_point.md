@@ -1,11 +1,11 @@
 # Perspective-n-Point
-Perspective-n-Point is the problem to estimating the pose of a **calibrated** camera given a set of n 3D points in the world and their correspondence projection point in camera.
+Perspective-n-Point is the problem of estimating the pose of a **calibrated** camera given a set of n 3D points in the world and their correspondence projection point in the camera.
 
 # P3P
 
 <img src="images/p3p.svg" alt="images/p3p.svg" />
 
-First step: using cosine to relate the length in 4 triangle in the tetrahedron:
+First step: using cosine to relate the length in 4 triangles in the tetrahedron:
 
 <img src="images/p3p_length.jpg" alt="images/p3p_length.jpg" />
  
@@ -13,14 +13,14 @@ First step: using cosine to relate the length in 4 triangle in the tetrahedron:
 
 second step:
 
-<img src=" images/p3p_polynominals.jpg" width="860" height="540" alt=" images/p3p_polynominals.jpg" />
+<img src="images/p3p_polynominals.jpg" width="860" height="540" alt="images/p3p_polynominals.jpg" />
 
 
 which gives us for possible solution so we need a 4th point or initial guess.
 
 
 
-The solution look like these 4 tetrahedron:
+The solution looks like these 4 tetrahedrons:
 
 
 <img src="images/p3p_results.png" alt="images/p3p_results.png" />
@@ -43,7 +43,7 @@ int 	flags
 
 <img src="images/critical_cylinder.png" alt="images/critical_cylinder.png" />
 
-The solution get in-stable
+The solution gets in-stable
 
 
 Refs: [1](https://www.youtube.com/watch?v=N1aCvzFll6Q), [2](https://www.cis.upenn.edu/~cis580/Spring2015/Lectures/cis580-13-LeastSq-PnP.pdf), [3](https://www.youtube.com/watch?v=xdlLXEyCoJY)
