@@ -186,8 +186,15 @@ Install the conda packages:
 [Factor Graph](docs/factor_graph.md)  
 [GTSAM](docs/GTSAM.md)  
 [Active Exposure Control for Robust Visual Odometry in HDR Environments](docs/active_exposure_control_HDR_environments.md)  
-[Resilient Autonomy in Perceptually-degraded Environments](https://www.youtube.com/watch?v=L0PQKxU8cps)
-
+[Resilient Autonomy in Perceptually-degraded Environments](https://www.youtube.com/watch?v=L0PQKxU8cps)  
+[A visual introduction to Gaussian Belief Propagation](https://gaussianbp.github.io/)  
+[Lidar and IMU ](docs/lidar_and_imu.md)  
+[IMU Propagation Derivations](https://docs.openvins.com/propagation.html)  
+[Open Keyframe-based Visual-Inertial SLAM](https://github.com/ethz-asl/okvis)  
+[HBA Large-Scale LiDAR Mapping Module](https://github.com/hku-mars/HBA)  
+[Gaussian Splatting](docs/gaussian_splatting.md)  
+[GANeRF](https://github.com/barbararoessle/ganerf)  
+[Hierarchical, multi-resolution volumetric mapping](https://github.com/ethz-asl/wavemap)  
 
 
 # [Lie Groups](#)
