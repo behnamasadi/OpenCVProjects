@@ -39,31 +39,8 @@ Refs: [1](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/inst
 
 `apt-get install linux-headers-$(uname -r)`
 
-3. Remove Outdated Signing Key
-`apt-key del 7fa2af80`
+3. Download and install the CUDA from [here](https://developer.nvidia.com/cuda-downloads)
 
-4. Install the new cuda-keyring package:
-
-where `$distro/$arch` is `ubuntu2004/x86_64`
-
-`wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb`
-
-`wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb`
-
-`dpkg -i cuda-keyring_1.0-1_all.deb`
-
-5. Update the apt repository cache
-
-`apt-get update`
-
-6. Install CUDA SDK:
-
-These two commands must be executed separately:
-- `apt-get install cuda`
-
-- `apt-get install nvidia-gds`
-
-Refs: [1](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation)
 
 ## CUDA settings
 To see the current default version of installed CUDA:
@@ -78,12 +55,10 @@ to see the version of the CUDA compiler:
 ```
  /usr/local/cuda/bin/nvcc --version
  ```
-to set the preferred CUDA version:
+to set the preferred CUDA version and set the preferred executable for compiling CUDA language files:
+
 ```
-to set the preferred executable for compiling CUDA language files
-```
-CUDACXX=/usr/local/cuda-12.1/bin/nvcc
-```
+CUDACXX=/usr/local/<cuda-version>/bin/nvcc
 export PATH="/usr/local/<cuda-version>/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/<cuda-version>/lib64:$LD_LIBRARY_PATH"
 ```
@@ -92,17 +67,9 @@ for instance:
 export PATH="/usr/local/cuda-11.8/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
 ```
+
+
 ## COLMAP Installation
-
-Set the compilers:
-
-```
-export CC=/usr/bin/gcc-9
-export CXX=/usr/bin/g++-9
-export CUDAHOSTCXX=/usr/bin/g++-9
-export PATH="/usr/local/cuda-11.8/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
-```
 
 Dependencies:
  
@@ -131,19 +98,41 @@ sudo apt-get install \
     libceres-dev
 ```
 
+Under **Ubuntu 22.04**, there is a problem when compiling with Ubuntu’s default CUDA package and GCC, and you must compile against GCC 10:
+
+
+Set the compilers:
+
+```
+sudo apt-get install gcc-10 g++-10
+export CC=/usr/bin/gcc-10
+export CXX=/usr/bin/g++-10
+export CUDAHOSTCXX=/usr/bin/g++-10
+```
+
 Download and build COLMAP
 
 ``` 
-git clone https://github.com/colmap/colmap
-
-cd colmap
-
-cmake -S . -B build -DCMAKE_CUDA_ARCHITECTURES=native -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CUDA_STANDARD=14  -DCMAKE_CUDA_STANDARD_REQUIRED=TRUE -DCMAKE_CXX_STANDARD_REQUIRED=TRUE -DCMAKE_INSTALL_PREFIX=~/usr
-
-cmake --build build -j18
-
-cmake --install build
+git clone https://github.com/colmap/colmap &&
+cd colmap &&
+git pull https://github.com/colmap/colmap.git && 
+git fetch --tags &&
+git checkout $(git describe --tags `git rev-list --tags --max-count=1`) &&
+mkdir build &&
+cd build &&
+CUDA_ARCHITECTURES=75 &&
+cmake .. -GNinja -DCMAKE_CUDA_ARCHITECTURES=$CUDA_ARCHITECTURES -DCMAKE_INSTALL_PREFIX=~/usr &&
+ninja &&
+ninja install && 
 ```
+
+Now set the path so you can access the colmap:
+
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/$USER/usr/lib/
+export PATH=$PATH:/home/$USER/usr/bin
+```
+
 
 # Running COLMAP via Command-line Interface
 
@@ -346,7 +335,11 @@ Refs: [1](https://github.com/jamesbrink/docker-opengl)
 
 # Tips and Utility Tools
 
-## Reconstruct Sparse/Dense Model From Known Camera Poses
+## 1. Reconstruct Sparse/Dense Model From Known Camera Poses
+
+
+### Files and directory structure
+You data should have the following structure: 
 
 ```
 ├── cameras.txt
@@ -391,7 +384,102 @@ Refs: [1](https://github.com/jamesbrink/docker-opengl)
 
 Refs: [1](https://colmap.github.io/faq.html#reconstruct-sparse-dense-model-from-known-camera-poses)
 
-## Merge Disconnected Models
+
+
+### Example KITTI dataset:
+
+1. run the script [kitti_to_colmap_noise](../scripts/kitti/kitti_to_colmap_noise.py) and dump the output into `images.txt` file so
+
+
+```
+python kitti_to_colmap_noise.py > images.txt
+```
+
+### Setting up parameters
+
+Then set the camera param:
+
+```
+CAM=707.0912,707.0912,601.8873,183.1104
+```
+
+set the project:
+```
+project_name=kitti_noisy
+DATASET_PATH=/home/$USER/colmap_projects/$project_name
+```
+
+### Feature extraction
+
+extract the features:
+```
+colmap feature_extractor  \
+--database_path $DATASET_PATH/database.db  \
+--image_path $DATASET_PATH/images  \
+--ImageReader.single_camera=true --ImageReader.camera_model=PINHOLE --ImageReader.camera_params=$CAM \
+--SiftExtraction.use_gpu 1 \
+--SiftExtraction.estimate_affine_shape=true \
+--SiftExtraction.domain_size_pooling=true
+```
+
+or 
+
+```
+colmap feature_extractor  \
+--database_path $DATASET_PATH/database.db  \
+--image_path $DATASET_PATH/images  \
+--ImageReader.single_camera=true --ImageReader.camera_model=PINHOLE --ImageReader.camera_params=$CAM
+```
+
+### Matcher
+run the matcher:
+
+```
+colmap sequential_matcher \
+   --database_path $DATASET_PATH/database.db \
+   --SequentialMatching.overlap=3 \
+   --SequentialMatching.loop_detection=true \
+   --SequentialMatching.loop_detection_period=2 \
+   --SequentialMatching.loop_detection_num_images=50 \
+   --SequentialMatching.vocab_tree_path="$DATASET_PATH/../vocab_tree/vocab_tree_flickr100K_words32K.bin" \
+   --SiftMatching.use_gpu 1 --SiftMatching.gpu_index=-1  --SiftMatching.guided_matching=true 
+```
+
+create the following directory:
+
+```
+dense/sparse/model/0
+dense/refined/model/0
+```
+
+### Triangulation
+then run the 
+
+```
+colmap point_triangulator \
+    --database_path $DATASET_PATH/database.db \
+    --image_path $DATASET_PATH/images\
+    --input_path $DATASET_PATH/sparse/model/0 \
+    --output_path $DATASET_PATH/dense/sparse/model/0
+```
+
+Now run bundle adjuster to only optimize the extrinsic (camera position and orientations) and **NOT** intrinsic (camera parameter)
+
+
+```
+colmap bundle_adjuster  \
+  --input_path $DATASET_PATH/dense/sparse/model/0 \
+  --output_path $DATASET_PATH/dense/refined/model/0 \
+  --BundleAdjustment.refine_focal_length  0 \
+  --BundleAdjustment.refine_principal_point   0 \
+  --BundleAdjustment.refine_extra_params  0 \
+  --BundleAdjustment.refine_extrinsics  1
+```  
+
+
+
+
+## 2. Merging Disconnected Models
 
 ```
 colmap model_merger \
@@ -399,6 +487,7 @@ colmap model_merger \
     --input_path2 /path/to/sub-model2 \
     --output_path /path/to/merged-model
 ```
+
 
 The two folders should contain the output of the reconstruction process, i.e., either the `cameras.bin, images.bin, points3D.bin `files or the `cameras.txt, images.txt, points3D.txt` files.
 
@@ -410,6 +499,9 @@ colmap bundle_adjuster \
     --input_path /path/to/merged-model \
     --output_path /path/to/refined-merged-model
 ```
+
+
+
 
 ## Merge two Colmap Databases
 
