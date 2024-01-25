@@ -508,7 +508,7 @@ void project3DPoint() {
   //  form cv::Mat imagePointLeftCamInMatFrom = cv::Mat_<double>(3, 1); cv::Mat
   //  imagePointRightCamInMatFrom = cv::Mat_<double>(3, 1);
 
-  // Compute SVD of the fundamental matrix
+  // Compute SVD of the fundamental matrixcd wo
   cv::SVD svd(fundamentalMatrixOpenCV);
 
   // The epipoles are in the null space of the fundamental matrix and its
