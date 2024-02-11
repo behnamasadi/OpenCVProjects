@@ -606,7 +606,7 @@ ffmpeg -i input.mkv -map 0:v -map 0:a output.mp4
 
 
 
-# graph2dot
+# 8. graph2dot
 
 
 The graph2dot tool in FFmpeg allows you to create a visual representation (in the DOT format) of a filtergraph. The DOT format can then be used with software like Graphviz to generate graphical visualizations.
@@ -637,7 +637,7 @@ This command will generate a PNG image (filtergraph.png) that represents the fil
 Please note that graph2dot is a utility provided with FFmpeg's source code and might not be installed by default when you install FFmpeg using some package managers. You might need to obtain it from FFmpeg's source and possibly make it executable.
 
 
-# 8. Determining Pixel Format
+# 9. Determining Pixel Format
 
 ```
 ffprobe -v error  -show_entries stream=pix_fmt  input_video.mp4
@@ -695,7 +695,7 @@ In general, if you're working with tools like FFmpeg and you see yuv420p, it's r
 Refs: [1](https://linuxize.com/post/how-to-install-ffmpeg-on-ubuntu-20-04/), [2](https://ffmpeg.org/ffmpeg-filters.html#scdet-1)
 
 
-# 9. Create Video From Images
+# 10. Create Video From Images
 You can use `-pattern_type glob`:
 
 ```

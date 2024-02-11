@@ -33,7 +33,6 @@ def plotCameraAndChessboard(objectPoints, cameraPoses, cameraOrientation):
     ax.set_title('Camera Poses and Chessboard Visualization')
     plt.show()
 
-
 def createChessBoardInWorldCoordinate(center_x, center_y, center_z, squareSize=0.2, numberOfRows=6, numberOfCols=7):
     objectPointsInObjectCoordinate = []
     objectPointsInWorldCoordinate = []
@@ -52,7 +51,6 @@ def createChessBoardInWorldCoordinate(center_x, center_y, center_z, squareSize=0
 
     return np.array(objectPointsInObjectCoordinate), np.array(objectPointsInWorldCoordinate)
 
-
 def simulateStereoCamerasAndProjectPoints(objPoints, cameraMatrix, distCoeffs, rotationMatrix, translationVector):
     # Ensure translation vector is a 3x1 array
     translationVector = np.array(
@@ -62,7 +60,6 @@ def simulateStereoCamerasAndProjectPoints(objPoints, cameraMatrix, distCoeffs, r
     imagePoints, _ = cv2.projectPoints(
         objPoints, rotationMatrix, translationVector, cameraMatrix, distCoeffs)
     return imagePoints
-
 
 def createImageFromPoints(imagePoints, imageSize):
     image = np.zeros((imageSize[1], imageSize[0]), dtype=np.uint8)

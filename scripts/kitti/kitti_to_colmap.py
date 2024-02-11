@@ -5,47 +5,6 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-def matrix_to_quat_and_position(rotation_matrix):
-    """Converts a rotation matrix and translation vector to quaternion and position."""
-
-    # Extract the rotation components
-    r11, r12, r13 = rotation_matrix[0]
-    r21, r22, r23 = rotation_matrix[1]
-    r31, r32, r33 = rotation_matrix[2]
-
-    # Calculate the trace of the matrix
-    trace = r11 + r22 + r33
-
-    if trace > 0:
-        s = 0.5 / np.sqrt(trace + 1.0)
-        w = 0.25 / s
-        x = (r32 - r23) * s
-        y = (r13 - r31) * s
-        z = (r21 - r12) * s
-    else:
-        if r11 > r22 and r11 > r33:
-            s = 2.0 * np.sqrt(1.0 + r11 - r22 - r33)
-            w = (r32 - r23) / s
-            x = 0.25 * s
-            y = (r12 + r21) / s
-            z = (r13 + r31) / s
-        elif r22 > r33:
-            s = 2.0 * np.sqrt(1.0 + r22 - r11 - r33)
-            w = (r13 - r31) / s
-            x = (r12 + r21) / s
-            y = 0.25 * s
-            z = (r23 + r32) / s
-        else:
-            s = 2.0 * np.sqrt(1.0 + r33 - r11 - r22)
-            w = (r21 - r12) / s
-            x = (r13 + r31) / s
-            y = (r23 + r32) / s
-            z = 0.25 * s
-
-    quat = np.array([w, x, y, z])
-
-    return quat
-
 
 def rotation_matrix_to_quaternion(matrix):
     """Convert a rotation matrix to quaternion."""
@@ -116,18 +75,7 @@ ax.set_zlabel('z')
 plt.show()
 
 
-# # Example usage:
-# rotation_matrix = np.array([
-#     [0.8660254, -0.5,       0],
-#     [0.5,       0.8660254, 0],
-#     [0,         0,         1]
-# ])
-# translation_vector = np.array([1, 2, 3])
 
-# quat, position = matrix_to_quat_and_position(
-#     rotation_matrix, translation_vector)
-# print("Quaternion:", quat)
-# print("Position:", position)
 
 
 ######################### Projection Matrices/ LIDAR #########################

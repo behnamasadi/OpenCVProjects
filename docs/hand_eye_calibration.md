@@ -142,4 +142,4 @@ RobotWorldHandEyeCalibrationMethod 	method = CALIB_ROBOT_WORLD_HAND_EYE_SHAH
 )	
 ```
 
-Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga41b1a8dd70eae371eba707d101729c36)
+Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga41b1a8dd70eae371eba707d101729c36), [2](https://support.zivid.com/en/latest/academy/applications/hand-eye.html), [3](https://wiki.ros.org/ensenso_driver/Tutorials/HandEyeCalibration)

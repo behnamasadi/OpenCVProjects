@@ -55,6 +55,9 @@ Refs: [1](https://www.youtube.com/watch?v=N1aCvzFll6Q), [2](https://www.cis.upen
 
 # PnP
 
+The `cv::solvePnP()` returns the rotation and the translation vectors that transform a 3D point expressed in the **object coordinate frame** to the **camera coordinate frame**,
+
+
 ```cpp
 bool cv::solvePnP	(	InputArray 	objectPoints,
 InputArray 	imagePoints,
@@ -75,5 +78,31 @@ With SOLVEPNP_ITERATIVE method and useExtrinsicGuess=true, the minimum number of
 
 
 Refs: [1](https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html), [2](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga549c2075fac14829ff4a58bc931c033d)
+
+
+<img src="images/Perspective-n-Point.svg" alt="images/Perspective-n-Point.svg" width="90%" height="90%" />
+
+```bash
+object_points:
+ [[ 0.  0.  0.]
+ [10.  0.  0.]
+ [10. 10.  0.]
+ [ 0. 10.  0.]]
+rotation of object in camera: 
+ [[0.813104  ]
+ [0.00000002]
+ [3.03454547]] 
+ translation of object in camera:
+ [[-20.00000019]
+ [ -0.00000006]
+ [ 50.00000046]]
+```
+
+
+<img src="images/pnp.png" alt="images/pnp.png" width="90%" height="90%" />
+
+
+[code](script/perspective-n-point.py)
+
 
 

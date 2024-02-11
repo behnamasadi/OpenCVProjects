@@ -1,14 +1,14 @@
-from pytransform3d.transform_manager import TransformManager
-from pytransform3d import transformations as pt
-from pytransform3d import rotations as pr
-from pytransform3d import batch_rotations as br
-from pytransform3d import *
+# from pytransform3d.transform_manager import TransformManager
+# from pytransform3d import transformations as pt
+# from pytransform3d import rotations as pr
+# from pytransform3d import batch_rotations as br
+# from pytransform3d import *
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import math
 from scipy.spatial.transform import Rotation as R
-
+from euler_quaternions import *
 
 # https://en.wikipedia.org/wiki/Image_rectification
 # https://www.sci.utah.edu/~gerig/CS6320-S2013/Materials/CS6320-CV-F2012-Rectification.pdf
@@ -43,27 +43,6 @@ from scipy.spatial.transform import Rotation as R
 #
 
 
-def rotationMatrix(roll, pitch, yaw):
-    yawMatrix = np.matrix([
-        [math.cos(yaw), -math.sin(yaw), 0],
-        [math.sin(yaw), math.cos(yaw), 0],
-        [0, 0, 1]
-    ])
-
-    pitchMatrix = np.matrix([
-        [math.cos(pitch), 0, math.sin(pitch)],
-        [0, 1, 0],
-        [-math.sin(pitch), 0, math.cos(pitch)]
-    ])
-
-    rollMatrix = np.matrix([
-        [1, 0, 0],
-        [0, math.cos(roll), -math.sin(roll)],
-        [0, math.sin(roll), math.cos(roll)]
-    ])
-
-    R = yawMatrix * pitchMatrix * rollMatrix
-    return R
 
 
 def createChessBoardInWorldCoordinate(center_x, center_y, center_z, squareSize=0.2, numberOfRows=6, numberOfCols=7):
@@ -118,7 +97,7 @@ distCoeffs = np.array([0.0, 0.0, 0.0, 0.0])
 roll_cam0 = -np.pi / 2
 pitch_cam0 = +np.pi / 36
 yaw_cam0 = 0.0
-rotationMatrix_cam0 = rotationMatrix(roll_cam0, pitch_cam0, yaw_cam0)
+rotationMatrix_cam0 = rotation_matrix_from_roll_pitch_yaw(roll_cam0, pitch_cam0, yaw_cam0)
 
 t0_x = -0.75
 t0_y = -1.0
@@ -146,7 +125,7 @@ roll_cam1 = -np.pi / 2
 pitch_cam1 = -np.pi / 36
 yaw_cam1 = 0.0
 
-rotationMatrix_cam1 = rotationMatrix(roll_cam1, pitch_cam1, yaw_cam1)
+rotationMatrix_cam1 = rotation_matrix_from_roll_pitch_yaw(roll_cam1, pitch_cam1, yaw_cam1)
 
 t1_x = +0.75
 t1_y = -1.0
