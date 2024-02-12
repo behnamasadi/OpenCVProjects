@@ -177,6 +177,14 @@ These values indicate how similar or dissimilar the histograms are to each other
 
 code [1](scripts/cosine_cost_matrix_histograms.py), [2](scripts/cost_matrix_calculation.py)
 
+<img src="images/cost_matrix.svg" alt="images/cost_matrix.svg" />
+
+
+
+
+
+
+
 ## Cosine Distance
 
  you can use cosine distance as a measure to compare histograms. Cosine distance (or cosine similarity, from which the distance can be derived) is particularly useful for comparing histograms in contexts where the shape of the distributions matters more than their absolute differences in bin counts. It's often used in text analysis, image processing, and machine learning for comparing feature vectors, but it's equally applicable to histogram comparison.
@@ -199,6 +207,8 @@ where:
 The cosine distance, which represents dissimilarity, can be derived from the cosine similarity:
 
 <img src="https://latex.codecogs.com/svg.latex?%5Ctext%7BCosine%20Distance%7D%20%3D%201%20-%20%5Ctext%7BCosine%20Similarity%7D" alt="\text{Cosine Distance} = 1 - \text{Cosine Similarity}" />
+
+<img src="images/cosine_cost_matrix_histograms.svg" alt="images/cosine_cost_matrix_histograms.svg" />
 
 
 
