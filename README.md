@@ -49,44 +49,32 @@ read more [here](https://ros-developer.com/2017/11/08/docker/)
 # How to build on your machine 
 configure it:
 
-```
-cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"
-```
+`cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"`
 
 
 build it:
 
-```
-cmake --build build --config Release
-```
+`cmake --build build --config Release`
 
 or 
 
-```
-cmake --build build --config Debug
-```
+`cmake --build build --config Debug`
 
 or be more specific:
 
-```
-cmake --build build --target all --config Release
-```
+`cmake --build build --target all --config Release`
 
 If you prefer `preset` use:
 
-```
-cmake --preset ninja-multi
-```
+`cmake --preset ninja-multi`
+
 and 
 
-```
-cmake --build --preset ninja-multi-debug
-```
-or 
-```
-cmake --build --preset ninja-multi-release
-```
+`cmake --build --preset ninja-multi-debug`
 
+or 
+
+`cmake --build --preset ninja-multi-release`
 
 
 # Using OpenCV Python API
@@ -179,7 +167,7 @@ Install the conda packages:
 [ICP Iterative Closest Point](src/icp.cpp)  
 [Structured Light Range Finding](src/structured_light_range_finding.cpp)  
 [Estate Estimation with Kalman Filter](src/kalman_filter.cpp)  
-[Drawing Frame Axes](src/drawing_drame_axes.cpp)  
+[Drawing Frame Axes](src/drawing_frame_axes.cpp)  
 [Writing video by choosing encoder using ffmpeg and libav](https://github.com/dataplayer12/video-writer)  
 [Plot Frame poses in 3d](docs/plot_frame_poses_in_3d.md)  
 [Euler Angle, Roll,Pitch, Yaw, Quaternion](docs/euler_quaternions.md)  
