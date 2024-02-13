@@ -1,7 +1,6 @@
 # OpenCV Projects
 
 
-
 ![alt text](https://img.shields.io/badge/license-BSD-blue.svg) ![build workflow](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-image.yml/badge.svg)  
 
 This project contains my Computer Vinson Projects with OpenCV.
@@ -51,7 +50,6 @@ configure it:
 
 `cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"`
 
-
 build it:
 
 `cmake --build build --config Release`
@@ -75,7 +73,6 @@ and
 or 
 
 `cmake --build --preset ninja-multi-release`
-
 
 # Using OpenCV Python API
 Install the conda packages:
@@ -203,8 +200,5 @@ Install the conda packages:
 [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
 [Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)  
 
-
-
-
   
-Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)  
+Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)
