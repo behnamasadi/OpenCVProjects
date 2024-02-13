@@ -45,6 +45,50 @@ You can remove unnecessary images and containers by:
 
 read more [here](https://ros-developer.com/2017/11/08/docker/)
 
+
+# How to build on your machine 
+configure it:
+
+```
+cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"
+```
+
+
+build it:
+
+```
+cmake --build build --config Release
+```
+
+or 
+
+```
+cmake --build build --config Debug
+```
+
+or be more specific:
+
+```
+cmake --build build --target all --config Release
+```
+
+If you prefer `preset` use:
+
+```
+cmake --preset ninja-multi
+```
+and 
+
+```
+cmake --build --preset ninja-multi-debug
+```
+or 
+```
+cmake --build --preset ninja-multi-release
+```
+
+
+
 # Using OpenCV Python API
 Install the conda packages:
 
@@ -75,11 +119,11 @@ Install the conda packages:
 [Stereo Vision, Disparity Map](docs/stereo_vision_disparity_map.md)  
 [Stereo Calibration](docs/stereo_calibration.md)  
 [Parallax](docs/parallax.md)  
-[Optical Flow](docs/optical_flow.md)  
+[Sparse Optical Flow](docs/optical_flow.md)
+[Dense Optical Flow](docs/dense_optical_flow_DIS.md)    
 [Visual Odometry](docs/visual_odometry.md)  
 [KITTI Visual Odometry](docs/kitti_visual_odometry.md)      
-[Visual Inertial Odometry](docs/VIO.md)   
-[Ego Motion](docs/ego_motion.md)  
+[Ego Motion Estimation](docs/ego_motion.md)  
 [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)  
 [Laser Triangulation](docs/laser_triangulation.md)  
 [Estate Estimation with Kalman Filter](docs/kalman_filter.md)  
@@ -105,7 +149,7 @@ Install the conda packages:
 [Color Calibration](docs/color_calibration.md)  
 [Dynamic Range](docs/dynamic_range.md)    
 [White Balance](docs/white_balance.md)    
-[Signal To Noise Ratio](docs/signal_to_noise_ratio.md)  
+
 
 # [OpenCV API](#)
 [Basic Operations](src/basic_operations.cpp)  
@@ -171,36 +215,7 @@ Install the conda packages:
 [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
 [Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)  
 
-# [SLAM](#)
-[SLAM](docs/slam.md)  
-[Kinematics of Differential Drive Robots and Wheel odometry](docs/differential_drive_robots_kinematics.md)  
-[Graph SLAM](docs/graph_slam.md)  
-[g2o](docs/g2o.md)  
-[NeRF-SLAM](docs/NeRF-SLAM.md)  
-[Factor Graph](docs/factor_graph.md)  
-[GTSAM](docs/GTSAM.md)  
-[Active Exposure Control for Robust Visual Odometry in HDR Environments](docs/active_exposure_control_HDR_environments.md)  
-[Resilient Autonomy in Perceptually-degraded Environments](https://www.youtube.com/watch?v=L0PQKxU8cps)  
-[A visual introduction to Gaussian Belief Propagation](https://gaussianbp.github.io/)  
-[Lidar and IMU ](docs/lidar_and_imu.md)  
-[IMU Propagation Derivations](https://docs.openvins.com/propagation.html)  
-[Open Keyframe-based Visual-Inertial SLAM](https://github.com/ethz-asl/okvis)  
-[HBA Large-Scale LiDAR Mapping Module](https://github.com/hku-mars/HBA)  
-[Hierarchical, multi-resolution volumetric mapping (wavemap)](https://github.com/ethz-asl/wavemap)  
-[kiss-icp](https://github.com/PRBonn/kiss-icp?tab=readme-ov-file)
 
-# Learning-based SLAM 
-[Gaussian Splatting](docs/gaussian_splatting.md)  
-[GANeRF](https://github.com/barbararoessle/ganerf)  
-[DSAC*](https://github.com/vislearn/dsacstar)  
-[Tracking Any Point (TAP)](https://github.com/google-deepmind/tapnet)  
-[image-matching-benchmark](https://github.com/ubc-vision/image-matching-benchmark)
-[Local Feature Matching at Light Speed](https://github.com/cvg/LightGlue)
-[https://github.com/cvg/Hierarchical-Localization](https://github.com/cvg/Hierarchical-Localization)
-[instant-ngp](docs/instant_ngp.md)
-
-# [Lie Groups](#)
-[Matrix Lie Groups for Robotics](docs/matrix_lie_groups.md)
 
 
   
