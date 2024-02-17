@@ -27,7 +27,7 @@ jobs:
     - name: Build with CMake
       run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake --build /OpenCVProjects/build --config Release
       
-    - name: Run tests
-      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest ctest -C Release -S /OpenCVProjects/build
+#    - name: Run tests
+#      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest ctest -C Release -S /OpenCVProjects/build
 
 

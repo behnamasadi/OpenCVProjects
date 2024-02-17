@@ -451,3 +451,10 @@ This is a basic implementation and the actual process can be more intricate. For
 
 
 Refs: [1](https://nicolovaligi.com/articles/bag-of-words-loop-closure-visual-slam/), [2](https://www.youtube.com/watch?v=a4cFONdc6nc), [3](https://github.com/ovysotska/in_simple_english/blob/master/bag_of_visual_words.ipynb)
+
+
+
+# FBOW (Fast Bag of Words) 
+
+Refs: [1](https://github.com/rmsalinas/fbow)
+
