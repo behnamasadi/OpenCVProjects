@@ -17,9 +17,12 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag myopencv_image:latest
 
-    # Assuming you want to run CMake commands within the Docker container
+    # Debugging: List contents of the GitHub workspace
+    - name: List contents of the repository
+      run: ls -la
+
     - name: Configure CMake
-      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake -B /OpenCVProjects/build -DCMAKE_BUILD_TYPE=Release
+      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake -S /OpenCVProjects -B /OpenCVProjects/build -DCMAKE_BUILD_TYPE=Release
       
     - name: Build with CMake
       run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake --build /OpenCVProjects/build --config Release
