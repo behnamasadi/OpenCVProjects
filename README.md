@@ -35,12 +35,11 @@ You can remove unnecessary images and containers by:
 ### GUI application with docker
 1. You need to run:
 
-`docker run --name myopencv_container -v /home/behnam/workspace/OpenCVProjects:/OpenCVProjects --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw"  -it myopencv_image`
+`xhost +local:docker `  
 
-2. On the host run the following (every time you run your container):
+and then: 
 
-<code>export containerId=$(docker ps -l -q)  
-<code>  xhost +local: docker inspect --format='{{ .Config.Hostname }}' $containerId </code>
+`docker run -v <path-on-host>:<path-in-the-container> -v /tmp/.X11-unix:/tmp/.X11-unix --name <container-name> -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it <image-name:tag>  bash  `
 
 read more [here](https://ros-developer.com/2017/11/08/docker/)
 
@@ -101,6 +100,7 @@ Install the conda packages:
 [Image Rectification](docs/image_rectification.md)  
 [Image Registration](docs/image_registration.md)  
 [Correspondence Problem](docs/correspondence_problem.md)  
+[Image Matching WebUI](https://huggingface.co/spaces/Realcat/image-matching-webui)
 [Stereo Vision, Disparity Map](docs/stereo_vision_disparity_map.md)  
 [Stereo Calibration](docs/stereo_calibration.md)  
 [Parallax](docs/parallax.md)  
@@ -124,12 +124,13 @@ Install the conda packages:
   [Kannala-Brandt Fisheye Camera](docs/camera_models.md#kannala-brandt-fisheye-camera)  
   [Spherical Camera](docs/camera_models.md#spherical-camera)  
 [Procrustes Analysis](docs/shape_analysis.md#procrustes-analysis)  
-  [Wahba's problem](docs/shape_analysis.md#wahba-s-problem)  
-  [Quaternion estimator algorithm (QUEST)](docs/shape_analysis.md#quaternion-estimator-algorithm--quest-)  
-  [Kabsch Algorithm](docs/shape_analysis.md#kabsch-algorithm)  
-  [Umeyama Algorithm](docs/shape_analysis.md#umeyama-algorithm)    
-  [Iterative Closest Point (ICP)](docs/shape_analysis.md#iterative-closest-point--icp-)  
-  [Difference between Kabsch, Procrustes, Umeyama and ICP Algorithm](docs/shape_analysis.md#difference-between-kabsch--procrustes--umeyama-and-icp-algorithm)  
+  [Procrustes Analysis](#procrustes-analysis)
+  [Wahba's Problem](#wahba-s-problem)
+  [Quaternion Estimator Algorithm (QUEST)](#quaternion-estimator-algorithm--quest-)
+  [Kabsch Algorithm](#kabsch-algorithm)
+  [Umeyama Algorithm](#umeyama-algorithm)
+  [Iterative Closest Point (ICP)](#iterative-closest-point--icp-)
+  [KISS-ICP](#kiss-icp)
 [Color Space](docs/color_spaces.md)   
 [Color Calibration](docs/color_calibration.md)  
 [Dynamic Range](docs/dynamic_range.md)    

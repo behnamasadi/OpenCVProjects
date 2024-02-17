@@ -1,0 +1,30 @@
+name: OpenCV Project Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+      name: Checkout the repository
+      
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag myopencv_image:latest
+
+    # Assuming you want to run CMake commands within the Docker container
+    - name: Configure CMake
+      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake -B /OpenCVProjects/build -DCMAKE_BUILD_TYPE=Release
+      
+    - name: Build with CMake
+      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest cmake --build /OpenCVProjects/build --config Release
+      
+    - name: Run tests
+      run: docker run --rm -v ${{ github.workspace }}:/OpenCVProjects myopencv_image:latest ctest -C Release -S /OpenCVProjects/build
+
+
