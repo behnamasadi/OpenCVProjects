@@ -1,7 +1,7 @@
 # OpenCV Projects
 
 
-![alt text](https://img.shields.io/badge/license-BSD-blue.svg) ![build workflow](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-image.yml/badge.svg)  
+![alt text](https://img.shields.io/badge/license-BSD-blue.svg) ![build workflow](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-build.yml/badge.svg)  
 
 This project contains my Computer Vinson Projects with OpenCV.
 
