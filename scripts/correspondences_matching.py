@@ -46,7 +46,7 @@ def drawCorrespondences(img1, img2, detector, matcher, top_matches=50):
     cv2.destroyAllWindows()
 
 
-directory_path = "/media/behnam/behnam/colmap_projects/GroupeE_Maigrauge/images/"
+directory_path = "/home/behnam/workspace/OpenCVProjects/VisualSLAM/KITTI_sequence_1/image_l/"
 if not os.path.exists(directory_path):
     print(f"Directory '{directory_path}' does not exist.")
 

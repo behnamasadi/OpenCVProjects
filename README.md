@@ -73,10 +73,29 @@ or
 
 `cmake --build --preset ninja-multi-release`
 
-# Using OpenCV Python API
+# Installing OpenCV Python API
+
 Install the conda packages:
 
-`conda install -c conda-forge opencv`
+```bash
+conda ceate -n OpenCVProjects
+conda activate OpenCVProjects
+conda install conda-forge::opencv
+conda install scipy
+conda install numpy
+conda install matplotlib
+conda install pywavelets
+conda install scikit-image
+conda install -c conda-forge jupyterlab
+```
+
+
+Create softlink
+```
+cd $HOME/anaconda3/envs/OpenCVProjects/
+ln -s $HOME/workspace/OpenCVProjects/scripts .
+ln -s $HOME/workspace/OpenCVProjects/images/ .
+```
 
 # [Computer Vision](#)
 [Edge Detection](docs/edge_detection.md)  
