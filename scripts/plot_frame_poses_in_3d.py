@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from euler_quaternions import *
 
 
+
 def plot_frame(ax, x, y, z, q, length=1.0, frameName=""):
     """
     Plot a 3D frame with axes colored by red, green, and blue based on coordinates and quaternion.
@@ -61,13 +62,27 @@ if __name__ == "__main__":
     x1, y1, z1 = 1, -1, 2
     q1 = [1, 0, 0, 0]  # Identity quaternion, no rotation
 
-    plot_frame(ax, x1, y1, z1, q1, length, "Frame 1")
+    plot_frame(ax, x1, y1, z1, q1, length, "cam 1")
 
     # Optionally, add a second frame or other plot elements
     x2, y2, z2 = 3, 1, -2
     q2 = [0, 1, 0, 0]
 
-    plot_frame(ax, x2, y2, z2, q2, length, "Frame 2")
+    plot_frame(ax, x2, y2, z2, q2, length, "cam 2")
+
+
+    x3, y3, z3 = 1, 4,1
+    q3=get_quaternion_from_euler(roll=np.pi/2, pitch=0, yaw=0)
+    plot_frame(ax, x3, y3, z3, q3, length, "Frame 3")
+
+
+
+    ax.scatter(2, 3, 4, c='magenta', marker='o', s=100 )
+    ax.scatter(1, 2, -1, c='red', marker='o', s=100)
+    ax.scatter(-1, 1, 0, c='black', marker='o', s=100)
+
+
+
 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')

@@ -4,7 +4,6 @@ data/kitti/05/image_1/*
 */__pycache__/*
 .vscode/*
 *.user
-*.kdev4
 *.autosave
 src/sandbox.cpp
-scripts/temp/*
+scripts/.ipynb_checkpoints/*

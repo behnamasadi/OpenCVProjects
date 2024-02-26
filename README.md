@@ -78,15 +78,18 @@ or
 Install the conda packages:
 
 ```bash
+unset PYTHONPATH
+export PYTHONNOUSERSITE=1
 conda create -n OpenCVProjects
 conda activate OpenCVProjects
-conda install scipy numpy matplotlib scikit-image  
 conda install conda-forge::opencv
+conda install scipy numpy matplotlib scikit-image  
 conda install -c conda-forge jupyterlab
+conda install anaconda::ipywidgets
 ```
 
+create softlinks: 
 
-Create softlinks: 
 ```
 cd $HOME/anaconda3/envs/OpenCVProjects/
 ln -s $HOME/workspace/OpenCVProjects/scripts .
