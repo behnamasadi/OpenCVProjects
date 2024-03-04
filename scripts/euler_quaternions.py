@@ -106,6 +106,36 @@ def rotation_matrix_to_quaternion_simple(rotation_matrix):
     q3 = (rotation_matrix[1, 0] - rotation_matrix[0, 1]) / (4 * q0)
     return [q0, q1, q2, q3]
 
+def quaternion_multiplication(q1, q2):
+    w1, x1, y1, z1 = q1
+    w2, x2, y2, z2 = q2
+    w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
+    x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
+    y = w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2
+    z = w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2
+    q = np.array([w, x, y, z])
+    return q / np.linalg.norm(q)  # Normalize the quaternion
+
+
+def quaternion_conjugate(q):
+    """Compute the conjugate of a quaternion."""
+    return np.array([q[0], -q[1], -q[2], -q[3]])
+
+
+def quaternion_rotate(q, v):
+    """Apply quaternion rotation to a vector."""
+    v_quat = np.array([0] + list(v))
+    q_conj = quaternion_conjugate(q)
+    return quaternion_multiplication(quaternion_multiplication(q, v_quat), q_conj)[1:]
+
+def compute_transformations(QA_B, QB_C, PA_B, PB_C):
+    """
+    Computes the combined rotation and translation.
+    """
+    QA_C = quaternion_multiplication(QA_B, QB_C)
+    PA_C = PA_B + quaternion_rotate(QA_B, PB_C)
+    return QA_C, PA_C
+
 
 if __name__ == "__main__":
 
@@ -124,4 +154,17 @@ if __name__ == "__main__":
 
 
     print("Quaternion:",rotation_matrix_to_quaternion(rotation_matrix))
+
+
+
+    # Example usage:
+    QA_B = np.array([0.707, 0, 0.707, 0])  # Example quaternion
+    QB_C = np.array([0.707, 0.707, 0, 0])  # Example quaternion
+    PA_B = np.array([1, 0, 0])             # Example position
+    PB_C = np.array([0, 1, 0])             # Example position
+
+    QA_C, PA_C = compute_transformations(QA_B, QB_C, PA_B, PB_C)
+
+    print("QA_C:", QA_C)
+    print("PA_C:", PA_C)
 
