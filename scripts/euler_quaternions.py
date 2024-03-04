@@ -1,6 +1,42 @@
 import numpy as np
 
 
+import numpy as np
+import math
+
+def rotation_matrix_to_roll_pitch_yaw(R):
+    """
+    Convert a rotation matrix to Euler angles.
+    
+    Parameters:
+    R (numpy.ndarray): A 3x3 transformation matrix.
+    
+    Returns:
+    tuple: A tuple containing the roll, pitch, and yaw angles.
+    """
+    # Ensure the input is a 3x3 matrix
+    assert(R.shape == (3, 3))
+
+   
+    # Calculate the Euler angles
+    sy = math.sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0])
+    singular = sy < 1e-6
+
+    if not singular:
+        x = math.atan2(R[2, 1], R[2, 2])
+        y = math.atan2(-R[2, 0], sy)
+        z = math.atan2(R[1, 0], R[0, 0])
+    else:
+        x = math.atan2(-R[1, 2], R[1, 1])
+        y = math.atan2(-R[2, 0], sy)
+        z = 0
+
+    return x,y,z
+    #return np.rad2deg(x), np.rad2deg(y), np.rad2deg(z)  # Convert to degrees
+
+
+
+
 def rotation_matrix_from_roll_pitch_yaw(roll, pitch, yaw):
     yawMatrix = np.array([
         [np.cos(yaw), -np.sin(yaw), 0],
@@ -144,8 +180,21 @@ if __name__ == "__main__":
     pitch= np.pi/4
     yaw=np.pi/3
 
+
+    print(f"ground truth Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
+
+
     rotation_matrix=rotation_matrix_from_roll_pitch_yaw(roll, pitch, yaw)
-    print(rotation_matrix)
+    print("rotation_matrix: ",rotation_matrix)
+
+
+
+
+    roll, pitch, yaw = rotation_matrix_to_roll_pitch_yaw(rotation_matrix)
+    print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
+
+
+
     translation_vector = np.array([1, 2, 3])
 
     quat = rotation_matrix_to_quaternion_simple(rotation_matrix)
