@@ -8,6 +8,14 @@ QB_C = np.array([0.707, 0.707, 0, 0])  # Example quaternion
 PB_C = np.array([0, 1, 0])             # Example position
 
 
+
+R_B_C=quaternion_to_rotation_matrix(QB_C)
+T_B_C=np.eye(4)
+T_B_C[:3, :3] = R_B_C 
+T_B_C[:3, 3] = PB_C  
+
+
+
 QA_B = np.array([0.707, 0, 0.707, 0])  # Example quaternion
 PA_B = np.array([1, 0, 0])             # Example position
 
@@ -15,14 +23,11 @@ R_A_B=quaternion_to_rotation_matrix(QA_B)
 T_A_B=np.eye(4)
 T_A_B[:3, :3] = R_A_B  # Replace the top-left 3x3 section with the rotation matrix
 T_A_B[:3, 3] = PA_B  # Set the top-right 3x1 section as the translation vector
-T_A_B[3,3]=1
 
-print(T_A_B)
+print("T_A_B \n:", T_A_B)
 
 
 print( rotation_matrix_to_quaternion(R_A_B)   )
-
-
 roll, pitch, yaw = rotation_matrix_to_roll_pitch_yaw(R_A_B)
 print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
 
@@ -34,7 +39,26 @@ print("QA_C:", QA_C)
 print("PA_C:", PA_C)
 
 
-# Example usage:
+R_A_C=quaternion_to_rotation_matrix(QA_C)
+T_A_C=np.eye(4)
+T_A_C[:3, :3] = R_A_C 
+T_A_C[:3, 3] = PA_B  
+
+
+print("T_A_C:\n",T_A_C)
+print("T_A_B@T_B_C:\n",T_A_B@T_B_C)
+
+
+diff=T_A_C -T_A_B@T_B_C
+
+print(diff)
+print( diff.sum())
+
+
+#T_A_C=T_A_B@T_B_C
+
+
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
