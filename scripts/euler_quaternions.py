@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     translation_vector = np.array([1, 2, 3])
 
-    quat = rotation_matrix_to_quaternion_simple(rotation_matrix)
+    quat = rotation_matrix_to_quaternion(rotation_matrix)
     print("Quaternion:", quat)
     # print("Position:", position)
 

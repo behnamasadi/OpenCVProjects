@@ -7,14 +7,14 @@ np.set_printoptions(suppress = True)
 
 # pose of C expressed in B
 QB_C = np.array([0.707, 0.707, 0, 0])
-PB_C = np.array([-1, -1, 1])
+PB_C = np.array([+1, -1, 0])
 
 # Rotation and corresponding 4x4 transformation
 R_B_C=quaternion_to_rotation_matrix(QB_C)
 T_B_C=np.eye(4)
 T_B_C[:3, :3] = R_B_C   # Replace the top-left 3x3 section with the rotation matrix
 T_B_C[:3, 3] = PB_C     # Set the top-right 3x1 section as the translation vector
-#print("T_B_C \n:", T_B_C)
+
 
 # pose of B expressed in A
 QA_B = np.array([0.707, 0, 0.707, 0])
@@ -25,7 +25,7 @@ R_A_B=quaternion_to_rotation_matrix(QA_B)
 T_A_B=np.eye(4)
 T_A_B[:3, :3] = R_A_B
 T_A_B[:3, 3] = PA_B
-# print("T_A_B \n:", T_A_B)
+
 
 
 # calculating pose of C in A using chain rule
@@ -40,15 +40,15 @@ T_A_C[:3, :3] = R_A_C
 T_A_C[:3, 3] = PA_C  
 
 
-# print("T_A_C calculated from quaternions:\n",T_A_C.round(decimals=3))
+print("T_A_C calculated from quaternions:\n",T_A_C.round(decimals=3))
 
-T_A_B_T_B_C=T_A_B@T_B_C
-print("T_A_B_T_B_C:\n",T_A_B_T_B_C.round(decimals=3))
+T_A_BxT_B_C=T_A_B@T_B_C
+print("T_A_C calculated from T_A_B x T_B_C:\n",T_A_BxT_B_C.round(decimals=3))
 
 
-diff=T_A_C -T_A_B_T_B_C
+diff=T_A_C -T_A_BxT_B_C
 
-# print("diff: \n",diff.round(decimals=3))
+print("diff: \n",diff.round(decimals=3))
 print( "sum of diff elements: ", diff.sum())
 
 
