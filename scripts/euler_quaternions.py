@@ -1,7 +1,4 @@
 import numpy as np
-
-
-import numpy as np
 import math
 
 def rotation_matrix_to_roll_pitch_yaw(R):
@@ -17,25 +14,19 @@ def rotation_matrix_to_roll_pitch_yaw(R):
     # Ensure the input is a 3x3 matrix
     assert(R.shape == (3, 3))
 
-   
-    # Calculate the Euler angles
-    sy = math.sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0])
+    sy = np.sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0])
     singular = sy < 1e-6
-
     if not singular:
-        x = math.atan2(R[2, 1], R[2, 2])
-        y = math.atan2(-R[2, 0], sy)
-        z = math.atan2(R[1, 0], R[0, 0])
+        x = np.arctan2(R[2, 1], R[2, 2])
+        y = np.arctan2(-R[2, 0], sy)
+        z = np.arctan2(R[1, 0], R[0, 0])
     else:
-        x = math.atan2(-R[1, 2], R[1, 1])
-        y = math.atan2(-R[2, 0], sy)
+        x = np.arctan2(-R[1, 2], R[1, 1])
+        y = np.arctan2(-R[2, 0], sy)
         z = 0
 
     return x,y,z
     #return np.rad2deg(x), np.rad2deg(y), np.rad2deg(z)  # Convert to degrees
-
-
-
 
 def rotation_matrix_from_roll_pitch_yaw(roll, pitch, yaw):
     yawMatrix = np.array([
@@ -84,63 +75,35 @@ def get_quaternion_from_euler(roll, pitch, yaw):
 
 def quaternion_to_rotation_matrix(q):
     """
-    Convert a quaternion into a rotation matrix.
+    Converts a quaternion into a rotation matrix.
     """
     w, x, y, z = q
-    return np.array([
-        [1 - 2*y*y - 2*z*z, 2*x*y - 2*z*w, 2*x*z + 2*y*w],
-        [2*x*y + 2*z*w, 1 - 2*x*x - 2*z*z, 2*y*z - 2*x*w],
-        [2*x*z - 2*y*w, 2*y*z + 2*x*w, 1 - 2*x*x - 2*y*y]
+    xx = x * x
+    yy = y * y
+    zz = z * z
+    xy = x * y
+    xz = x * z
+    yz = y * z
+    wx = w * x
+    wy = w * y
+    wz = w * z
+
+    R = np.array([
+        [1 - 2 * (yy + zz),     2 * (xy - wz),       2 * (xz + wy)],
+        [2 * (xy + wz),         1 - 2 * (xx + zz),   2 * (yz - wx)],
+        [2 * (xz - wy),         2 * (yz + wx),       1 - 2 * (xx + yy)]
     ])
+    return R
 
-def rotation_matrix_to_quaternion(rotation_matrix):
-    """Converts a rotation matrix and translation vector to quaternion and position."""
-
-    # Extract the rotation components
-    r11, r12, r13 = rotation_matrix[0]
-    r21, r22, r23 = rotation_matrix[1]
-    r31, r32, r33 = rotation_matrix[2]
-
-    # Calculate the trace of the matrix
-    trace = r11 + r22 + r33
-
-    if trace > 0:
-        s = 0.5 / np.sqrt(trace + 1.0)
-        w = 0.25 / s
-        x = (r32 - r23) * s
-        y = (r13 - r31) * s
-        z = (r21 - r12) * s
-    else:
-        if r11 > r22 and r11 > r33:
-            s = 2.0 * np.sqrt(1.0 + r11 - r22 - r33)
-            w = (r32 - r23) / s
-            x = 0.25 * s
-            y = (r12 + r21) / s
-            z = (r13 + r31) / s
-        elif r22 > r33:
-            s = 2.0 * np.sqrt(1.0 + r22 - r11 - r33)
-            w = (r13 - r31) / s
-            x = (r12 + r21) / s
-            y = 0.25 * s
-            z = (r23 + r32) / s
-        else:
-            s = 2.0 * np.sqrt(1.0 + r33 - r11 - r22)
-            w = (r21 - r12) / s
-            x = (r13 + r31) / s
-            y = (r23 + r32) / s
-            z = 0.25 * s
-
-    quat = np.array([w, x, y, z])
-
-    return quat
-
-def rotation_matrix_to_quaternion_simple(rotation_matrix):
-    """Convert a rotation matrix to quaternion."""
-    q0 = np.sqrt(1 + rotation_matrix[0, 0] + rotation_matrix[1, 1] + rotation_matrix[2, 2]) / 2
-    q1 = (rotation_matrix[2, 1] - rotation_matrix[1, 2]) / (4 * q0)
-    q2 = (rotation_matrix[0, 2] - rotation_matrix[2, 0]) / (4 * q0)
-    q3 = (rotation_matrix[1, 0] - rotation_matrix[0, 1]) / (4 * q0)
-    return [q0, q1, q2, q3]
+def rotation_matrix_to_quaternion(R):
+    """
+    Converts a rotation matrix to a quaternion.
+    """
+    w = np.sqrt(1.0 + R[0, 0] + R[1, 1] + R[2, 2]) / 2
+    x = (R[2, 1] - R[1, 2]) / (4 * w)
+    y = (R[0, 2] - R[2, 0]) / (4 * w)
+    z = (R[1, 0] - R[0, 1]) / (4 * w)
+    return np.array([w, x, y, z])
 
 def quaternion_multiplication(q1, q2):
     w1, x1, y1, z1 = q1
@@ -150,19 +113,16 @@ def quaternion_multiplication(q1, q2):
     y = w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2
     z = w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2
     q = np.array([w, x, y, z])
-    return q / np.linalg.norm(q)  # Normalize the quaternion
-
+    #return q / np.linalg.norm(q)  # Normalize the quaternion
+    return q
 
 def quaternion_conjugate(q):
-    """Compute the conjugate of a quaternion."""
-    return np.array([q[0], -q[1], -q[2], -q[3]])
-
+    w, x, y, z = q
+    return np.array([w, -x, -y, -z])
 
 def quaternion_rotate(q, v):
-    """Apply quaternion rotation to a vector."""
-    v_quat = np.array([0] + list(v))
-    q_conj = quaternion_conjugate(q)
-    return quaternion_multiplication(quaternion_multiplication(q, v_quat), q_conj)[1:]
+    qv = np.array([0.0] + v.tolist())
+    return quaternion_multiplication(quaternion_multiplication(q, qv), quaternion_conjugate(q))[1:]
 
 def compute_transformations(QA_B, QB_C, PA_B, PB_C):
     """
