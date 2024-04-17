@@ -101,7 +101,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Image Filtering Convolution](docs/image_filtering_convolution.md)  
 [Histogram Analysis](docs/histogram_analysis.md)  
 [Keypoints Detector and Descriptor](docs/keypoints_detector_and_descriptor.md)  
-[Pinhole Camera Model and Projection](docs/projection_camera_intrinsic.md)  
+[Pinhole Camera Model and Projection](docs/pinhole_camera_model_projection_intrinsic.md)  
 [Direct Linear Transformation](docs/direct_linear_transformation.md)  
 [Zhang's Camera Calibration Algorithm](docs/zhang_camera_calibration_algorithm.md)  
 [Extrinsic Calibration of Camera to LIDAR](https://www.dropbox.com/s/arhpp59d502fuks/2023IROS_fu.pdf?dl=0)     

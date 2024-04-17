@@ -422,7 +422,10 @@ Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#gaaae5a7899faa1
 
 
 
+# Global Shutter vs  Rolling Shutter
 
+<img src="images/Rolling-Blue.gif" heigh="333" width="333" />
 
+[image courtesy](https://www.photometrics.com/learn/advanced-imaging/rolling-vs-global-shutter)
 
 
