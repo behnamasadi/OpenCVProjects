@@ -103,7 +103,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Keypoints Detector and Descriptor](docs/keypoints_detector_and_descriptor.md)  
 [Pinhole Camera Model and Projection](docs/pinhole_camera_model_projection_intrinsic.md)  
 [Direct Linear Transformation](docs/direct_linear_transformation.md)  
-[Zhang's Camera Calibration Algorithm](docs/zhang_camera_calibration_algorithm.md)  
+[Zhang's Camera Calibration Algorithm](docs/camera_calibration_algorithm.ipynb)  
 [Extrinsic Calibration of Camera to LIDAR](https://www.dropbox.com/s/arhpp59d502fuks/2023IROS_fu.pdf?dl=0)     
 [Image Resolution and Calibration Parameter](docs/image_resolution_and_calibration_parameter.md)  
 [Affine Transformation](docs/affine_transformation.md)  
