@@ -1,0 +1,10 @@
+build/*
+data/kitti/05/image_0/*
+data/kitti/05/image_1/*
+*/__pycache__/*
+.vscode/*
+*.user
+*.autosave
+src/sandbox.cpp
+scripts/.ipynb_checkpoints/*
+docs/.ipynb_checkpoints/*
