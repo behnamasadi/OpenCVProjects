@@ -182,7 +182,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 
 
 # [FFmpeg Commands](#)  
-[Available encoders and decoders](docs/ffmpeg.md#available-encoders-and-decoders)
+[Available encoders and decoders](docs/ffmpeg.md#available-encoders-and-decoders)  
 [1. FFmpeg Common Options](docs/ffmpeg.md#1-ffmpeg-common-options)  
 [2. FFmpeg Filters](docs/ffmpeg.md#2-ffmpeg-filters)  
   [2.1 Available Filters](docs/ffmpeg.md#21-available-filters)  
