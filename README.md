@@ -129,7 +129,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Ego Motion Estimation](docs/ego_motion.md)  
 [Recover Pose and Pose Estimation](docs/recover_pose_pose_estimation.md)  
 [Laser Triangulation](docs/laser_triangulation.md)  
-[Estate Estimation with Kalman Filter](docs/kalman_filter.md)  
+[Bayes Filter, Estate Estimation with Kalman Filter, Extended Kalman Filter](docs/kalman_filter.md)  
 [Bag of Words](docs/bag_of_words.md)   
 [Vocabulary Tree](docs/vocabulary_tree.md)    
 [Perspective-n-point](docs/perspective_n_point.md)  
