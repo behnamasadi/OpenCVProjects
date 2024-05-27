@@ -2,28 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_BUILD_TYPE Debug)
 option(USE_CLANG "build application with clang" OFF)
 
-if(USE_CLANG)
-	set(CMAKE_C_COMPILER "/usr/bin/clang")
 
-	# set (CMAKE_C_FLAGS                "-Wall -std=c99")
-	set(CMAKE_C_FLAGS_DEBUG "-g")
-	set(CMAKE_C_FLAGS_MINSIZEREL "-Os -DNDEBUG")
-	set(CMAKE_C_FLAGS_RELEASE "-O4 -DNDEBUG")
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
-
-	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-	set(CMAKE_CXX_FLAGS "-Wall")
-	set(CMAKE_CXX_FLAGS_DEBUG "-g")
-	set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
-	set(CMAKE_CXX_FLAGS_RELEASE "-O4 -DNDEBUG")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-
-	set(CMAKE_AR "/usr/bin/llvm-ar")
-	set(CMAKE_LINKER "/usr/bin/llvm-ld")
-	set(CMAKE_NM "/usr/bin/llvm-nm")
-	set(CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
-	set(CMAKE_RANLIB "/usr/bin/llvm-ranlib")
-endif()
 
 project(OpenCVProjects)
 
@@ -168,8 +147,8 @@ target_link_libraries(affine_transformation ${OpenCV_LIBS})
 add_executable(icp src/icp.cpp)
 target_link_libraries(icp ${OpenCV_LIBS})
 
-add_executable(perspective-n-point src/perspective-n-point.cpp)
-target_link_libraries(perspective-n-point ${OpenCV_LIBS})
+# add_executable(perspective-n-point src/perspective-n-point.cpp)
+# target_link_libraries(perspective-n-point ${OpenCV_LIBS})
 
 add_executable(homogeneous_conversion src/homogeneous_conversion.cpp)
 target_link_libraries(homogeneous_conversion ${OpenCV_LIBS})
@@ -269,6 +248,9 @@ target_link_libraries(PnP ${OpenCV_LIBS})
 
 add_executable(drawing_frame_axes src/drawing_frame_axes.cpp)
 target_link_libraries(drawing_frame_axes ${OpenCV_LIBS})
+
+add_executable(camera_rays src/camera_rays.cpp)
+target_link_libraries(camera_rays ${OpenCV_LIBS})
 
 find_package(Eigen3 NO_MODULE)
 
