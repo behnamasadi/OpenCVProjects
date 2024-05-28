@@ -53,20 +53,7 @@ Decentering distortion is a result of the lens assembly not being centered over 
 # 2. OpenCV Lens Distortion Model
 
 
-
-
-
-<img src="https://latex.codecogs.com/svg.latex?%5Cbegin%7Bbmatrix%7D%20x%5C%5C%20y%5C%5C%20z%20%5Cend%7Bbmatrix%7D%3D%20R%5Cbegin%7Bbmatrix%7D%20X%5C%5C%20Y%5C%5C%20Z%20%5Cend%7Bbmatrix%7D&plus;t
-" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}
-x\\ 
-y\\ 
-z
-\end{bmatrix}=
-R\begin{bmatrix}
-X\\ 
-Y\\ 
-Z
-\end{bmatrix}+t" />
+<img src="https://latex.codecogs.com/svg.latex?\begin{bmatrix}x\\y\\z%20\end{bmatrix}=%20R\begin{bmatrix}%20X\\%20%20Y\\%20%20Z%20\end{bmatrix}+t" alt="https://latex.codecogs.com/svg.latex?\begin{bmatrix}x\\y\\z \end{bmatrix}= R\begin{bmatrix} X\\  Y\\  Z \end{bmatrix}+t" />
 
 
 

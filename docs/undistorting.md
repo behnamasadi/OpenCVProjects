@@ -93,12 +93,12 @@ In case of a stereo camera, this function is called twice: once for each camera 
 
 
 
-Refs: [1](https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#ga7dfb72c9cf9780a347fbe3d1c47e5d5a)
+Refs: [1](https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#ga7dfb72c9cf9780a347fbe3d1c47e5d5a), [2](https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html#initundistortrectifymap)
 
 
 
 
-### undistort
+### cv::undistortPoints
 This function is similar to `initUndistortRectifyMap` but it operates on a sparse set of points
 ```cpp
 void cv::undistortPoints	(	InputArray 	src,
@@ -125,4 +125,87 @@ For each pixel of the destination lens-corrected image do:
 
 
 Refs: [1](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#camera-calibration-and-3d-reconstruction), [2](https://stackoverflow.com/questions/21958521/understanding-of-opencv-undistortion), [3](https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#ga69f2545a8b62a6b0fc2ee060dc30559d)
+
+
+
+
+
+
+##  cv::UndistortTypes in OpenCV:
+
+**`cv::UndistortTypes`** is an enumeration (enum) in OpenCV's C++ API that specifies different distortion correction models used in the `undistort` function. This function is essential for rectifying images captured with lenses that introduce geometric distortions, such as barrel or pincushion distortion.
+
+**Available options in `cv::UndistortTypes`:**
+
+- **`cv::PROJ_SPHERICAL_ORTHO` (value: 0):** This model assumes a spherical projection with orthographic rectification. It's suitable for images captured with fisheye lenses that have a very wide field of view. In this model, straight lines in the real world may appear curved in the distorted image, but after undistortion using `cv::PROJ_SPHERICAL_ORTHO`, they will be represented as straight lines.
+
+- **`cv::PROJ_SPHERICAL_EQRECT` (value: 1):** This model also assumes a spherical projection, but with equirectangular rectification. It's appropriate for panoramic images where the goal is to create a rectangular image with minimal distortion. Straight lines in the real world may be slightly bent after undistortion, but the overall distortion is reduced.
+
+**Choosing the appropriate model:**
+
+The choice between these models depends on the type of lens distortion present in your image and the desired outcome.
+
+- If you have a fisheye image and want to preserve straight lines, use `cv::PROJ_SPHERICAL_ORTHO`.
+- If you have a panoramic image and want a rectangular representation with minimal distortion, use `cv::PROJ_SPHERICAL_EQRECT`.
+
+**Additional considerations:**
+
+- To use these models effectively, you'll need the camera calibration parameters (camera matrix and distortion coefficients) obtained through a calibration process. These parameters are typically used as input to the `undistort` function.
+- OpenCV provides other distortion correction models beyond these two, which might be more suitable for specific lens types or applications. Refer to the OpenCV documentation for a comprehensive list.
+
+
+
+
+## fisheye::undistortPoints
+
+Refs: [1](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#fisheye-undistortpoints)
+
+
+
+## fisheye::initUndistortRectifyMap
+
+Refs: [1](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#fisheye-initundistortrectifymap)
+
+
+## fisheye::undistortImage
+
+Refs: [1](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#fisheye-undistortimage)
+
+
+## cv::undistort
+
+The function transforms an image to compensate radial and tangential lens distortion.
+
+The function is simply a combination of `initUndistortRectifyMap` (with unity `R` ) and `remap` (with bilinear interpolation). 
+
+
+```cpp
+void cv::undistort	(	InputArray 	src,
+OutputArray 	dst,
+InputArray 	cameraMatrix,
+InputArray 	distCoeffs,
+InputArray 	newCameraMatrix = noArray() 
+)
+```
+
+
+Refs: [1](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga69f2545a8b62a6b0fc2ee060dc30559d)
+
+
+
+
+## cv::undistortImagePoints
+
+```cpp
+
+void cv::undistortImagePoints	(	InputArray 	src,
+OutputArray 	dst,
+InputArray 	cameraMatrix,
+InputArray 	distCoeffs,
+TermCriteria 	= TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 5, 0.01) 
+)
+```
+- `src`: Observed points position, 2xN/Nx2 1-channel or 1xN/Nx1 2-channel (CV_32FC2 or CV_64FC2) (or vector<Point2f> ).
+
+Compute undistorted image points position
 
