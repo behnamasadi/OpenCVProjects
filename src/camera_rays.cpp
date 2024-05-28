@@ -161,7 +161,7 @@ void project3DPoint(std::string pathToPointFile = "../data/points.csv") {
   int numberOfPixelInHeight, numberOfPixelInWidth;
   double heightOfSensor, widthOfSensor;
   // double focalLength = 0.1;
-  double focalLength = 0.5;
+  double focalLength = 1.0;
   // double focalLength = 2.0;
   double mx, my, cx, cy;
 
@@ -189,6 +189,12 @@ void project3DPoint(std::string pathToPointFile = "../data/points.csv") {
   p1 = 0;
   p2 = 0;
   k3 = 0;
+
+  // k1 = 0.005;
+  // k2 = -0.004;
+  // // p1 = -0.01;
+  // // p2 = 0.01;
+  // k3 = -0.003;
 
   cv::Mat distortionCoefficient =
       (cv::Mat_<double>(5, 1) << k1, k2, p1, p2, k3);
