@@ -2,7 +2,49 @@
 
 ## Installation using docker
 ### 1. Building the Image
-There is docker file for this project that contains all dependencies and you build the image with :   
+There is  [docker file](https://github.com/colmap/colmap/blob/main/docker/Dockerfile) for this project that contains all dependencies and you build the image with :   
+
+
+- get the OS version, the `$distribution` should gives you your OS version  `ubuntu22.04`: 
+
+```
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+```
+
+- add the package repositories:
+```
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+```
+
+- Install nvidia-container-toolkit
+```
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+```
+- Check that it worked!
+
+```
+docker run --gpus all nvidia/cuda:<CUDA-version>-base nvidia-smi
+```
+For instance:
+
+```
+docker run --gpus all nvidia/cuda:10.2-base nvidia-smi
+```
+
+
+
+
+
+`docker build -t="colmap:latest" --build-arg CUDA_ARCHITECTURES=75 .`
+
+`xhost +local:`
+`docker run -v /home/$USER/:/home/$USER/ -v /tmp/.X11-unix:/tmp/.X11-unix --name colmap -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it colmap bash`
+
+
+
+
 `docker build -t sfm .`
 
 to quickly check your nvidia docker, run:
@@ -54,7 +96,8 @@ sudo update-alternatives --config cuda
 to see the version of the CUDA compiler:
 ```
  /usr/local/cuda/bin/nvcc --version
- ```
+```
+
 to set the preferred CUDA version and set the preferred executable for compiling CUDA language files:
 
 ```
@@ -97,6 +140,38 @@ sudo apt-get install \
     libcgal-dev \
     libceres-dev
 ```
+
+if you need to build `ceres-solver`, first install `abseil`:
+
+```
+git git@github.com:abseil/abseil-cpp.git
+cd abseil-cpp
+git checkout 20240722.0
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=~/usr -Dabsl_VERSION=20240722.0
+cmake --build build/ --parallel
+cmake --install build 
+
+```
+then make `ceres-solver`:
+
+
+```
+git clone git@github.com:ceres-solver/ceres-solver.git
+
+
+export CUDA_HOME=/usr/local/cuda
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+export PATH=$PATH:$CUDA_HOME/bin
+
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=FALSE -DBUILD_TESTING=OFF  -Dabsl_DIR=~/usr/lib/cmake/absl/ -DCMAKE_INSTALL_PREFIX:PATH=~/usr
+
+cmake --build build/ --parallel
+
+cmake --install build 
+```
+
+
+
 
 Under **Ubuntu 22.04**, there is a problem when compiling with Ubuntu’s default CUDA package and GCC, and you must compile against GCC 10:
 
