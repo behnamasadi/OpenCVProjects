@@ -117,35 +117,26 @@ endif()
 add_executable(basic_operations src/basic_operations.cpp)
 target_link_libraries(basic_operations ${OpenCV_LIBS})
 
+add_executable(feature_detection_description src/feature_detection_description.cpp)
+target_link_libraries(feature_detection_description ${OpenCV_LIBS})
+
+add_executable(correspondences_matching src/correspondences_matching.cpp)
+target_link_libraries(correspondences_matching ${OpenCV_LIBS})
+
+
 add_executable(coordinate_system_points src/coordinate_system_points.cpp)
 target_link_libraries(coordinate_system_points ${OpenCV_LIBS})
 
 add_executable(hough_transform src/hough_transform.cpp)
 target_link_libraries(hough_transform ${OpenCV_LIBS})
 
-add_executable(feature_detection src/feature_detection.cpp)
-target_link_libraries(feature_detection ${OpenCV_LIBS})
 
-add_executable(edge_detection src/edge_detection.cpp)
-target_link_libraries(edge_detection ${OpenCV_LIBS})
-
-add_executable(blob_detection src/blob_detection.cpp)
-target_link_libraries(blob_detection ${OpenCV_LIBS})
-
-add_executable(feature_description src/feature_description.cpp)
-target_link_libraries(feature_description ${OpenCV_LIBS})
-
-add_executable(image_moments src/image_moments.cpp)
-target_link_libraries(image_moments ${OpenCV_LIBS})
-
-add_executable(histogram_analysis src/histogram_analysis.cpp)
-target_link_libraries(histogram_analysis ${OpenCV_LIBS})
 
 add_executable(affine_transformation src/affine_transformation.cpp)
 target_link_libraries(affine_transformation ${OpenCV_LIBS})
 
-add_executable(icp src/icp.cpp)
-target_link_libraries(icp ${OpenCV_LIBS})
+# add_executable(icp src/icp.cpp)
+# target_link_libraries(icp ${OpenCV_LIBS})
 
 # add_executable(perspective-n-point src/perspective-n-point.cpp)
 # target_link_libraries(perspective-n-point ${OpenCV_LIBS})
@@ -215,9 +206,6 @@ target_link_libraries(file_storage_io ${OpenCV_LIBS})
 
 add_executable(camera_projection_matrix src/camera_projection_matrix.cpp)
 target_link_libraries(camera_projection_matrix ${OpenCV_LIBS})
-
-add_executable(corner_detection src/corner_detection.cpp)
-target_link_libraries(corner_detection ${OpenCV_LIBS})
 
 add_executable(finding_homography_matrix_4_corresponding_points src/finding_homography_matrix_4_corresponding_points.cpp)
 target_link_libraries(finding_homography_matrix_4_corresponding_points ${OpenCV_LIBS})
