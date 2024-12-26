@@ -86,6 +86,7 @@ conda install conda-forge::opencv
 conda install scipy numpy matplotlib scikit-image  
 conda install -c conda-forge jupyterlab
 conda install anaconda::ipywidgets
+conda install -c conda-forge rerun-sdk
 ```
 
 create softlinks: 
@@ -142,7 +143,9 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Color Calibration](docs/color_calibration.md)  
 [Dynamic Range](docs/dynamic_range.md)    
 [White Balance](srcipts/white_balance.ipynb)    
-
+[Decompose Projection Matrix](docs/decomposition_matrix.ipynb#Decompose-Essential-Matrix)  
+[Decompose Homography Matrix](docs/decomposition_matrix.ipynb#decomposition_matrix.ipynb#Decompose-Homography-Matrix)  
+[Decompose Essential Matrix](docs/decomposition_matrix.ipynb#Decompose-Projection-Matrix)  
 
 # [OpenCV API](#)
 [Basic Operations](src/basic_operations.cpp)  
