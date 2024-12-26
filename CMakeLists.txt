@@ -124,6 +124,17 @@ add_executable(correspondences_matching src/correspondences_matching.cpp)
 target_link_libraries(correspondences_matching ${OpenCV_LIBS})
 
 
+add_executable(epipolar_geometry src/epipolar_geometry.cpp)
+target_link_libraries(epipolar_geometry ${OpenCV_LIBS})
+
+
+add_executable(essential_matrix_estimation src/essential_matrix_estimation.cpp)
+target_link_libraries(essential_matrix_estimation ${OpenCV_LIBS})
+
+add_executable(fundamental_matrix_estimation src/fundamental_matrix_estimation.cpp)
+target_link_libraries(fundamental_matrix_estimation ${OpenCV_LIBS})
+
+
 add_executable(coordinate_system_points src/coordinate_system_points.cpp)
 target_link_libraries(coordinate_system_points ${OpenCV_LIBS})
 
@@ -153,8 +164,7 @@ target_link_libraries(morphological_transformation ${OpenCV_LIBS})
 add_executable(image_thresholding src/image_thresholding.cpp)
 target_link_libraries(image_thresholding ${OpenCV_LIBS})
 
-add_executable(epipolar_geometry src/epipolar_geometry.cpp)
-target_link_libraries(epipolar_geometry ${OpenCV_LIBS})
+
 
 add_executable(optical_flow src/optical_flow.cpp)
 target_link_libraries(optical_flow ${OpenCV_LIBS})
@@ -162,11 +172,7 @@ target_link_libraries(optical_flow ${OpenCV_LIBS})
 add_executable(tracking_objects_by_color src/tracking_objects_by_color.cpp)
 target_link_libraries(tracking_objects_by_color ${OpenCV_LIBS})
 
-add_executable(essential_matrix_estimation src/essential_matrix_estimation.cpp)
-target_link_libraries(essential_matrix_estimation ${OpenCV_LIBS})
 
-add_executable(fundamental_matrix_estimation src/fundamental_matrix_estimation.cpp)
-target_link_libraries(fundamental_matrix_estimation ${OpenCV_LIBS})
 
 add_executable(triangulation src/triangulation.cpp)
 target_link_libraries(triangulation ${OpenCV_LIBS})
