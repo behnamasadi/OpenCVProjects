@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 
 
 # http://www.cvlibs.net/download.php?file=data_odometry_poses.zip
-ground_truth_poses = '/home/behnam/Downloads/data_odometry_gray/data_odometry_poses/dataset/poses/00.txt'
+ground_truth_poses = '/home/behnam/workspace/OpenCVProjects/data/kitti/odometry/05/poses/05.txt'
 
 # http://www.cvlibs.net/download.php?file=data_odometry_gray.zip
-left_images_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/image_0'
-right_images_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/image_1'
+left_images_path = '/home/behnam/workspace/OpenCVProjects/data/kitti/odometry/05/image_0/'
+right_images_path = '/home/behnam/workspace/OpenCVProjects/data/kitti/odometry/05/image_1/'
 time_stamp_path = '/home/behnam/Downloads/data_odometry_gray/dataset/sequences/00/times.txt'
 
 

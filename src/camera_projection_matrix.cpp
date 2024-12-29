@@ -1,7 +1,10 @@
+#include "collection_adapters.hpp"
 #include "csv.h"
 #include <iomanip>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include <rerun.hpp>
+#include <rerun/archetypes/arrows3d.hpp>
 
 // https://www.cnblogs.com/shengguang/p/5932522.html
 void HouseHolderQR(const cv::Mat &A, cv::Mat &Q, cv::Mat &R) {
@@ -33,9 +36,10 @@ void HouseHolderQR(const cv::Mat &A, cv::Mat &Q, cv::Mat &R) {
   }
 }
 
-void saveImage(double focalLength, int numberOfPixelInHeight,
-               int numberOfPixelInWidth,
-               std::vector<cv::Point2d> projectedPoints) {
+cv::Mat createImage(double focalLength, int numberOfPixelInHeight,
+                    int numberOfPixelInWidth,
+                    std::vector<cv::Point2d> projectedPoints,
+                    std::string fileName) {
 
   double row, col;
 
@@ -53,9 +57,9 @@ void saveImage(double focalLength, int numberOfPixelInHeight,
     // std::cout<<row <<"," <<col  <<std::endl;
     cameraImage.at<char>(int(row), int(col)) = char(255);
   }
-  std::string fileName = std::string("image_") + std::to_string(focalLength) +
-                         std::string("_.jpg");
+
   cv::imwrite(fileName, cameraImage);
+  return cameraImage;
 }
 
 cv::Mat rotationMatrixFromRollPitchYaw(double alpha, double beta,
@@ -224,7 +228,7 @@ void project3DPoint() {
       */
 
   ///////////////// camera intrinsic /////////////////
-  int numberOfPixelInHeight, numberOfPixelInWidth;
+  unsigned int numberOfPixelInHeight, numberOfPixelInWidth;
   double heightOfSensor, widthOfSensor;
   // double focalLength = 0.1;
   double focalLength = 2.0;
@@ -256,17 +260,7 @@ void project3DPoint() {
 
     P[x,y,z,w]
 
-                                           Z
-                                            ▲
-                                             \
-                                              \
-                                               \ 1 2 3 4
-                                               |------------  camera
-                                             1 |
-                                             2 |
-                                             3 |
-                                             Y |
-                                               ⯆
+
 
 
                   Z
@@ -280,6 +274,19 @@ void project3DPoint() {
             3|
            Y |
              ⯆
+
+
+                                           Z
+                                            ▲
+                                             \
+                                              \
+                                               \ 1 2 3 4
+                                               |------------  camera
+                                             1 |
+                                             2 |
+                                             3 |
+                                             Y |
+                                               ⯆
   */
 
   double roll, pitch, yaw, tx, ty, tz;
@@ -299,25 +306,77 @@ void project3DPoint() {
   cv::Mat T_w_c = (cv::Mat_<double>(3, 1) << tx, ty, tz);
 
   std::vector<cv::Point3d> objectPointsInWorldesCoordinate =
-      readPoints("../data/points.csv");
+      readPoints("../../data/points.csv");
+
+  const auto rec = rerun::RecordingStream("camera_projection_matrix");
+  rec.spawn().exit_on_failure();
+  // OpenCV X=Right, Y=Down, Z=Forward
+  rec.log_static("world", rerun::ViewCoordinates::RIGHT_HAND_Y_DOWN);
+  std::vector<rerun::components::Position3D> point3d_positions;
+  std::vector<float> point_sizes; // Define a vector for point sizes
+
+  // Log the arrows to the Rerun Viewer
+  rec.log("world/xyz",
+          rerun::Arrows3D::from_vectors(
+              {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}})
+              .with_colors({{255, 0, 0}, {0, 255, 0}, {0, 0, 255}}));
+
+  // objectPointsInCameraCoordinate;
+  float x, y, z;
+
+  for (std::size_t i = 0; i < objectPointsInWorldesCoordinate.size(); i++) {
+    x = objectPointsInWorldesCoordinate[i].x;
+    y = objectPointsInWorldesCoordinate[i].y;
+    z = objectPointsInWorldesCoordinate[i].z;
+    point3d_positions.push_back({x, y, z});
+    point_sizes.push_back(0.1);
+  }
+
+  rec.log("world/points",
+          rerun::Points3D(point3d_positions).with_radii(point_sizes));
+
+  // Extract translation vector
+  rerun::Vec3D translation(T_w_c.at<double>(0, 0), T_w_c.at<double>(1, 0),
+                           T_w_c.at<double>(2, 0));
+
+  // Extract rotation matrix as std::array<float, 9> in
+  // column-major order
+  std::array<float, 9> rotation_data = {
+      static_cast<float>(R_w_c.at<double>(0, 0)),
+      static_cast<float>(R_w_c.at<double>(1, 0)),
+      static_cast<float>(R_w_c.at<double>(2, 0)),
+
+      static_cast<float>(R_w_c.at<double>(0, 1)),
+      static_cast<float>(R_w_c.at<double>(1, 1)),
+      static_cast<float>(R_w_c.at<double>(2, 1)),
+
+      static_cast<float>(R_w_c.at<double>(0, 2)),
+      static_cast<float>(R_w_c.at<double>(1, 2)),
+      static_cast<float>(R_w_c.at<double>(2, 2)),
+  };
+
+  rerun::Mat3x3 rotation_matrix;
+  rotation_matrix = rotation_data;
+
+  // Log the data
+  std::string camera_name = "world/camera";
+
+  rec.log(camera_name,
+          rerun::Pinhole::from_focal_length_and_resolution(
+              {float(focalLength * mx), float(focalLength * my)},
+              {float(numberOfPixelInWidth), float(numberOfPixelInHeight)}));
+
+  rec.log(camera_name, rerun::Transform3D(translation, rotation_matrix));
 
   ///////////////// 3D points from world /////////////////
 
   std::vector<cv::Point2d> projectedPointsInCamera;
 
-  cv::Mat R_c_w = R_w_c.inv();
-  cv::Mat T_c_w = -T_w_c;
+  cv::Mat R_c_w = R_w_c.t(); // Transpose (or inverse) of R_w_c
+  cv::Mat T_c_w =
+      -R_c_w * T_w_c; // Correct transformation of the translation vector
 
-  /*
-   `rvec` and `tvec` are the rotation and translation that transform object pose
-from world coordinate into camera's coordinate, namely R_c_w=R_w_c.inv() and
-T_c_w=-T_w_c
-
-
-
-  */
-
-  std::cout << "====projecting 3D points into camera  unsing OpenCV===="
+  std::cout << "====projecting 3D points into camera  using OpenCV===="
             << std::endl;
 
   cv::projectPoints(objectPointsInWorldesCoordinate, R_c_w, T_c_w, cameraMatrix,
@@ -328,10 +387,19 @@ T_c_w=-T_w_c
     std::cout << "row: " << p.y << ","
               << " column: " << p.x << std::endl;
 
-  std::cout << "====saving projected point into image===="<<std::endl;
+  std::cout << "====saving projected point into image====" << std::endl;
 
-      saveImage(focalLength, numberOfPixelInHeight, numberOfPixelInWidth,
-                projectedPointsInCamera);
+  std::string fileName = std::string("image_") + std::to_string(focalLength) +
+                         std::string("_.png");
+
+  cv::Mat img =
+      createImage(focalLength, numberOfPixelInHeight, numberOfPixelInWidth,
+                  projectedPointsInCamera, fileName);
+
+  // Log the image to the camera entity in the hierarchy
+  rec.log("world/camera/image/rgb",
+          rerun::Image::from_greyscale8(
+              img, {numberOfPixelInWidth, numberOfPixelInHeight}));
 
   std::cout
       << "======= projecting 3D points into camera unsing P=K[R|t] ======="
@@ -357,7 +425,7 @@ T_c_w=-T_w_c
   R_t.at<double>(2, 3) = T_c_w.at<double>(2, 0);
 
   P = cameraMatrix * R_t;
-  std::cout << P << std::endl;
+  std::cout << "projection matrix:" << P << std::endl;
 
   cv::Mat1d pointInWorldCoordinateHomogeneous(4, 1);
 
