@@ -1,10 +1,17 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import os
 
 
-img_path = "/home/behnam/workspace/OpenCVProjects/images/opticalflow/bt_0.png"
-img = cv2.imread(img_path)
+# Use relative path based on the current script directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+img_path = "../images/feature_detection_description/000000.png"
+img_path_abs_path = os.path.join(script_dir, img_path)
+print("reading calibration file from: ", img_path_abs_path)
+
+
+img = cv2.imread(img_path_abs_path)
 
 
 ############################ ORB ############################
@@ -15,7 +22,7 @@ img_pts, img_descriptor = detector.compute(img, img_pts)
 
 # draw only keypoints location,not size and orientation
 prevImg_marked = cv2.drawKeypoints(
-    img, img_pts, None, color=(0, 255, 0), flags=0)
+    img, img_pts, None, color=(0, 255, 0), flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 plt.imshow(prevImg_marked), plt.show()
 

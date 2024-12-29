@@ -119,6 +119,8 @@ void estimateFundamentalMatrix() {
     cv::line(right_image, cv::Point(x0, y0), cv::Point(x1, y1),
              cv::Scalar(0, 255, 0), 1);
     cv::imshow("right_image_epipolarline", right_image);
+    cv::imwrite("right_image_epipolarline.png", right_image);
+
     cv::waitKey(0);
   }
 

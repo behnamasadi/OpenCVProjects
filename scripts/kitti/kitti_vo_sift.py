@@ -21,7 +21,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 # Path to KITTI dataset calibration file, Relative to script directory
-calibration_file = "../data/kitti/05/calib.txt"
+calibration_file = "../../data/kitti/odometry/05/calib.txt"
 calibration_file_abs_path = os.path.join(script_dir, calibration_file)
 print("reading calibration file from: ", calibration_file_abs_path)
 decomposed_data = load_and_decompose_calibration(calibration_file_abs_path)
@@ -42,7 +42,7 @@ for camera, data in decomposed_data.items():
 
 
 # Path to KITTI dataset images, Relative to script directory
-image_path = "../data/kitti/05/image_0/*.png"
+image_path = "../../data/kitti/odometry/05/image_0/*.png"
 image_path_abs_path = os.path.join(script_dir, image_path)
 print("reading images from: ", image_path_abs_path)
 
@@ -93,7 +93,13 @@ rr.log(
 )
 
 
-# Process each image in the dataset
+# Initialize SIFT detector
+sift = cv2.SIFT_create()
+
+# Create a BFMatcher
+bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=False)
+
+
 for i, file in enumerate(image_files):
     # Read current image
     curr_img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
@@ -102,32 +108,47 @@ for i, file in enumerate(image_files):
         continue
 
     if prev_img is None:
-        # Detect initial features
-        prev_features = cv2.goodFeaturesToTrack(
-            curr_img, mask=None, **feature_params)
+        # Detect keypoints and compute descriptors in the initial image
+        prev_keypoints, prev_descriptors = sift.detectAndCompute(
+            curr_img, None)
         prev_img = curr_img
         continue
 
-    # Track features using Lucas-Kanade Optical Flow
-    curr_features, status, err = cv2.calcOpticalFlowPyrLK(
-        prev_img, curr_img, prev_features, None, **lk_params)
+    # Detect keypoints and compute descriptors in the current image
+    curr_keypoints, curr_descriptors = sift.detectAndCompute(curr_img, None)
 
-    # Filter valid points
-    status = status.reshape(-1)
-    prev_features = prev_features[status == 1]
-    curr_features = curr_features[status == 1]
-
-    if len(curr_features) < 8:
-        print("Insufficient points for pose estimation.")
+    if prev_descriptors is None or curr_descriptors is None:
+        print("No descriptors found in one of the images.")
         prev_img = curr_img
-        prev_features = cv2.goodFeaturesToTrack(
-            curr_img, mask=None, **feature_params)
+        prev_keypoints, prev_descriptors = curr_keypoints, curr_descriptors
         continue
+
+    # Perform KNN matching
+    knn_matches = bf.knnMatch(prev_descriptors, curr_descriptors, k=2)
+
+    # Apply Lowe's ratio test
+    ratio_thresh = 0.75
+    good_matches = []
+    for m, n in knn_matches:
+        if m.distance < ratio_thresh * n.distance:
+            good_matches.append(m)
+
+    if len(good_matches) < 8:
+        print("Insufficient good matches for pose estimation.")
+        prev_img = curr_img
+        prev_keypoints, prev_descriptors = curr_keypoints, curr_descriptors
+        continue
+
+    # Extract matched points
+    prev_pts = np.float32(
+        [prev_keypoints[m.queryIdx].pt for m in good_matches])
+    curr_pts = np.float32(
+        [curr_keypoints[m.trainIdx].pt for m in good_matches])
 
     # Estimate Essential Matrix and recover pose
     E, mask = cv2.findEssentialMat(
-        curr_features, prev_features, K, method=cv2.RANSAC, prob=0.999, threshold=1.0)
-    _, R, t, mask = cv2.recoverPose(E, curr_features, prev_features, K)
+        curr_pts, prev_pts, K, method=cv2.RANSAC, prob=0.999, threshold=1.0)
+    _, R, t, mask = cv2.recoverPose(E, curr_pts, prev_pts, K)
 
     # Update the pose
     transformation = np.eye(4)
@@ -140,7 +161,7 @@ for i, file in enumerate(image_files):
 
     height, width = curr_img.shape
     if i % 20 == 0:
-        rr.log("world/camera"+str(i),
+        rr.log("world/camera" + str(i),
                rr.Pinhole(focal_length=float(fx), width=width, height=height))
 
         # Compute quaternion from rotation matrix, [x, y, z, w]
@@ -151,11 +172,9 @@ for i, file in enumerate(image_files):
         quaternion_rerun = rr.Quaternion(xyzw=quaternion_rerun)
 
         # Log the camera's global transform to Rerun
-
         rr.log(
             "world/camera" + str(i),
             rr.Transform3D(
-                # Convert translation to list
                 translation=list(t_global.flatten()),
                 rotation=quaternion_rerun
             ),
@@ -163,25 +182,10 @@ for i, file in enumerate(image_files):
 
         # Log the current image to Rerun
         rr.log("world/camera" + str(i), rr.Image(curr_img))
-
-        rr.log("world/camera"+str(i) + "/image/rgb",  rr.Image(curr_img))
-
-    # Save position for visualization
-    positions.append(pose[:3, 3])
-
-    # Visualize trajectory
-    x, y, z = pose[:3, 3]
-    draw_x, draw_y = int(x) + 400, int(z) + 300  # Adjust for visualization
-    cv2.circle(trajectory, (draw_x, draw_y), 1, (0, 255, 0), 1)
-    cv2.putText(trajectory, f"Frame: {
-        i}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    cv2.imshow("Trajectory", trajectory)
+        rr.log("world/camera" + str(i) + "/image/rgb", rr.Image(curr_img))
 
     # Update variables for next iteration
     prev_img = curr_img
-    prev_features = curr_features.reshape(-1, 1, 2)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    prev_keypoints, prev_descriptors = curr_keypoints, curr_descriptors
 
 cv2.destroyAllWindows()

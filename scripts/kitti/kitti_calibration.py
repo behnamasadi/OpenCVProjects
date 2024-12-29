@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import os
 
 
 def parse_kitti_calibration(file_path):
@@ -68,10 +69,13 @@ def load_and_decompose_calibration(file_path):
 
 if __name__ == "__main__":
     # Example usage
+    # Use relative path based on the current script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    calibration_file = "../../data/kitti/odometry/05/calib.txt"
+    calibration_file_abs_path = os.path.join(script_dir, calibration_file)
+    print("reading calibration file from: ", calibration_file_abs_path)
 
-    calibration_file = "/home/behnam/workspace/OpenCVProjects/data/kitti/05/calib.txt"
-
-    decomposed_data = load_and_decompose_calibration(calibration_file)
+    decomposed_data = load_and_decompose_calibration(calibration_file_abs_path)
 
     for camera, data in decomposed_data.items():
         print(f"Camera: {camera}")
