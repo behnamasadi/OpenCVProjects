@@ -100,8 +100,8 @@ How to run:
 int main(int argc, char **argv) {
 
   if (argc == 1) {
-    argv[1] = strdup("../images/stereo_vision/tsucuba_left.png");
-    argv[2] = strdup("../images/stereo_vision/tsucuba_right.png");
+    argv[1] = strdup("../../images/stereo_vision/tsucuba_left.png");
+    argv[2] = strdup("../../images/stereo_vision/tsucuba_right.png");
   }
 
   const int MAX_FEATURES = 500;
@@ -114,7 +114,6 @@ int main(int argc, char **argv) {
   cv::KeyPoint left_image_good_keypoint, right_image_good_keypoint;
 
   cv::Ptr<cv::Feature2D> ORB_detector = cv::ORB::create(MAX_FEATURES);
-  // cv::SiftFeatureDetector sift_detector;
   ORB_detector->detect(left_image, left_image_sift_keypoints);
   ORB_detector->detect(right_image, right_image_sift_keypoints);
 
@@ -130,7 +129,8 @@ int main(int argc, char **argv) {
   //     cv::FlannBasedMatcher flann_based_matcher;
   //     flann_based_matcher.match(left_image_sift_descriptor,left_image_sift_descriptor,matches);
 
-  cv::BFMatcher matcher(cv::NORM_L1, true);
+  // cv::BFMatcher matcher(cv::NORM_L1, true);
+  cv::BFMatcher matcher(cv::NORM_HAMMING, true);
   /* from the file SURF_Homography.cpp
       matcher matchs from first param (descriptors_object) to second param
      (descriptors_scene) matcher.match( descriptors_object, descriptors_scene,
@@ -156,7 +156,7 @@ int main(int argc, char **argv) {
   std::cout << "-- median_distance : " << median_distance << std::endl;
 
   /*    */
-  double k = 4;
+  double k = 1;
 
   std::vector<cv::DMatch> good_matches;
   for (std::size_t i = 0; i < matches.size(); i++) {
@@ -199,6 +199,7 @@ int main(int argc, char **argv) {
                   cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
   cv::imshow("Good Matches", img_matches);
+  cv::imwrite("Good_Matches_Epipolar_Geometry.png", img_matches);
 
   // This will draw all mtaches
 
@@ -207,8 +208,8 @@ int main(int argc, char **argv) {
       cv::drawMatches( left_image, left_image_sift_keypoints, right_image,
      right_image_sift_keypoints, matches, img_matches, cv::Scalar::all(-1),
      cv::Scalar::all(-1), std::vector<char>(),
-     cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS ); cv::imshow( "All Matches",
-     img_matches );
+     cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS ); cv::imshow( "All
+     Matches", img_matches );
   */
 
   // This wil draw all keypoints
@@ -217,8 +218,9 @@ int main(int argc, char **argv) {
       cv::imshow("left image sift key points",left_image);
 
 
-      cv::drawKeypoints(right_image, right_image_sift_keypoints,right_image);
-      cv::imshow("right image sift key points",right_image);
+      cv::drawKeypoints(right_image,
+     right_image_sift_keypoints,right_image); cv::imshow("right image sift
+     key points",right_image);
   */
 
   // This will draw good keypoints
@@ -243,14 +245,14 @@ int main(int argc, char **argv) {
   F = cv::findFundamentalMat(left_imgpts, right_imgpts, cv::FM_RANSAC, 0.1,
                              0.99);
 
-  //    std::cout<<"Fundemental matrix using FM_RANSAC algorithm:" <<std::endl;
-  //    std::cout<< std::fixed;
-  //    std::cout<< std::setprecision(6)<< F<<std::endl;
-  //    std::cout<<"-------------------------------------------" <<std::endl;
+  std::cout << "Fundemental matrix using FM_RANSAC algorithm:" << std::endl;
+  std::cout << std::fixed;
+  std::cout << std::setprecision(6) << F << std::endl;
+  std::cout << "-------------------------------------------" << std::endl;
 
-  std::cout << "Fundemental matrix using FM_8POINT algorithm:" << std::endl;
-  F = cv::findFundamentalMat(left_imgpts, right_imgpts, cv::FM_8POINT, 0, 0);
-  //    std::cout<<F <<std::endl;
+  // std::cout << "Fundemental matrix using FM_8POINT algorithm:" << std::endl;
+  // F = cv::findFundamentalMat(left_imgpts, right_imgpts, cv::FM_8POINT, 0, 0);
+  std::cout << F << std::endl;
 
   std::vector<cv::Vec3f> lines1, lines2;
   cv::computeCorrespondEpilines(left_imgpts, 1, F, lines1);
@@ -268,6 +270,7 @@ int main(int argc, char **argv) {
   }
 
   cv::imshow("Correspond Epilines from points in image", image_out);
+  cv::imwrite("Correspond Epilines from points in image.png", image_out);
 
   cv::waitKey(0);
   // Hartley’s algorithm

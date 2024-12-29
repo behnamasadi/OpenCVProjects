@@ -21,6 +21,7 @@ void correspondencesMatching(cv::Mat img1, cv::Mat img2) {
   cv::drawMatches(img1, keypoints1, img2, keypoints2, matches, img_matches);
 
   cv::imshow("BFMatcher", img_matches);
+  cv::imwrite("BFMatcher.png", img_matches);
   cv::waitKey(0);
 
   //////////////////////// knnMatches ////////////////////////////
@@ -43,7 +44,9 @@ void correspondencesMatching(cv::Mat img1, cv::Mat img2) {
 
   cv::drawMatches(img1, keypoints1, img2, keypoints2, goodMatches,
                   img_knn_matches);
-  cv::imshow("knn matches", img_knn_matches);
+  cv::imshow("KNN Matches", img_knn_matches);
+  cv::imwrite("KNN_Matches.png", img_knn_matches);
+
   cv::waitKey(0);
 
   //////////////////////// radius matching ////////////////////////////
@@ -76,7 +79,9 @@ void correspondencesMatching(cv::Mat img1, cv::Mat img2) {
                   imgMatches);
 
   // Display the result
-  cv::imshow("Good Matches (Radius Match)", imgMatches);
+  cv::imshow("Radius Match", imgMatches);
+  cv::imwrite("Radius_Match.png", img_knn_matches);
+
   cv::waitKey(0);
 }
 

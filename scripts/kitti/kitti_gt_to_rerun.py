@@ -78,7 +78,7 @@ def publish_poses_to_rerun(poses):
 
 if __name__ == "__main__":
     # Path to the KITTI poses fil, Relative to script directory
-    kitti_poses_file = "../data/kitti/05/poses/05.txt"
+    kitti_poses_file = "../../data/kitti/odometry/05/poses/05.txt"
 
     # Use relative path based on the current script directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
