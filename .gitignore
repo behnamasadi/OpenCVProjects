@@ -6,7 +6,7 @@ data/kitti/05/image_1/*
 *.user
 *.autosave
 src/sandbox.cpp
-scripts/.ipynb_checkpoints/*
-docs/.ipynb_checkpoints/*
+*/.ipynb_checkpoints/*
 data/kitti/*
+*.pyc
 
