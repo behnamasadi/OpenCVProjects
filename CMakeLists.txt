@@ -192,7 +192,7 @@ add_executable(virtual_camera_calibration src/virtual_camera_calibration.cpp)
 target_link_libraries(virtual_camera_calibration ${OpenCV_LIBS})
 
 add_executable(virtual_stereo_vision_cameras src/virtual_stereo_vision_cameras.cpp)
-target_link_libraries(virtual_stereo_vision_cameras ${OpenCV_LIBS})
+target_link_libraries(virtual_stereo_vision_cameras rerun_sdk ${OpenCV_LIBS})
 
 add_executable(rodrigue_rotation_matrices src/rodrigue_rotation_matrices.cpp)
 target_link_libraries(rodrigue_rotation_matrices ${OpenCV_LIBS})
@@ -216,7 +216,7 @@ add_executable(file_storage_io src/file_storage_io.cpp)
 target_link_libraries(file_storage_io ${OpenCV_LIBS})
 
 add_executable(camera_projection_matrix src/camera_projection_matrix.cpp)
-target_link_libraries(camera_projection_matrix ${OpenCV_LIBS})
+target_link_libraries(camera_projection_matrix rerun_sdk ${OpenCV_LIBS})
 
 add_executable(finding_homography_matrix_4_corresponding_points src/finding_homography_matrix_4_corresponding_points.cpp)
 target_link_libraries(finding_homography_matrix_4_corresponding_points ${OpenCV_LIBS})
