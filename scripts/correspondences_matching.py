@@ -43,6 +43,7 @@ def drawCorrespondences(img1, img2, detector, matcher, top_k_matches=10):
     title = f"Detector Name: {detector.getDefaultName()}, Detector Type:{
         detector.descriptorType()}, Matcher: {type(matcher).__name__}"
     cv2.imshow(title, img_matches)
+    cv2.imwrite(title+".png", img_matches)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

@@ -8,3 +8,5 @@ data/kitti/05/image_1/*
 src/sandbox.cpp
 scripts/.ipynb_checkpoints/*
 docs/.ipynb_checkpoints/*
+data/kitti/*
+

@@ -31,6 +31,12 @@ endif()
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
+
+include(FetchContent)
+FetchContent_Declare(rerun_sdk URL https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip)
+FetchContent_MakeAvailable(rerun_sdk)
+
+
 message("\n########################################## glog ##########################################\n")
 
 if(EXISTS "$ENV{HOME}/usr/lib/cmake/glog/")
@@ -172,10 +178,9 @@ target_link_libraries(optical_flow ${OpenCV_LIBS})
 add_executable(tracking_objects_by_color src/tracking_objects_by_color.cpp)
 target_link_libraries(tracking_objects_by_color ${OpenCV_LIBS})
 
-
-
 add_executable(triangulation src/triangulation.cpp)
-target_link_libraries(triangulation ${OpenCV_LIBS})
+set_property(TARGET triangulation PROPERTY CXX_STANDARD 17)
+target_link_libraries(triangulation rerun_sdk ${OpenCV_LIBS})
 
 add_executable(structured_light_range_finding src/structured_light_range_finding.cpp)
 target_link_libraries(structured_light_range_finding ${OpenCV_LIBS})

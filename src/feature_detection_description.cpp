@@ -5,7 +5,16 @@
 void shiTomasiGoodFeaturesToTrack(cv::Mat img) {
 
   cv::Mat img_gray;
-  cv::cvtColor(img, img_gray, cv::COLOR_BGR2GRAY);
+
+  // Check if the image has 3 channels (color)
+  if (img.channels() == 3) {
+    cv::cvtColor(img, img_gray, cv::COLOR_BGR2GRAY);
+    std::cout << "image has 3 channel" << std::endl;
+
+  } else {
+    std::cout << "image is already gray scale" << std::endl;
+    img_gray = img.clone();
+  }
 
   int maxCorners = 100;
 
@@ -27,17 +36,21 @@ void shiTomasiGoodFeaturesToTrack(cv::Mat img) {
   /// Draw corners detected
   std::cout << "** Number of corners detected: " << corners.size() << std::endl;
   int r = 4;
+  cv::Mat img_color;
+  cv::cvtColor(img, img_color, cv::COLOR_GRAY2BGR);
+
   for (std::size_t i = 0; i < corners.size(); i++) {
-    cv::circle(img, corners[i], r,
+    cv::circle(img_color, corners[i], r,
                cv::Scalar(rng.uniform(0, 255), rng.uniform(0, 255),
                           rng.uniform(0, 255)),
                -1, 8, 0);
   }
 
   // Show what you got
-  std::string sourceWindow = "Image";
+  std::string sourceWindow = "goodFeaturesToTrack";
   cv::namedWindow(sourceWindow, cv::WINDOW_AUTOSIZE);
-  cv::imshow(sourceWindow, img);
+  cv::imshow(sourceWindow, img_color);
+  cv::imwrite("goodFeaturesToTrack.png", img_color);
   cv::waitKey(0);
 }
 
@@ -64,8 +77,8 @@ void keyPointDetectorDescriptor(cv::Mat img) {
 
   sift->detect(img, k_pts);
   // Draw keypoints on the original image
-  cv::Mat imgWithKeypoints;
-  cv::drawKeypoints(img, k_pts, imgWithKeypoints, cv::Scalar::all(-1),
+  cv::Mat imgWithSIFTKeypoints;
+  cv::drawKeypoints(img, k_pts, imgWithSIFTKeypoints, cv::Scalar::all(-1),
                     cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
   for (int i = 0; i < 5; i++) {
@@ -79,7 +92,30 @@ void keyPointDetectorDescriptor(cv::Mat img) {
   cv::KeyPoint::convert(k_pts, points);
 
   // Display the result
-  cv::imshow("Keypoints", imgWithKeypoints);
+  cv::imshow("SIFT Keypoints", imgWithSIFTKeypoints);
+  cv::imwrite("SIFTKeypoints.png", imgWithSIFTKeypoints);
+  cv::waitKey(0); // Wait for a key press
+
+  ///////////////////////////////// ORB //////////////////////////////
+
+  k_pts.clear();
+
+  orb->detect(img, k_pts);
+  // Draw keypoints on the original image
+  cv::Mat imgWithORBKeypoints;
+  cv::drawKeypoints(img, k_pts, imgWithORBKeypoints, cv::Scalar::all(-1),
+                    cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+  for (int i = 0; i < 5; i++) {
+
+    std::cout << "angle: " << k_pts[i].angle << std::endl;
+    std::cout << "class_id:" << k_pts[i].class_id << std::endl;
+    std::cout << "pt:" << k_pts[i].pt << std::endl;
+  }
+
+  // Display the result
+  cv::imshow("ORB Keypoints", imgWithORBKeypoints);
+  cv::imwrite("ORBKeypoints.png", imgWithORBKeypoints);
   cv::waitKey(0); // Wait for a key press
 }
 
