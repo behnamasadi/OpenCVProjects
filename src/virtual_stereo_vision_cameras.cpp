@@ -205,6 +205,18 @@ void projectPointcloudInStereoImagePlane() {
   cv::Mat rightCameraTranslation_w_c =
       (cv::Mat_<double>(3, 1) << txRight, tyRight, tzRight);
 
+  std::cout << "///////// ground truth /////////" << std::endl;
+
+  std::cout << "left camera translation in world:\n"
+            << leftCameraTranslation_w_c << std::endl;
+  std::cout << "left camera roll, pitch , yaw in world:\n"
+            << thetaLeft << std::endl;
+  std::cout << "right camera translation in world:\n"
+            << rightCameraTranslation_w_c << std::endl;
+
+  std::cout << "right camera roll, pitch , yaw in world:\n"
+            << thetaRight << std::endl;
+
   ///////// creating ellipsoid in the world coordinate /////////
   std::vector<cv::Vec3f> objectPointsInWorldCoordinate;
 
@@ -350,6 +362,9 @@ void projectPointcloudInStereoImagePlane() {
   imagePointsLeft.push_back(imagePointsLeftCamera);
   imagePointsRight.push_back(imagePointsRightCamera);
 
+  /*The rotation matrix   R and translation vector T represent the
+  pose camera 1 (left) expressed in camera 2 (right)*/
+
   cv::Mat R, T, E, F, perViewErrors;
 
   int flags = cv::CALIB_FIX_INTRINSIC;
@@ -366,20 +381,62 @@ void projectPointcloudInStereoImagePlane() {
 
   std::cout << "rms: " << rms << std::endl;
 
-  std::cout << "R: " << R << "\nT: " << T << "\nE: " << E << "\nF: " << F
-            << "\n Per View Errors:" << perViewErrors << std::endl;
-
-  std::cout << R * (-leftCameraTranslation_w_c) + T << std::endl;
-
-  cv::Mat rightCameraCenter = -R.t() * T; // Compute the right camera center
-  std::cout << "Right camera center in left camera frame:\n"
-            << rightCameraCenter << std::endl;
+  std::cout << "Rotation of left camera expressed in right camera:\n"
+            << R << "\nTranslation of left camera expressed in right camera:\n"
+            << T << "\nE: " << E << "\nF: " << F << "\n Per View Errors:\n"
+            << perViewErrors << std::endl;
 
   // Rectification matrices
   cv::Mat R1, R2, P1, P2, Q;
   cv::stereoRectify(K, distortionCoefficient, K, distortionCoefficient,
                     cv::Size(numberOfPixelInWidth, numberOfPixelInHeight), R, T,
                     R1, R2, P1, P2, Q);
+
+  //////////////////////////// Triangulate points ////////////////////////////
+  cv::Mat points4D;
+  cv::triangulatePoints(P1, P2, imagePointsLeftCamera, imagePointsRightCamera,
+                        points4D);
+
+  // Convert points from homogeneous to 3D (divide by w)
+  std::vector<cv::Point3f> triangulatedPoints;
+  for (int i = 0; i < points4D.cols; ++i) {
+    cv::Point3f point;
+    point.x = points4D.at<float>(0, i) / points4D.at<float>(3, i);
+    point.y = points4D.at<float>(1, i) / points4D.at<float>(3, i);
+    point.z = points4D.at<float>(2, i) / points4D.at<float>(3, i);
+    triangulatedPoints.push_back(point);
+  }
+
+  // points are in rectified coordinated, meaning in left camera
+  //////////////////////////// Triangulate points ////////////////////////////
+  std::vector<cv::Point3f> pointsInWorld;
+
+  for (const auto &point : triangulatedPoints) {
+    // Convert point from camera space to world space
+    cv::Mat pointMat = (cv::Mat_<double>(3, 1) << point.x, point.y, point.z);
+
+    // Apply rotation from camera to world
+    cv::Mat rotatedPoint = leftCameraRotation_w_c * pointMat;
+
+    // Apply translation
+    cv::Point3f worldPoint;
+    worldPoint.x =
+        rotatedPoint.at<double>(0) + leftCameraTranslation_w_c.at<double>(0);
+    worldPoint.y =
+        rotatedPoint.at<double>(1) + leftCameraTranslation_w_c.at<double>(1);
+    worldPoint.z =
+        rotatedPoint.at<double>(2) + leftCameraTranslation_w_c.at<double>(2);
+    pointsInWorld.push_back(worldPoint);
+  }
+
+  // Log the triangulated points to Rerun
+  std::vector<rerun::components::Position3D> triangulated3d_positions;
+  for (const auto &point : pointsInWorld) {
+    triangulated3d_positions.push_back({point.x, point.y, point.z});
+  }
+  rec.log("world/triangulated_points",
+          rerun::Points3D(triangulated3d_positions)
+              .with_radii(std::vector<float>(triangulatedPoints.size(), 0.05)));
 
   // Compute rectification maps
   cv::Mat map1x, map1y, map2x, map2y;
@@ -412,52 +469,46 @@ void projectPointcloudInStereoImagePlane() {
       rerun::Image::from_greyscale8(
           rectifiedImageRight, {numberOfPixelInWidth, numberOfPixelInHeight}));
 
-  // Triangulate points
-  cv::Mat points4D;
-  cv::triangulatePoints(P1, P2, imagePointsLeftCamera, imagePointsRightCamera,
-                        points4D);
+  // Create the stereo matcher
 
-  // Convert points from homogeneous to 3D (divide by w)
-  std::vector<cv::Point3f> triangulatedPoints;
-  for (int i = 0; i < points4D.cols; ++i) {
-    cv::Point3f point;
-    point.x = points4D.at<float>(0, i) / points4D.at<float>(3, i);
-    point.y = points4D.at<float>(1, i) / points4D.at<float>(3, i);
-    point.z = points4D.at<float>(2, i) / points4D.at<float>(3, i);
-    triangulatedPoints.push_back(point);
-  }
+  // numDisparities must be multiple of 16
+  // blockSize must be odd, e.g., 15, 17, 19, etc.
+  int numDisparities = 7 * 16;
+  int blockSize = 5;
 
-  //////////////////////////////////////////////////////////////////////
-  cv::Mat R_c_w =
-      leftCameraRotation_w_c.t(); // Rotation from world to left camera
-  cv::Mat T_c_w =
-      -R_c_w *
-      leftCameraTranslation_w_c; // Translation from world to left camera
+  cv::Ptr<cv::StereoBM> stereoBM =
+      cv::StereoBM::create(numDisparities, blockSize);
+  stereoBM->setPreFilterCap(31);
+  stereoBM->setBlockSize(blockSize);
+  stereoBM->setMinDisparity(0);
+  stereoBM->setNumDisparities(numDisparities);
+  stereoBM->setTextureThreshold(10);
+  stereoBM->setUniquenessRatio(15);
 
-  for (auto &point : triangulatedPoints) {
-    cv::Mat pointInCamera =
-        (cv::Mat_<double>(3, 1) << point.x, point.y, point.z);
-    cv::Mat pointInWorld = R_c_w * pointInCamera + T_c_w;
+  // Compute the disparity map
 
-    point.x = pointInWorld.at<double>(0);
-    point.y = pointInWorld.at<double>(1);
-    point.z = pointInWorld.at<double>(2);
-  }
-  //////////////////////////////////////////////////////////////////////
+  cv::Mat disparity16S, disparity8U;
+  stereoBM->compute(rectifiedImageLeft, rectifiedImageRight, disparity16S);
 
-  // Log the triangulated points to Rerun
-  std::vector<rerun::components::Position3D> triangulated3d_positions;
-  for (const auto &point : triangulatedPoints) {
-    triangulated3d_positions.push_back({point.x, point.y, point.z});
-  }
-  rec.log("world/triangulated_points",
-          rerun::Points3D(triangulated3d_positions)
-              .with_radii(std::vector<float>(triangulatedPoints.size(), 0.05)));
+  // Convert from 16S to 8U for easy visualization
+  disparity16S.convertTo(disparity8U, CV_8U, 255.0 / (numDisparities * 16.0));
 
-  // Optional: Print or save the triangulated points
-  for (const auto &point : triangulatedPoints) {
-    std::cout << "Triangulated Point: " << point << std::endl;
-  }
+  cv::imshow("disparity", disparity8U);
+  cv::imwrite("disparity.png", disparity8U);
+
+  cv::waitKey(0);
+
+  // Convert disparity to 3D (depth map)
+  cv::Mat xyz; // Will hold 3D coordinates of each pixel
+  cv::reprojectImageTo3D(disparity16S, xyz, Q,
+                         /* handleMissingValues = */ true);
+
+  // etc.
+
+  // // Optional: Print or save the triangulated points
+  // for (const auto &point : triangulatedPoints) {
+  //   std::cout << "Triangulated Point: " << point << std::endl;
+  // }
 
   /*
 typedef Vec<float, 3> cv::Vec3f
