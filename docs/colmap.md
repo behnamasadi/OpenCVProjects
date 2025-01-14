@@ -1,74 +1,44 @@
-# COLMAP installation
-
+# COLMAP Installation
 ## Installation using docker
-### 1. Building the Image
-There is  [docker file](https://github.com/colmap/colmap/blob/main/docker/Dockerfile) for this project that contains all dependencies and you build the image with :   
 
-
-- get the OS version, the `$distribution` should gives you your OS version  `ubuntu22.04`: 
+First run `nvidia-smi` and check the cuda supported version:
 
 ```
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.08             Driver Version: 550.127.08     CUDA Version: 12.4     |
 ```
-
-- add the package repositories:
-```
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-```
-
-- Install nvidia-container-toolkit
-```
-sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-sudo systemctl restart docker
-```
-- Check that it worked!
+since we have `12.4`, download and install the cuda toolkit 12.4, and set the pass:
 
 ```
-docker run --gpus all nvidia/cuda:<CUDA-version>-base nvidia-smi
-```
-For instance:
-
-```
-docker run --gpus all nvidia/cuda:10.2-base nvidia-smi
+export PATH="/usr/local/cuda-12.4/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-12.4/lib64:$LD_LIBRARY_PATH"
 ```
 
+check the version:
+
+to see the version of the CUDA compiler:
+```
+ /usr/local/cuda/bin/nvcc --version
+```
+
+Now docker part:
+
+- `docker pull colmap/colmap:20240212.4`
+
+- `xhost +local:`
+- Now run: `docker run --gpus all --name <continer-name> -v <image-dataset-path-on-host>:<path-in-the-container> -it <docker-image-name>` 
+
+for instance`docker run --gpus all --user $(id -u):$(id -g) -v /home/$USER/:/home/$USER/ -v /tmp/.X11-unix:/tmp/.X11-unix --name colmap_container -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it colmap/colmap:20240212.4 bash`
 
 
-
-
-`docker build -t="colmap:latest" --build-arg CUDA_ARCHITECTURES=75 .`
-
-`xhost +local:`
-`docker run -v /home/$USER/:/home/$USER/ -v /tmp/.X11-unix:/tmp/.X11-unix --name colmap -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it colmap bash`
-
-
-
-
-`docker build -t sfm .`
-
-to quickly check your nvidia docker, run:
-
-`docker run --gpus all nvidia/cuda:11.6.0-devel-ubuntu20.04 nvidia-smi`
-
-
-### 2. Creating the container
-Create a container where you mount your image dataset into your container: 
-
-`docker run --gpus all --name <continer-name> -v <image-dataset-path-on-host>:<path-in-the-container> -it <docker-image-name>`
-
-for instance:
-
-`docker run --gpus all --name sfm_container -v /home/behnam/workspace/sfm:/sfm -it sfm`
-
-### 3. Starting an existing container
 If you have already created a container from the docker image, you can start it with:
 
-`docker  start -i sfm_container`
+`docker  start -i colmap_container`
 
 
 Refs: [1](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker), [2](https://github.com/colmap/colmap/blob/dev/docker/Dockerfile), [3](https://github.com/NVIDIA/nvidia-docker)
 
+[Full list of available Nvidia tags on docker hub](https://hub.docker.com/r/nvidia/cuda/tags)
 
 ## Direct installation on your machine
 ### CUDA Installation
@@ -107,8 +77,8 @@ export LD_LIBRARY_PATH="/usr/local/<cuda-version>/lib64:$LD_LIBRARY_PATH"
 ```
 for instance:
 ```
-export PATH="/usr/local/cuda-11.8/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
+export PATH="/usr/local/cuda-12.6/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-12.6/lib64:$LD_LIBRARY_PATH"
 ```
 
 
@@ -239,10 +209,20 @@ colmap feature_extractor  \
 
 If you have your camera parameter you specify them:
 
-set your camera parameters:
+set your camera parameters(fish eye):
 ```
 CAM=fx,fy,cx,cy,k1,k2,k3,k4
 ```
+
+for normal pinhole:
+```
+CAM=fx,fy,cx,cy,k1,k2,p1,p2
+```
+for instance:
+```
+CAM=848.53117539872062,848.53117539872062,639.5,359.5,0.15971715887123378,-0.61045779426294378,0,0
+```
+
 Then 
 ```
 colmap feature_extractor  \
@@ -549,7 +529,7 @@ colmap bundle_adjuster  \
   --BundleAdjustment.refine_principal_point   0 \
   --BundleAdjustment.refine_extra_params  0 \
   --BundleAdjustment.refine_extrinsics  1
-```  
+```
 
 
 
@@ -903,4 +883,25 @@ Refs: [1](https://github.com/colmap/colmap/issues/1624), [2](https://pdfs.semant
 
 Paper: [COLMAP-SLAM: A FRAMEWORK FOR VISUAL ODOMETRY](https://isprs-archives.copernicus.org/articles/XLVIII-1-W1-2023/317/2023/isprs-archives-XLVIII-1-W1-2023-317-2023.pdf)  
 [code](https://github.com/3DOM-FBK/COLMAP_SLAM)
+
+
+
+
+## Dense Point-Cloud with OpenMVS
+
+```
+DATASET_PATH=<you-dataset>
+```
+
+
+```
+./InterfaceCOLMAP -i $DATASET_PATH/dense/ -o scene.mvs --image-folder $DATASET_PATH/dense/images
+```
+
+
+
+Refs: [1](https://github.com/cdcseacave/openMVS/wiki/Usage#convert-sfm-scene-from-colmap), [2](https://github.com/cdcseacave/openMVS_sample)
+
+
+
 
