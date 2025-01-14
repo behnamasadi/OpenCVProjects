@@ -32,3 +32,37 @@ Refs: [1](https://github.com/pmoulon/CMVS-PMVS)
 
 ## openMVG
 Refs: [1](https://opensourcephotogrammetry.blogspot.com/)
+
+
+
+
+##  Pipeline for SFM
+
+**Feature Detection and Matching:**
+First, features are detected in each image. Common algorithms include SIFT, SURF, or ORB. 
+These features are then matched between images to find correspondences. OpenCV's cv::BFMatcher or cv::FlannBasedMatcher can be used for this.
+
+**Pose Estimation:**
+With matched features, you estimate the relative pose between two images. cv::recoverPose is often used here. It computes the rotation and translation between two views given corresponding points and the essential matrix. The essential matrix can be calculated using `cv::findEssentialMat`.
+
+```cpp
+cv::Mat E = cv::findEssentialMat(points1, points2, focal, pp, cv::RANSAC, 0.999, 1.0, mask);
+cv::recoverPose(E, points1, points2, R, t, focal, pp, mask);
+```
+
+
+**Incremental or Global Structure from Motion:**
+- Incremental SfM: Start with an initial pair of images, recover pose, and then add images one by one, adjusting the structure and camera poses with each addition. Here, after using cv::recoverPose, you would typically use a bundle adjustment step to refine the structure and camera poses.
+- Global SfM: All images are considered at once. 
+
+
+
+
+
+
+
+
+
+
+
+
