@@ -155,8 +155,7 @@ target_link_libraries(affine_transformation ${OpenCV_LIBS})
 # add_executable(icp src/icp.cpp)
 # target_link_libraries(icp ${OpenCV_LIBS})
 
-# add_executable(perspective-n-point src/perspective-n-point.cpp)
-# target_link_libraries(perspective-n-point ${OpenCV_LIBS})
+
 
 add_executable(homogeneous_conversion src/homogeneous_conversion.cpp)
 target_link_libraries(homogeneous_conversion ${OpenCV_LIBS})
@@ -240,10 +239,13 @@ add_executable(computes_camera_characteristics_from_camera_intrinsic src/compute
 target_link_libraries(computes_camera_characteristics_from_camera_intrinsic ${OpenCV_LIBS})
 
 add_executable(P3P src/P3P.cpp)
-target_link_libraries(P3P ${OpenCV_LIBS})
+target_link_libraries(P3P rerun_sdk ${OpenCV_LIBS})
 
 add_executable(PnP src/PnP.cpp)
 target_link_libraries(PnP ${OpenCV_LIBS})
+
+# add_executable(perspective-n-point src/perspective-n-point.cpp)
+# target_link_libraries(perspective-n-point ${OpenCV_LIBS})
 
 add_executable(drawing_frame_axes src/drawing_frame_axes.cpp)
 target_link_libraries(drawing_frame_axes ${OpenCV_LIBS})
