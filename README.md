@@ -117,7 +117,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Triangulation](docs/triangulation.ipynb)  
 [Epipolar Geometry, Essential Matrix, Fundamental Matrix](docs/epipolar_geometry_essential_matrix_fundamental_matrix.ipynb)  
 [Ego Motion Estimation, Recover Pose and Pose Estimation, R,t from Essential Matrix](docs//epipolar_geometry_essential_matrix_fundamental_matrix.ipynb#Recovery-of-R,T-from-Essential-Matrix)  
-[Sparse Optical Flow, Dense Optical Flow](docs/opticalflow.ipynb)
+[Sparse Optical Flow, Dense Optical Flow](docs/opticalflow.ipynb)  
 [Visual Odometry](docs/visual_odometry.md)  
 [KITTI Visual Odometry](docs/kitti.ipynb)   
 [Stereo Calibration](docs/stereo_calibration_disparity_map.ipynb#Stereo-Calibration)  
@@ -201,7 +201,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 
 # [Bundle adjustment and Structure from motion](#)
 [Colmap](docs/colmap.md)  
-[Photogrammetry](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#photogrammetry)  
+[Photogrammetry](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.ipynb#photogrammetry)  
 [Structure from Motion (SfM)](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#structure-from-motion--sfm-)  
 [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
 [Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)  
