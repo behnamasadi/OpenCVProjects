@@ -6,34 +6,9 @@ template <typename T> void printArray(std::vector<T> array) {
     std::cout << element << std::endl;
 }
 
-/*
-cv::SolvePnPMethod:
-
-1)(SOLVEPNP_P3P, SOLVEPNP_AP3P): need 4 input points to return a unique solution.
-
-2) cv::SOLVEPNP_IPPE
-Input points must be >= 4 and object points must be coplanar.
-Infinitesimal Plane-Based Pose Estimation
-
-
-
-3) cv::SOLVEPNP_IPPE_SQUARE
-
-Special case suitable for marker pose estimation. Number of input points must
-be 4. Object points must be defined in the following order:
-
-point 0: [-squareLength / 2, squareLength / 2, 0]
-point 1: [ squareLength / 2,squareLength / 2, 0]
-point 2: [ squareLength / 2, -squareLength / 2, 0]
-point 3: [-squareLength / 2, -squareLength / 2, 0]
-
-*/
-
 void solvePerspectivenPoint(
     std::vector<cv::Vec3f> objectPointsInWorldCoordinate,
-    cv::SolvePnPMethod method)
-{
-
+    cv::SolvePnPMethod method) {
 
   ///////// camera extrinsic parameters/////////
 
@@ -107,9 +82,6 @@ void solvePerspectivenPoint(
   printArray(tvecs);
 }
 
-
-
-
 /*
 The cv::solvePnPGeneric() allows retrieving all the possible solutions.
 Currently, only cv::SOLVEPNP_P3P, cv::SOLVEPNP_AP3P, cv::SOLVEPNP_IPPE,
@@ -124,17 +96,12 @@ The cv::solvePnPRansac() computes the object pose wrt. the camera frame using a
 RANSAC scheme to deal with outliers.
 */
 
-void PnPRansac() {//cv::solvePnPRansac()
+void PnPRansac() { // cv::solvePnPRansac()
 }
 
-
-
-
-void PnPPoseRefinement()
-{
-   //solvePnPRefineLM()
-    //solvePnPRefineVVS()
+void PnPPoseRefinement() {
+  // solvePnPRefineLM()
+  // solvePnPRefineVVS()
 }
 
-
-int main() {  }
+int main() {}
