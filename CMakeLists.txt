@@ -253,6 +253,13 @@ target_link_libraries(drawing_frame_axes ${OpenCV_LIBS})
 add_executable(camera_rays src/camera_rays.cpp)
 target_link_libraries(camera_rays ${OpenCV_LIBS})
 
+
+
+add_executable(undistort_points src/undistort_points.cpp)
+target_link_libraries(undistort_points ${OpenCV_LIBS})
+
+
+
 find_package(Eigen3 NO_MODULE)
 
 IF(${EIGEN3_FOUND})
