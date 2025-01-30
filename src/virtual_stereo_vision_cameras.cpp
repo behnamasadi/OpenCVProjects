@@ -394,6 +394,9 @@ void projectPointcloudInStereoImagePlane() {
 
   //////////////////////////// Triangulate points ////////////////////////////
   cv::Mat points4D;
+
+  std::cout << "P1: " << P1 << std::endl;
+  std::cout << "P2: " << P2 << std::endl;
   cv::triangulatePoints(P1, P2, imagePointsLeftCamera, imagePointsRightCamera,
                         points4D);
 
