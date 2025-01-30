@@ -1,12 +1,38 @@
-# COLMAP Installation
-## Installation using docker
+# 1. COLMAP Installation
 
-First run `nvidia-smi` and check the cuda supported version:
+## 1.1 ssh/ scp set up (optional)
+If you running colmap on the remote machine first:
+
 
 ```
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 550.127.08             Driver Version: 550.127.08     CUDA Version: 12.4     |
+MACHINE_ADDRESS=<ip-address>
 ```
+Then tunnel the localhost for jupyter:
+
+```
+ssh -i /home/$USER/.ssh/<user>.pem -L 10000:localhost:10000 <user-name>@MACHINE_ADDRESS
+```
+
+Install jupyter
+```
+pip install --upgrade jupyter
+pip install --upgrade ipywidgets
+```
+
+So you can run jupyter
+```
+jupyter notebook --ip 0.0.0.0 --port 10000
+```
+-----
+
+## 1.2 Installation using docker
+
+Now on your machine run `nvidia-smi` and check the cuda supported version:
+
+```
+NVIDIA-SMI 550.127.08             Driver Version: 550.127.08     CUDA Version: 12.4
+```
+
 since we have `12.4`, download and install the cuda toolkit 12.4, and set the pass:
 
 ```
@@ -23,12 +49,12 @@ to see the version of the CUDA compiler:
 
 Now docker part:
 
-- `docker pull colmap/colmap:20240212.4`
+- `docker pull colmap/colmap:20240212.4` or `docker pull colmap/colmap:20240112.3`
 
 - `xhost +local:`
 - Now run: `docker run --gpus all --name <continer-name> -v <image-dataset-path-on-host>:<path-in-the-container> -it <docker-image-name>` 
 
-for instance`docker run --gpus all --user $(id -u):$(id -g) -v /home/$USER/:/home/$USER/ -v /tmp/.X11-unix:/tmp/.X11-unix --name colmap_container -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it colmap/colmap:20240212.4 bash`
+for instance`docker run --gpus all  -v /home/$USER/:/home/$USER/ -v /tmp/.X11-unix:/tmp/.X11-unix --name colmap_container -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host --privileged -it colmap/colmap:20240212.4 bash`
 
 
 If you have already created a container from the docker image, you can start it with:
@@ -36,156 +62,25 @@ If you have already created a container from the docker image, you can start it 
 `docker  start -i colmap_container`
 
 
-Refs: [1](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker), [2](https://github.com/colmap/colmap/blob/dev/docker/Dockerfile), [3](https://github.com/NVIDIA/nvidia-docker)
 
-[Full list of available Nvidia tags on docker hub](https://hub.docker.com/r/nvidia/cuda/tags)
-
-## Direct installation on your machine
-### CUDA Installation
-
-1. Verify You Have a CUDA-Capable GPU
-
-`lspci | grep -i nvidia`
-
-2. The kernel headers and development packages
-
-`apt-get install linux-headers-$(uname -r)`
-
-3. Download and install the CUDA from [here](https://developer.nvidia.com/cuda-downloads)
+[Full list of available Nvidia tags on docker hub](https://hub.docker.com/r/nvidia/cuda/tags)  
+[Full list of available Colmap tags on docker hub](https://hub.docker.com/r/colmap/colmap/tags)  
 
 
-## CUDA settings
-To see the current default version of installed CUDA:
-```
-sudo update-alternatives --display cuda
-```
-To change the default version pf CUDA:
-```
-sudo update-alternatives --config cuda
-```
-to see the version of the CUDA compiler:
-```
- /usr/local/cuda/bin/nvcc --version
-```
+# 2. Running colmap
 
-to set the preferred CUDA version and set the preferred executable for compiling CUDA language files:
+## 2.1 GUI
 
-```
-CUDACXX=/usr/local/<cuda-version>/bin/nvcc
-export PATH="/usr/local/<cuda-version>/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/<cuda-version>/lib64:$LD_LIBRARY_PATH"
-```
-for instance:
-```
-export PATH="/usr/local/cuda-12.6/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda-12.6/lib64:$LD_LIBRARY_PATH"
-```
+On the host run the following (every time you run your container):
 
+`export containerId=$(docker ps -l -q)`
 
-## COLMAP Installation
-
-Dependencies:
- 
-```
-sudo apt-get install \
-    git \
-    cmake \
-    ninja-build \
-    build-essential \
-    libboost-program-options-dev \
-    libboost-filesystem-dev \
-    libboost-graph-dev \
-    libboost-system-dev \
-    libboost-test-dev \
-    libeigen3-dev \
-    libflann-dev \
-    libfreeimage-dev \
-    libmetis-dev \
-    libgoogle-glog-dev \
-    libgflags-dev \
-    libsqlite3-dev \
-    libglew-dev \
-    qtbase5-dev \
-    libqt5opengl5-dev \
-    libcgal-dev \
-    libceres-dev
-```
-
-if you need to build `ceres-solver`, first install `abseil`:
-
-```
-git git@github.com:abseil/abseil-cpp.git
-cd abseil-cpp
-git checkout 20240722.0
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=~/usr -Dabsl_VERSION=20240722.0
-cmake --build build/ --parallel
-cmake --install build 
-
-```
-then make `ceres-solver`:
-
-
-```
-git clone git@github.com:ceres-solver/ceres-solver.git
-
-
-export CUDA_HOME=/usr/local/cuda
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
-export PATH=$PATH:$CUDA_HOME/bin
-
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=FALSE -DBUILD_TESTING=OFF  -Dabsl_DIR=~/usr/lib/cmake/absl/ -DCMAKE_INSTALL_PREFIX:PATH=~/usr
-
-cmake --build build/ --parallel
-
-cmake --install build 
-```
+<code>  xhost +local: docker inspect --format='{{ .Config.Hostname }}' $containerId </code>
 
 
 
-
-Under **Ubuntu 22.04**, there is a problem when compiling with Ubuntu’s default CUDA package and GCC, and you must compile against GCC 10:
-
-
-Set the compilers:
-
-```
-sudo apt-get install gcc-10 g++-10
-export CC=/usr/bin/gcc-10
-export CXX=/usr/bin/g++-10
-export CUDAHOSTCXX=/usr/bin/g++-10
-```
-
-Download and build COLMAP
-
-``` 
-git clone https://github.com/colmap/colmap &&
-cd colmap &&
-git pull https://github.com/colmap/colmap.git && 
-git fetch --tags &&
-git checkout $(git describe --tags `git rev-list --tags --max-count=1`) &&
-mkdir build &&
-cd build &&
-CUDA_ARCHITECTURES=75 &&
-cmake .. -GNinja -DCMAKE_CUDA_ARCHITECTURES=$CUDA_ARCHITECTURES -DCMAKE_INSTALL_PREFIX=~/usr &&
-ninja &&
-ninja install && 
-```
-
-Now set the path so you can access the colmap:
-
-```
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/$USER/usr/lib/
-export PATH=$PATH:/home/$USER/usr/bin
-```
-
-
-# Running COLMAP via Command-line Interface
-
-create a project folder i.e. `south-building`. This directory must contain a folder `images` with all the images. If you need to resize your images run the following, it will resize your images `20%` and put them in the `_resized` directory:
-
-`find . -maxdepth 1 -iname "*.jpg" | xargs -L1 -I{} convert -resize 20% "{}" _resized/"{}"`
-
-First, set the path:
+## 2.2 Command-line Interface
+create a project folder i.e. `south-building`, set the path:
 
 `DATASET_PATH=/sfm/image_dataset/south-building`
 
@@ -196,16 +91,61 @@ mkdir $DATASET_PATH/sparse
 mkdir $DATASET_PATH/dense
 ```
 
-## Feature Extraction
-Now run the feature extractor:
+project directory structure should look like this:
 
-```   
-colmap feature_extractor  \
---database_path $DATASET_PATH/database.db  \
---image_path $DATASET_PATH/images  \
---ImageReader.single_camera true  \
---SiftExtraction.use_gpu 1 
 ```
+.
+├── database.db
+├── dense
+├── images
+│   ├── 00000.png
+│   ├── 00001.png
+│   └── 00002.png
+├── sparse
+├── video
+│   └── video.mp4
+└── vocab_tree
+    └── vocab_tree_flickr100K_words256K.bin
+```
+
+
+## 2.3 Create image sequence from video
+
+set the file name:
+```
+FILE=video.mkv
+FILE=video_0.mp4
+```
+
+
+To select 4 images per second, we need to select every 1/4th of a second. Assuming a typical frame rate of 25 frames per second, we need to select every 6th frame.
+
+```
+ffmpeg -i $DATASET_PATH/video/$FILE -ss 00:00:59  -to 00:07:00  -vf "select=not(mod(n\,6)),scale=1920:-1" -vsync vfr $DATASET_PATH/images/%05d.png 
+```
+
+If you set the `select=not(mod(n\,25))` it select every 25th frame.
+
+
+## 2.4 Feature Extraction
+
+First set your camera parameter
+
+### Camera Models
+- SIMPLE_PINHOLE: `f,cx,cy`
+- PINHOLE: `fx,fy,cx,cy`
+- SIMPLE_RADIAL: `f,cx,cy,k`
+- SIMPLE_RADIAL_FISHEYE: `f,cx,cy,k`
+- RADIAL: `f,cx,cy,k1,k2`
+- RADIAL_FISHEYE: `f,cx,cy,k1,k2`
+- OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2`
+- OPENCV_FISHEYE:`fx,fy,cx,cy,k1,k2,k3` 
+- FULL_OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,k5,k6` 
+- FOV:`fx,fy,cx,cy,omega`
+- THIN_PRISM_FISHEYE: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,sx1,sy1`
+
+Refs: [1](https://colmap.github.io/cameras.html)
+
 
 If you have your camera parameter you specify them:
 
@@ -224,46 +164,68 @@ CAM=848.53117539872062,848.53117539872062,639.5,359.5,0.15971715887123378,-0.610
 ```
 
 Then 
-```
-colmap feature_extractor  \
---database_path $DATASET_PATH/database.db  \
---image_path $DATASET_PATH/images  \
---ImageReader.single_camera=true --ImageReader.camera_model=OPENCV_FISHEYE --ImageReader.camera_params=$CAM \ --SiftExtraction.use_gpu 1
-```
-
-[List of camera models in COLMAP](https://colmap.github.io/cameras.html)
-
-
-To increase the number of matches, you should use the more discriminative DSP-SIFT features instead of plain SIFT and also estimate the affine feature shape using the options:
-```
---SiftExtraction.estimate_affine_shape=true \
---SiftExtraction.domain_size_pooling=true\
-```
-Also, you should enable guided feature matching in the matching step (exhaustive_matcher, sequential_matcher, etc) using: `--SiftMatching.guided_matching=true`
-so your extraction would be:
-
 
 ```
 colmap feature_extractor  \
 --database_path $DATASET_PATH/database.db  \
 --image_path $DATASET_PATH/images  \
---ImageReader.single_camera=true --ImageReader.camera_model=OPENCV_FISHEYE --ImageReader.camera_params=$CAM \ --SiftExtraction.use_gpu 1 \
+--ImageReader.single_camera=true --ImageReader.camera_model=OPENCV_FISHEYE --ImageReader.camera_params=$CAM \ 
+--SiftExtraction.use_gpu 1 \
 --SiftExtraction.estimate_affine_shape=true \
 --SiftExtraction.domain_size_pooling=true
 ```
 
-Warning: The GPU implementation of SIFT simply does not support estimating **affine shapes**. Thus, Colmap falls back to a **CPU** implementation of SIFT that supports this feature.
+
+To increase the number of matches, you should use the more discriminative DSP-SIFT features instead of plain SIFT and also estimate the affine feature shape using the options:
+```
+--SiftExtraction.estimate_affine_shape=true 
+--SiftExtraction.domain_size_pooling=true 
+```
+
+The GPU implementation of SIFT simply does not support estimating **affine shapes**. Thus, Colmap falls back to a **CPU** implementation of SIFT that supports this feature.
 
 Refs: [1](https://colmap.github.io/faq.html#increase-number-of-matches-sparse-3d-points)
 
-## Guided Matching
+
+## 2.5 Feature Matching
+
+### 2.5.1 Sequential Matching
+
+If your images are in sequential order and consecutive frames have visual overlap, consecutively captured images can be matched against each other. This matching mode has built-in loop detection **based on a vocabulary tree** that can be downloaded from [Here](https://demuc.de/colmap/). Every N-th image (`loop_detection_period`) is matched against its visually most similar images (`loop_detection_num_images`). Image file names must be ordered sequentially (e.g., `image0001.jpg, image0002.jpg`, etc.), and images are explicitly ordered according to their file names. 
 
 
-`SiftMatching.guided_matching` is an option used to enable or disable guided matching for feature matches.
+```bash
+colmap sequential_matcher \
+   --database_path $DATASET_PATH/database.db \
+   --SequentialMatching.overlap=10 \
+   --SequentialMatching.loop_detection=true \
+   --SequentialMatching.loop_detection_period=1 \
+   --SequentialMatching.loop_detection_num_images=200 \
+   --SequentialMatching.vocab_tree_path="$DATASET_PATH/../vocab_tree/vocab_tree_flickr100K_words256K.bin" \
+   --SiftMatching.use_gpu 1 \
+   --SiftMatching.gpu_index=-1 \
+   --SiftMatching.guided_matching=true \
+   --SiftMatching.max_num_matches=100000 \
+   --SiftMatching.max_ratio=0.7 \
+   --SiftMatching.max_distance=0.6
+```
 
-Guided matching is used primarily in the context of epipolar geometry. Given an image pair and the essential matrix `E` that relates them, the epipolar constraint states that for any point in the first image, its corresponding match in the second image should lie on a specific line known as the epipolar line. This constraint can be derived from the essential matrix `E`.
+`--SequentialMatching.loop_detection_num_images`: This expands the search space, allowing the matcher to consider more images as potential loop closure candidates. Increase this value to a higher number (e.g., `100` or `200`).
 
-Guided matching leverages this epipolar constraint to refine feature matches. Here's what happens when you enable `SiftMatching.guided_matching`:
+
+`--SequentialMatching.loop_detection_period`: Set this to `1`. This ensures loop detection is attempted for every image in the sequence, increasing the chances of detecting loops.
+
+
+`--SequentialMatching.overlap`: This extends the range of images considered for sequential matching, which can help capture more spatially adjacent loop closures. Increase this to `5` or `10`
+
+
+**Trade-offs:** Increasing parameters like `loop_detection_num_images` and `overlap` will make the process more computationally expensive and slower.
+
+
+`--SiftMatching.guided_matching`: Keep this enabled. Guided matching ensures that matches respect geometric constraints, reducing false positives and increasing the reliability of loop closure.
+
+
+Given an image pair and the essential matrix `E` that relates them, the epipolar constraint states that for any point in the first image, its corresponding match in the second image should lie on a specific line known as the epipolar line. This constraint can be derived from the essential matrix `E`. Guided matching leverages this epipolar constraint to refine feature matches. Here's what happens when you enable `SiftMatching.guided_matching`:
 
 1. Initial matches between two images are found based on the SIFT descriptors.
 2. Using the matches, an essential matrix `E` is estimated.
@@ -271,43 +233,65 @@ Guided matching leverages this epipolar constraint to refine feature matches. He
 4. Matches that don't lie close to these epipolar lines are considered mismatches and are discarded.
 5. The result is a refined set of matches that adhere better to the epipolar geometry.
 
-Guided matching is especially useful in cases where there might be many false matches, as it uses the geometric relationship between the matched points to further refine and filter the matches.
 
-If `SiftMatching.guided_matching` is set to `true`, guided matching will be applied; if set to `false`, it won't be applied.
+`--SiftMatching.max_num_matches`: Allowing more matches can improve the chances of detecting loops.
+
+`--SiftMatching.max_ratio`: default is `0.8`.  If you reduce it (e.g., `0.7` or `0.6`), you make the ratio test stricter, so fewer matches survive. and it reduces false matches but may also remove some true matches if you go too low.
 
 
-## Feature Matching
+`--SiftMatching.max_error`: (during geometric verification) Controls the maximum reprojection error in pixels for inlier correspondences during geometric verification (the default is usually `4.0` pixels). Lower it to be stricter (e.g., `2.0` or `1.5`).
+Effect: In geometric verification, only correspondences that reproject within this tighter pixel error will remain.
 
-### Exhaustive Matching   
-Then run the matcher: 
+
+`--SiftMatching.cross_check`: If you enable cross-check (true), a match must be mutual: A → B is best match and B → A is best match. This can eliminate unidirectional false matches. Effect: Tends to produce fewer but more reliable matches, at some computational cost.
+
+
+`--SiftMatching.min_num_inliers`: Default is usually `15`. If you increase this number, you will discard image pairs that do not meet the minimum inlier count after geometric verification.
+Effect: Eliminates pairs that only have a small number of inliers, which can often be false or too weak to help.
+
+
+`--SiftMatching.confidence`: The default is usually `0.9999`, which influences how many RANSAC iterations are done internally to find inliers.If you reduce it (e.g., `0.999` or `0.99`), it might cause RANSAC to use fewer iterations. Usually, you’d increase it to be sure you don’t skip inliers, so be careful here.
+Effect: Lower confidence means you might terminate RANSAC earlier; in practice, it rarely is used for controlling pickiness as directly as the others.
+
+
+`--SiftMatching.max_distance` default: is `0.7`,  Any SIFT match with descriptor distance >0.7 is discarded.
+
+---
+
+### 2.5.2  Vocab tree matcher
+
+```
+colmap vocab_tree_matcher \
+    --database_path $DATASET_PATH/database.db \
+    --VocabTreeMatching.vocab_tree_path="$DATASET_PATH/../vocab_tree/vocab_tree_flickr100K_words256K.bin" \
+    --SiftMatching.use_gpu 1 \
+    --SiftMatching.gpu_index=-1 \
+    --SiftMatching.guided_matching=true \ 
+    --SiftMatching.cross_check=true \ # Enable cross-checking
+    --SiftMatching.max_ratio=0.6 \  # Stricter ratio test
+    --SiftMatching.max_distance=0.4  # Stricter max distance
+```
+
+###  2.5.3 Exhaustive Matching   
+
 ```
 colmap exhaustive_matcher \
-   --database_path $DATASET_PATH/database.db \
-   --SiftMatching.use_gpu 1
-```
-### Sequential Matching
-
-If your images are in sequential order and consecutive frames have visual overlap, consecutively captured images can be matched against each other. This matching mode has built-in loop detection based on a vocabulary tree.
-Every N-th image (`loop_detection_period`) is matched against its visually most similar images (`loop_detection_num_images`). Image file names must be ordered sequentially (e.g., `image0001.jpg, image0002.jpg`, etc.), and images are explicitly ordered according to their file names. Note that loop detection requires a pre-trained vocabulary tree, that can be downloaded from [Here](https://demuc.de/colmap/).
-
-```
-colmap sequential_matcher \
-   --database_path $DATASET_PATH/database.db \
-   --SequentialMatching.overlap=3 \
-   --SequentialMatching.loop_detection=true \
-   --SequentialMatching.loop_detection_period=2 \
-   --SequentialMatching.loop_detection_num_images=50 \
-   --SequentialMatching.vocab_tree_path="../vocab_tree/vocab_tree_flickr100K_words32K.bin" \
-   --SiftMatching.use_gpu 1 --SiftMatching.gpu_index=-1  --SiftMatching.guided_matching=true  
+    --database_path $DATASET_PATH/database.db \
+    --SiftMatching.use_gpu 1 \
+    --SiftMatching.gpu_index=-1 \
+    --SiftMatching.guided_matching=true \  
+    --SiftMatching.cross_check=true \ # Enable cross-checking
+    --SiftMatching.max_ratio=0.5 \  # Stricter ratio test
+    --SiftMatching.max_distance=0.4  # Stricter max distance    
 ```
 
 Refs: [1](https://colmap.github.io/tutorial.html#feature-matching-and-geometric-verification)
 
-### Hierarchical Mapper
+###  2.5.4 Hierarchical Mapper
 `hierarchical_mapper`: Sparse 3D reconstruction / mapping of the dataset using hierarchical SfM after performing feature extraction and matching. This parallelizes the reconstruction process by partitioning the scene into overlapping submodels and then reconstructing each submodel independently. Finally, the overlapping submodels are merged into a single reconstruction. It is recommended to run a few rounds of point triangulation and bundle adjustment after this step.
 
 
-## Sparse 3D Reconstruction
+## 2.6 Sparse 3D Reconstruction
 
 Then run the mapper:
 
@@ -318,7 +302,7 @@ colmap mapper \
     --output_path $DATASET_PATH/sparse
 ```
 
-## Undistortion
+## 2.7 Undistortion
 Then run the image undistorter:
 
 ```
@@ -330,7 +314,7 @@ colmap image_undistorter \
     --max_image_size 2000
 ```
 
-##  Dense 3D Reconstruction
+## 2.8 Dense 3D Reconstruction
 
 Then run the match stereo(warning this will take a while):
 
@@ -341,7 +325,7 @@ colmap patch_match_stereo \
     --PatchMatchStereo.geom_consistency true
 ```
 
-## Fusion Into Point Cloud
+## 2.9 Fusion Into Point Cloud
 
 Then run the stereo fusion:
 
@@ -353,7 +337,7 @@ colmap stereo_fusion \
     --output_path $DATASET_PATH/dense/fused.ply
 ```
 
-## Meshing of Fused Point Cloud
+## 2.10 Meshing of Fused Point Cloud
 
 Now your point cloud is ready, you can create mesh file from that:
 
@@ -373,41 +357,59 @@ colmap delaunay_mesher \
 
 Ref: [1](https://colmap.github.io/cli.html)
 
-# Running COLMAP GUI
-
-1. You need to run:
-
-`docker run --gpus all --name sfm_container_gui -v /home/behnam/workspace/sfm:/sfm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -it sfm`
 
 
-2. On the host run the following (every time you run your container):
+## 2.11 COLMAP Parameters
 
-`export containerId=$(docker ps -l -q)`
-
-<code>  xhost +local: docker inspect --format='{{ .Config.Hostname }}' $containerId </code>
-
-Refs: [1](https://github.com/jamesbrink/docker-opengl)
-
-# Tips and Utility Tools
-
-## 1. Reconstruct Sparse/Dense Model From Known Camera Poses
+Full list of colmap parameters
+Refs: [1](https://github.com/mwtarnowski/colmap-parameters)
 
 
-### Files and directory structure
-You data should have the following structure: 
+# 3. Tips and Utility Tools
+
+
+## 3.1 Importing and Exporting
+
+output type could be `{BIN, TXT, NVM, Bundler, VRML, PLY, R3D, CAM}`
 
 ```
-├── cameras.txt
+colmap model_converter --input_path $DATASET_PATH/sparse/0 --output_path /home/$USER/ --output_type TXT
+```
+which will give you `points3D.txt`, `images.txt`, `cameras.txt`
+
+The output could be used for [Instant-ngp: Instant neural graphics primitives](https://nvlabs.github.io/instant-ngp/)
+
+
+
+
+Refs: [1](https://colmap.github.io/faq.html#reconstruct-sparse-dense-model-from-known-camera-poses)
+
+
+## 3.2 Reconstruct Sparse/Dense Model From Known Camera Poses
+
+
+Your data should have the following structure: 
+
+```
+├── database.db
+├── dense
+│   └── sparse
+│       └── model
+│           └── 0
 ├── images
 │   ├── 00000.png
 │   ├── 00001.png
 │   ├── 00002.png
 │   └── 00003.png
-├── images.txt
-└── points3D.txt
+└── sparse
+    └── model
+        └── 0
+            ├── cameras.txt
+            ├── images.txt
+            └── points3D.txt
 ```
 
-`cameras.txt`:
+1. `cameras.txt`: should be like this:
 
 ```
 # Camera list with one line of data per camera:
@@ -418,7 +420,7 @@ You data should have the following structure:
 3 SIMPLE_RADIAL 3072 2304 2559.69 1536 1152 -0.0218531
 ```
 
-`images.txt`:
+2. `images.txt`: should be like this:
 
 ```
 # Image list with two lines of data per image:
@@ -434,107 +436,13 @@ You data should have the following structure:
 4 0.698777 0.714625 -0.023996 0.021129 -0.048184 0.004529 -0.313427 1 00003.png
 ```
 
-`points3D.txt`: This file should be empty.
-
-
-Refs: [1](https://colmap.github.io/faq.html#reconstruct-sparse-dense-model-from-known-camera-poses)
+3. `points3D.txt`: This file should be empty.
 
 
 
-### Example KITTI dataset:
+Full example [here](kitti.ipynb#Reconstruct-Sparse/Dense-Model-From-Known-Camera-Poses-with-Colmap)
 
-1. run the script [kitti_to_colmap_noise](../scripts/kitti/kitti_to_colmap_noise.py) and dump the output into `images.txt` file so
-
-
-```
-python kitti_to_colmap_noise.py > images.txt
-```
-
-### Setting up parameters
-
-Then set the camera param:
-
-```
-CAM=707.0912,707.0912,601.8873,183.1104
-```
-
-set the project:
-```
-project_name=kitti_noisy
-DATASET_PATH=/home/$USER/colmap_projects/$project_name
-```
-
-### Feature extraction
-
-extract the features:
-```
-colmap feature_extractor  \
---database_path $DATASET_PATH/database.db  \
---image_path $DATASET_PATH/images  \
---ImageReader.single_camera=true --ImageReader.camera_model=PINHOLE --ImageReader.camera_params=$CAM \
---SiftExtraction.use_gpu 1 \
---SiftExtraction.estimate_affine_shape=true \
---SiftExtraction.domain_size_pooling=true
-```
-
-or 
-
-```
-colmap feature_extractor  \
---database_path $DATASET_PATH/database.db  \
---image_path $DATASET_PATH/images  \
---ImageReader.single_camera=true --ImageReader.camera_model=PINHOLE --ImageReader.camera_params=$CAM
-```
-
-### Matcher
-run the matcher:
-
-```
-colmap sequential_matcher \
-   --database_path $DATASET_PATH/database.db \
-   --SequentialMatching.overlap=3 \
-   --SequentialMatching.loop_detection=true \
-   --SequentialMatching.loop_detection_period=2 \
-   --SequentialMatching.loop_detection_num_images=50 \
-   --SequentialMatching.vocab_tree_path="$DATASET_PATH/../vocab_tree/vocab_tree_flickr100K_words32K.bin" \
-   --SiftMatching.use_gpu 1 --SiftMatching.gpu_index=-1  --SiftMatching.guided_matching=true 
-```
-
-create the following directory:
-
-```
-dense/sparse/model/0
-dense/refined/model/0
-```
-
-### Triangulation
-then run the 
-
-```
-colmap point_triangulator \
-    --database_path $DATASET_PATH/database.db \
-    --image_path $DATASET_PATH/images\
-    --input_path $DATASET_PATH/sparse/model/0 \
-    --output_path $DATASET_PATH/dense/sparse/model/0
-```
-
-Now run bundle adjuster to only optimize the extrinsic (camera position and orientations) and **NOT** intrinsic (camera parameter)
-
-
-```
-colmap bundle_adjuster  \
-  --input_path $DATASET_PATH/dense/sparse/model/0 \
-  --output_path $DATASET_PATH/dense/refined/model/0 \
-  --BundleAdjustment.refine_focal_length  0 \
-  --BundleAdjustment.refine_principal_point   0 \
-  --BundleAdjustment.refine_extra_params  0 \
-  --BundleAdjustment.refine_extrinsics  1
-```
-
-
-
-
-## 2. Merging Disconnected Models
+## 3.3 Merging Disconnected Models
 
 ```
 colmap model_merger \
@@ -555,111 +463,135 @@ colmap bundle_adjuster \
     --output_path /path/to/refined-merged-model
 ```
 
-
-
-
-## Merge two Colmap Databases
+## 3.4 Merge two Colmap Databases
 
 Merging two COLMAP databases can be useful when you have processed different subsets of a dataset separately and want to bring the results together into a single database. To merge two COLMAP databases, follow these steps:
 
-1. **Backup Databases**: 
-   
-   Before making any changes, always backup your databases to prevent any unintended data loss.
+COLMAP provides a tool named `database_merger` specifically for merging two databases.
 
-2. **Use COLMAP's `database_merger` Tool**:
-
-   COLMAP provides a tool named `database_merger` specifically for merging two databases.
-
-   ```bash
-   colmap database_merger \
-       --database_path1 path/to/database1.db \
-       --database_path2 path/to/database2.db \
-       --output_path path/to/merged_database.db
-   ```
-
-   Replace `path/to/database1.db`, `path/to/database2.db`, and `path/to/merged_database.db` with your actual paths. 
-
-   This command will merge the contents of `database1.db` and `database2.db` into `merged_database.db`.
-
-3. **Inspect the Merged Database**:
-
-   After merging, you should check the resulting database to ensure that the data has been merged correctly. You can use COLMAP's GUI to open the database and inspect its contents.
-
-4. **Proceed with Reconstruction**:
-
-   If everything looks good, you can continue with the reconstruction process using the merged database.
-
-Note: Ensure that the two databases you are merging are compatible. They should ideally be created with the same version of COLMAP and should not have overlapping images or camera IDs. If there are conflicts between the two databases, the merging process might produce unexpected results.
-
-
-  
-
-## Extending COLMAP
-
-
-
-## COLMAP and Visual Odometry
-
-Refs: [1](https://github.com/colmap/colmap/issues/568)
-
-## COLMAP Parameters
-Refs: [1](https://github.com/mwtarnowski/colmap-parameters)
-
-
-## Loop Closure
-Colmap can add images in arbitrary order. Colmap prefers to use image pairs that are not pure forward motion for **initialization**. 
-
-Try skipping frames, eg, use only a frame every 1 or 2 seconds. This should improve reduce drift for video data. You could also try to I crease the size of the local bundle adjustment window.  Otherwise, COLMAP probably detects the loops successfully but cannot optimize them as well as ORBSLAM, which is specifically optimized for the SLAM scenario. It also does pose graph optimization if I remember correctly, which is better in correcting for large drift than pure bundle adjustment used in COLMAP.
-
-Refs: [1](https://github.com/colmap/colmap/issues/1521), [2](https://github.com/colmap/colmap/issues/254)
-
-
-## Train the Vocabulary Tree
-Refs: [1](https://github.com/colmap/colmap/issues/866)
-
-
-## External Dense Reconstruction Libraries
-If you do not have a CUDA-enabled GPU but some other GPU, you can use all COLMAP functionality except the dense reconstruction part. You can use external dense reconstruction software as an alternative. COLMAP exports to several other dense reconstruction libraries, .
-
-- CMVS/PMVS [furukawa10]
-- CMP-MVS [jancosek11]
-- Line3D++ [hofer16].
-
-
-Refs: [1](https://colmap.github.io/tutorial.html#dense-reconstruction)
-
-
-## Improving Dense Reconstruction of Weakly Textured Surfaces
-
-Refs: [1](https://colmap.github.io/faq.html#improving-dense-reconstruction-results-for-weakly-textured-surfaces)
-
-
-## Speedup Dense Reconstruction
-
-
-Refs: [1](https://colmap.github.io/faq.html#speedup-dense-reconstruction)
-
-
-## Importing and Exporting
-
-output type could be `{BIN, TXT, NVM, Bundler, VRML, PLY, R3D, CAM}`
-
-```
-colmap model_converter --input_path $DATASET_PATH/sparse/0 --output_path /home/$USER/ --output_type TXT
-```
-which will give you `points3D.txt`, `images.txt`, `cameras.txt`
-
-The output could be used for [Instant-ngp: Instant neural graphics primitives](https://nvlabs.github.io/instant-ngp/)
-
-
-## Instant-ngp
-
-```
-python3 /home/$USER/workspace/instant-ngp/scripts/colmap2nerf.py --text /home/$USER/<above-output> --images /home/$USER/<images>
+```bash
+colmap database_merger \
+	--database_path1 path/to/database1.db \
+	--database_path2 path/to/database2.db \
+	--output_path path/to/merged_database.db
 ```
 
+Replace `path/to/database1.db`, `path/to/database2.db`, and `path/to/merged_database.db` with your actual paths. 
 
-## Register/Localize New Images Into an Existing Reconstruction
+This command will merge the contents of `database1.db` and `database2.db` into `merged_database.db`.
+
+
+## 3.5 Rig bundle Adjuster
+What the rig bundle adjuster does is it takes a 3D reconstruction as input and performs some form of constrained bundle adjustment. The constraint here comes from using a multi-camera rig. During reconstruction, Colmap does not enforce relative pose constraints between images taken at the same point in time by the different cameras in the multi-camera rig. This is done as a post-processing step by the rig bundle adjuster.
+To this end, you first need to define the multi-camera rig (as explained in the documentation starting in the above code snippet).
+
+Note that the purpose of the rig bundle adjuster is not pose graph optimization. Rather it tries to ensure a rigid movement of the multi-camera rig, i.e., the relative pose between two cameras in the rig should stay the same over all snapshots (images taken by the multi-camera rig at the same point in time).
+This is not the same as pose graph optimization, where relative poses between images are used as measurements.
+
+Refs: [1](https://github.com/colmap/colmap/issues/891)
+
+<img src="images/camera_rig.png" alt="camera_rig" width="40%" height="40%" />
+
+
+An example configuration of a single camera rig:
+
+```
+ [
+   {
+     "ref_camera_id": 1,
+     "cameras":
+     [
+       {
+           "camera_id": 1,
+           "image_prefix": "left1_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [1, 0, 0, 0]
+       },
+       {
+           "camera_id": 2,
+           "image_prefix": "left2_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 1, 0, 0]
+       },
+       {
+           "camera_id": 3,
+           "image_prefix": "right1_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 0, 1, 0]
+       },
+       {
+           "camera_id": 4,
+           "image_prefix": "right2_image"
+           "rel_tvec": [0, 0, 0],
+           "rel_qvec": [0, 0, 0, 1]
+       }
+     ]
+   }
+ ]
+```
+
+The "camera_id" and "image_prefix" fields are required, whereas the
+"rel_tvec" and "rel_qvec" fields optionally specify the relative
+extrinsics of the camera rig in the form of a translation vector and a
+rotation quaternion. The relative extrinsics rel_qvec and rel_tvec transform
+coordinates from rig to camera coordinate space. If the relative extrinsics
+are not provided then they are automatically inferred from the
+reconstruction.
+
+This file specifies the configuration for a single camera rig and that you
+could potentially define multiple camera rigs. The rig is composed of 4
+cameras: all images of the first camera must have "left1_image" as a name
+prefix, e.g., "left1_image_frame000.png" or "left1_image/frame000.png".
+Images with the same suffix ("_frame000.png" and "/frame000.png") are
+assigned to the same snapshot, i.e., they are assumed to be captured at the
+same time. Only snapshots with the reference image registered will be added
+to the bundle adjustment problem. The remaining images will be added with
+independent poses to the bundle adjustment problem. The above configuration
+could have the following input image file structure:
+
+```
+    /path/to/images/...
+        left1_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        left2_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        right1_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+        right2_image/...
+            frame000.png
+            frame001.png
+            frame002.png
+            ...
+```
+
+you can call `rig_bundle_adjuster` to run the bundle adjuster for a known rig mode:
+
+```bash
+colmap rig_bundle_adjuster --input_path $DATASET_PATH/sparse/0 --output_path $DATASET_PATH/sparse/rig --rig_config_path $DATASET_PATH/rig_config.json
+```
+
+Example in the [documentation](https://github.com/colmap/colmap/blob/main/src/colmap/exe/sfm.cc)  
+
+Example of parameters in the  [test file](https://github.com/colmap/colmap/blob/main/src/colmap/scene/camera_rig_test.cc)  
+
+
+
+Refs: [1](https://github.com/colmap/colmap/issues/1624), [2](https://pdfs.semanticscholar.org/b01d/3c3cd7b43e58a344c8ea40d08aa87d63b13f.pdf)
+
+
+
+
+
+## 3.6 Register/Localize New Images Into an Existing Reconstruction
 
 If you have an existing reconstruction of images and want to register/localize new images within this reconstruction, you can follow these steps:
 create an image list text file contains a list of images to get extracted and matched, specified as one image file name per line. 
@@ -712,7 +644,7 @@ Refs: [1](https://colmap.github.io/faq.html#register-localize-new-images-into-an
 
 
 
-## Manhattan World Alignment
+## 3.7 Manhattan World Alignment
 
 Insert this after the mapper:
 ```
@@ -748,146 +680,28 @@ By leveraging the Manhattan world assumption, computer vision algorithms can eff
 Refs: [1](https://colmap.github.io/faq.html#manhattan-world-alignment), [2](https://github.com/colmap/colmap/issues/1743), [3](https://grail.cs.washington.edu/projects/manhattan/manhattan.pdf)
 
 
-## Multiple View Triangulation
-
-`feature_importer` and `matches_importer`
-
-Refs: [1](https://robotics.stackexchange.com/questions/16132/multiple-view-triangulation-method-used-by-colmap), [2](https://github.com/colmap/colmap/issues/688)
 
 
 
-## Camera Models
-- SIMPLE_PINHOLE: `f,cx,cy`
-- PINHOLE: `fx,fy,cx,cy`
-- SIMPLE_RADIAL: `f,cx,cy,k`
-- SIMPLE_RADIAL_FISHEYE: `f,cx,cy,k`
-- RADIAL: `f,cx,cy,k1,k2`
-- RADIAL_FISHEYE: `f,cx,cy,k1,k2`
-- OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2`
-- OPENCV_FISHEYE:`fx,fy,cx,cy,k1,k2,k3` 
-- FULL_OPENCV: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,k5,k6` 
-- FOV:`fx,fy,cx,cy,omega`
-- THIN_PRISM_FISHEYE: `fx,fy,cx,cy,k1,k2,p1,p2,k3,k4,sx1,sy1`
+## 3.8 Loop Closure
+Colmap can add images in arbitrary order. Colmap prefers to use image pairs that are not pure forward motion for **initialization**. 
 
-Refs: [1](https://colmap.github.io/cameras.html)
+Try skipping frames, eg, use only a frame every 1 or 2 seconds. This should improve reduce drift for video data. You could also try to I crease the size of the local bundle adjustment window.  Otherwise, COLMAP probably detects the loops successfully but cannot optimize them as well as ORBSLAM, which is specifically optimized for the SLAM scenario. It also does pose graph optimization if I remember correctly, which is better in correcting for large drift than pure bundle adjustment used in COLMAP.
 
-
-## Rig bundle Adjuster
-What the rig bundle adjuster does is it takes a 3D reconstruction as input and performs some form of constrained bundle adjustment. The constraint here comes from using a multi-camera rig. During reconstruction, Colmap does not enforce relative pose constraints between images taken at the same point in time by the different cameras in the multi-camera rig. This is done as a post-processing step by the rig bundle adjuster.
-To this end, you first need to define the multi-camera rig (as explained in the documentation starting in the above code snippet).
-
-Note that the purpose of the rig bundle adjuster is not pose graph optimization. Rather it tries to ensure a rigid movement of the multi-camera rig, i.e., the relative pose between two cameras in the rig should stay the same over all snapshots (images taken by the multi-camera rig at the same point in time).
-This is not the same as pose graph optimization, where relative poses between images are used as measurements.
-
-Refs: [1](https://github.com/colmap/colmap/issues/891)
-
-<img src="images/camera_rig.png" alt="camera_rig" width="40%" height="40%" />
-
-
-An example configuration of a single camera rig:
-
-```
- [
-   {
-     "ref_camera_id": 1,
-     "cameras":
-     [
-       {
-           "camera_id": 1,
-           "image_prefix": "left1_image"
-           "rel_tvec": [0, 0, 0],
-           "rel_qvec": [1, 0, 0, 0]
-       },
-       {
-           "camera_id": 2,
-           "image_prefix": "left2_image"
-           "rel_tvec": [0, 0, 0],
-           "rel_qvec": [0, 1, 0, 0]
-       },
-       {
-           "camera_id": 3,
-           "image_prefix": "right1_image"
-           "rel_tvec": [0, 0, 0],
-           "rel_qvec": [0, 0, 1, 0]
-       },
-       {
-           "camera_id": 4,
-           "image_prefix": "right2_image"
-           "rel_tvec": [0, 0, 0],
-           "rel_qvec": [0, 0, 0, 1]
-       }
-     ]
-   }
- ]
-
- The "camera_id" and "image_prefix" fields are required, whereas the
- "rel_tvec" and "rel_qvec" fields optionally specify the relative
- extrinsics of the camera rig in the form of a translation vector and a
- rotation quaternion. The relative extrinsics rel_qvec and rel_tvec transform
- coordinates from rig to camera coordinate space. If the relative extrinsics
- are not provided then they are automatically inferred from the
- reconstruction.
-
- This file specifies the configuration for a single camera rig and that you
- could potentially define multiple camera rigs. The rig is composed of 4
- cameras: all images of the first camera must have "left1_image" as a name
- prefix, e.g., "left1_image_frame000.png" or "left1_image/frame000.png".
- Images with the same suffix ("_frame000.png" and "/frame000.png") are
- assigned to the same snapshot, i.e., they are assumed to be captured at the
- same time. Only snapshots with the reference image registered will be added
- to the bundle adjustment problem. The remaining images will be added with
- independent poses to the bundle adjustment problem. The above configuration
- could have the following input image file structure:
-
-    /path/to/images/...
-        left1_image/...
-            frame000.png
-            frame001.png
-            frame002.png
-            ...
-        left2_image/...
-            frame000.png
-            frame001.png
-            frame002.png
-            ...
-        right1_image/...
-            frame000.png
-            frame001.png
-            frame002.png
-            ...
-        right2_image/...
-            frame000.png
-            frame001.png
-            frame002.png
-            ...
-```
-
-you can call `rig_bundle_adjuster` to run the bundle adjuster for a known rig mode:
-
-```bash
-colmap rig_bundle_adjuster --input_path $DATASET_PATH/sparse/0 --output_path $DATASET_PATH/sparse/rig --rig_config_path $DATASET_PATH/rig_config.json
-```
-
-Example in the [documentation](https://github.com/colmap/colmap/blob/main/src/colmap/exe/sfm.cc)  
-
-Example of parameters in the  [test file](https://github.com/colmap/colmap/blob/main/src/colmap/scene/camera_rig_test.cc)  
+Refs: [1](https://github.com/colmap/colmap/issues/1521), [2](https://github.com/colmap/colmap/issues/254)
 
 
 
-Refs: [1](https://github.com/colmap/colmap/issues/1624), [2](https://pdfs.semanticscholar.org/b01d/3c3cd7b43e58a344c8ea40d08aa87d63b13f.pdf)
+## External Dense Reconstruction Libraries
+If you do not have a CUDA-enabled GPU but some other GPU, you can use all COLMAP functionality except the dense reconstruction part. You can use external dense reconstruction software as an alternative. COLMAP exports to several other dense reconstruction libraries, .
 
+- CMVS/PMVS [furukawa10]
+- CMP-MVS [jancosek11]
+- Line3D++ [hofer16].
 
+Refs: [1](https://colmap.github.io/tutorial.html#dense-reconstruction)
 
-## Colmap SLAM
-
-
-Paper: [COLMAP-SLAM: A FRAMEWORK FOR VISUAL ODOMETRY](https://isprs-archives.copernicus.org/articles/XLVIII-1-W1-2023/317/2023/isprs-archives-XLVIII-1-W1-2023-317-2023.pdf)  
-[code](https://github.com/3DOM-FBK/COLMAP_SLAM)
-
-
-
-
-## Dense Point-Cloud with OpenMVS
+**Dense Point-Cloud with OpenMVS**
 
 ```
 DATASET_PATH=<you-dataset>
@@ -901,6 +715,49 @@ DATASET_PATH=<you-dataset>
 
 
 Refs: [1](https://github.com/cdcseacave/openMVS/wiki/Usage#convert-sfm-scene-from-colmap), [2](https://github.com/cdcseacave/openMVS_sample)
+
+
+## Improving Dense Reconstruction of Weakly Textured Surfaces
+
+Refs: [1](https://colmap.github.io/faq.html#improving-dense-reconstruction-results-for-weakly-textured-surfaces)
+
+
+## Speedup Dense Reconstruction
+
+
+Refs: [1](https://colmap.github.io/faq.html#speedup-dense-reconstruction)
+
+
+
+
+
+## Instant-ngp
+
+```
+python3 /home/$USER/workspace/instant-ngp/scripts/colmap2nerf.py --text /home/$USER/<above-output> --images /home/$USER/<images>
+```
+
+
+## Multiple View Triangulation
+
+`feature_importer` and `matches_importer`
+
+Refs: [1](https://robotics.stackexchange.com/questions/16132/multiple-view-triangulation-method-used-by-colmap), [2](https://github.com/colmap/colmap/issues/688)
+
+
+
+
+
+
+## Colmap SLAM
+
+
+Paper: [COLMAP-SLAM: A FRAMEWORK FOR VISUAL ODOMETRY](https://isprs-archives.copernicus.org/articles/XLVIII-1-W1-2023/317/2023/isprs-archives-XLVIII-1-W1-2023-317-2023.pdf)  
+[code](https://github.com/3DOM-FBK/COLMAP_SLAM)
+
+
+
+
 
 
 

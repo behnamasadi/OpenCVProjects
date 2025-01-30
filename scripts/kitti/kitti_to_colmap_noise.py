@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 import os.path
-import cv2
-
+import argparse
 
 # os.system("clear")
 
@@ -41,66 +40,102 @@ def rotation_matrix_to_quaternion(matrix):
 
 
 base_path = '/home/behnam/workspace/OpenCVProjects/'
-ground_truth_poses = "/data/kitti/poses/05.txt"
+ground_truth_poses = "data/kitti/odometry/05/poses/05.txt"
 ground_truth_poses_abs_path = base_path+ground_truth_poses
 
 
-if not os.path.exists(base_path+ground_truth_poses):
-    print("no file")
-    exit()
+def convertKITTIgtToColmap(KITTIfilepath):
+    """Processes the file specified by filepath."""
+    if not os.path.exists(KITTIfilepath):
+        raise FileNotFoundError(f"File not found: {KITTIfilepath}")
+        exit(1)
 
-poses = pd.read_csv(ground_truth_poses_abs_path, sep=" ", header=None)
+    print('result will be written into images.txt')
+    poses = pd.read_csv(KITTIfilepath, sep=" ", header=None)
 
-# r11 r12 r13 tx r21 r22 r23 ty r31 r32 r33 tz
+    # r11 r12 r13 tx r21 r22 r23 ty r31 r32 r33 tz
 
-# colmap format:
-# IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME
+    # colmap format:
+    # IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME
 
-CAMERA_ID = 1
-NAME = ""
-length = 6
-gt = np.zeros((len(poses), 3, 4))
-for i in range(len(poses)):
-    gt[i] = np.array(poses.iloc[i]).reshape((3, 4))
+    CAMERA_ID = 1
+    NAME = ""
+    length = 6
+    gt = np.zeros((len(poses), 3, 4))
+    with open("images.txt", "w") as f:
+        for i in range(len(poses)):
+            gt[i] = np.array(poses.iloc[i]).reshape((3, 4))
 
-    rotation_matrix = np.array(poses.iloc[i]).reshape((3, 4))[:, 0:3]
-    translation_vector = np.array(poses.iloc[i]).reshape((3, 4))[:, 3]
+            rotation_matrix = np.array(poses.iloc[i]).reshape((3, 4))[:, 0:3]
+            translation_vector = np.array(poses.iloc[i]).reshape((3, 4))[:, 3]
 
-    # -R^t * T
-    translation_vector = np.dot(- np.transpose(rotation_matrix),
-                                translation_vector)
+            # -R^t * T
+            translation_vector = np.dot(- np.transpose(rotation_matrix),
+                                        translation_vector)
 
-    rows = 3
-    cols = 1
-    rnd = 0.5*(np.random.random(size=[rows, cols])-0.5).squeeze()
+            rows = 3
+            cols = 1
+            rnd = 0.5*(np.random.random(size=[rows, cols])-0.5).squeeze()
 
-    translation_vector = translation_vector+rnd
+            translation_vector = translation_vector+rnd
 
-    rotation_matrix = np.transpose(rotation_matrix)
+            rotation_matrix = np.transpose(rotation_matrix)
 
-    quat = rotation_matrix_to_quaternion(rotation_matrix)
+            quat = rotation_matrix_to_quaternion(rotation_matrix)
 
-    # roll, pitch, yaw = 0.0*(np.random.random(size=[rows, cols])-0.5).squeeze()
-    # quat_noise = get_quaternion_from_euler(roll, pitch, yaw)
-    # print(quat_noise)
-    # quat = quat_noise+quat
-    # quat = quat/np.linalg.norm(quat)
+            # roll, pitch, yaw = 0.0*(np.random.random(size=[rows, cols])-0.5).squeeze()
+            # quat_noise = get_quaternion_from_euler(roll, pitch, yaw)
+            # print(quat_noise)
+            # quat = quat_noise+quat
+            # quat = quat/np.linalg.norm(quat)
 
-    rows = 4
-    cols = 1
-    # quat = quat+0.05*(np.random.random(size=[rows, cols])-0.5).squeeze()
-    quat = quat/np.linalg.norm(quat)
+            rows = 4
+            cols = 1
+            # quat = quat+0.05*(np.random.random(size=[rows, cols])-0.5).squeeze()
+            quat = quat/np.linalg.norm(quat)
 
-    QW, QX, QY, QZ = quat
+            QW, QX, QY, QZ = quat
 
-    TX, TY, TZ = translation_vector
-    IMAGE_ID = i+1
-    # IMAGE_ID = i
+            TX, TY, TZ = translation_vector
+            IMAGE_ID = i+1
+            # IMAGE_ID = i
 
-    # This creates a format string like "{:0>5}" for length = 5
-    format_string = f"{{:0>{length}}}"
-    NAME = format_string.format(i)+".png"
+            # This creates a format string like "{:0>5}" for length = 5
+            format_string = f"{{:0>{length}}}"
+            NAME = format_string.format(i)+".png"
 
-    str = f"{IMAGE_ID} {QW} {QX} {QY} {QZ} {TX} {TY} {TZ} {CAMERA_ID} {NAME} \n".format(
-        IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME)
-    print(str)
+            str = f"{IMAGE_ID} {QW} {QX} {QY} {QZ} {TX} {TY} {TZ} {CAMERA_ID} {NAME} \n".format(
+                IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME)
+            # print(str)
+
+            f.writelines(str)
+            f.writelines('\n')
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="convert a KITI ground truth file to colmap file.")
+    parser.add_argument(
+        "-f", "--file",
+        type=str,
+        help="Path to the input file. If not provided, a default file will be used.")
+
+    args = parser.parse_args()
+
+    # Define your default file name
+    default_file = "../../data/kitti/odometry/05/poses/05.txt"
+
+    filepath = args.file
+
+    if filepath is None:
+        print(f"No input file provided, Using default file at: {default_file}")
+        filepath = default_file
+
+    try:
+        convertKITTIgtToColmap(filepath)
+    except FileNotFoundError:
+        print(f"Error: File '{filepath}' not found.  Exiting.")
+        exit(1)  # Exit with error code indicating the file issue
+    except Exception as e:  # Catch other potential errors
+        print(f"An error occurred: {e}")
+        exit(1)
