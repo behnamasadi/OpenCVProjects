@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 import os.path
 import argparse
-
-# os.system("clear")
+import matplotlib.pyplot as plt
 
 
 def get_quaternion_from_euler(roll, pitch, yaw):
@@ -37,11 +36,6 @@ def rotation_matrix_to_quaternion(matrix):
     q2 = (matrix[0, 2] - matrix[2, 0]) / (4 * q0)
     q3 = (matrix[1, 0] - matrix[0, 1]) / (4 * q0)
     return np.array([q0, q1, q2, q3])
-
-
-base_path = '/home/behnam/workspace/OpenCVProjects/'
-ground_truth_poses = "data/kitti/odometry/05/poses/05.txt"
-ground_truth_poses_abs_path = base_path+ground_truth_poses
 
 
 def convertKITTIgtToColmap(KITTIfilepath):
@@ -83,12 +77,6 @@ def convertKITTIgtToColmap(KITTIfilepath):
 
             quat = rotation_matrix_to_quaternion(rotation_matrix)
 
-            # roll, pitch, yaw = 0.0*(np.random.random(size=[rows, cols])-0.5).squeeze()
-            # quat_noise = get_quaternion_from_euler(roll, pitch, yaw)
-            # print(quat_noise)
-            # quat = quat_noise+quat
-            # quat = quat/np.linalg.norm(quat)
-
             rows = 4
             cols = 1
             # quat = quat+0.05*(np.random.random(size=[rows, cols])-0.5).squeeze()
@@ -104,12 +92,21 @@ def convertKITTIgtToColmap(KITTIfilepath):
             format_string = f"{{:0>{length}}}"
             NAME = format_string.format(i)+".png"
 
-            str = f"{IMAGE_ID} {QW} {QX} {QY} {QZ} {TX} {TY} {TZ} {CAMERA_ID} {NAME} \n".format(
+            str = f"{IMAGE_ID} {QW} {QX} {QY} {QZ} {TX} {TY} {TZ} {CAMERA_ID} {NAME}".format(
                 IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME)
             # print(str)
 
             f.writelines(str)
-            f.writelines('\n')
+            f.writelines('\n\n')
+
+    fig = plt.figure(figsize=(7, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(gt[:, :, 3][:, 0], gt[:, :, 3][:, 1], gt[:, :, 3][:, 2])
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    # ax.view_init(elev=-40, azim=270)
+    plt.show()
 
 
 if __name__ == "__main__":
