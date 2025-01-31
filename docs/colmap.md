@@ -13,6 +13,12 @@ Then tunnel the localhost for jupyter:
 ssh -i /home/$USER/.ssh/<user>.pem -L 10000:localhost:10000 <user-name>@MACHINE_ADDRESS
 ```
 
+or later  one to download the data
+
+```
+scp -r -i /home/$USER/.ssh/<user>.pem  <path-on-local-machine>  <user-name>@MACHINE_ADDRESS:<path-on-remote-machine>
+```
+
 Install jupyter
 ```
 pip install --upgrade jupyter
@@ -393,6 +399,9 @@ Your data should have the following structure:
 ```
 ├── database.db
 ├── dense
+│   ├── refined
+│   │   └── model
+│   │       └── 0
 │   └── sparse
 │       └── model
 │           └── 0
