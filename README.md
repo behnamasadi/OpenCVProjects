@@ -1,13 +1,19 @@
 # OpenCV Projects
 
+![Ubuntu](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-build.yml/badge.svg)
+![alt text](https://img.shields.io/badge/license-BSD-blue.svg)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/behnamasadi/OpenCVProjects)
+![GitHub Release](https://img.shields.io/github/v/release/behnamasadi/OpenCVProjects)
+![GitHub Repo stars](https://img.shields.io/github/stars/behnamasadi/OpenCVProjects)
+![GitHub forks](https://img.shields.io/github/forks/behnamasadi/OpenCVProjects)
 
-![alt text](https://img.shields.io/badge/license-BSD-blue.svg) ![build workflow](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-build.yml/badge.svg)  
 
-This project contains my Computer Vinson Projects with OpenCV.
+
+This project contains my **Computer Vision Projects** with OpenCV.
 
 ## Building and Installation
 ### 1. Building the Image
-There is docker file for this project that contains all dependencies and you build the image with :   
+There is docker file for this project that contains all dependencies, and you can build the image with :   
 
 `docker build -t myopencv_image:latest .`
 
@@ -16,7 +22,7 @@ Create a container where you mount the checkout code into your container:
 
 `docker run --name <continer-name> -v <checked-out-path-on-host>:<path-in-the-container> -it <docker-image-name>`
 
-for instance:
+For instance:
 
 `docker run --name myopencv_container -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects -it myopencv_image`
 
@@ -49,7 +55,7 @@ configure it:
 
 `cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"`
 
-build it:
+Build it:
 
 `cmake --build build --config Release`
 
