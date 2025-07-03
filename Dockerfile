@@ -67,9 +67,9 @@ LABEL maintainer="Behnam Asadi <behnam.asadi@gmail.com>"
 
 ENV TZ=Europe/Berlin
 
-# Install only runtime dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        cmake \
         libeigen3-dev \
         libsuitesparse-dev \
         libva-dev \
@@ -82,6 +82,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
+
+COPY --from=opencv-builder /usr/local/ /usr/local/
+
+WORKDIR /
+
 
 # Copy OpenCV from build stage
 COPY --from=opencv-builder /usr/local/ /usr/local/
