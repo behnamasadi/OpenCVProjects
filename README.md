@@ -148,6 +148,8 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Decompose Projection Matrix](docs/decomposition_matrix.ipynb#Decompose-Essential-Matrix)  
 [Decompose Homography Matrix](docs/decomposition_matrix.ipynb#decomposition_matrix.ipynb#Decompose-Homography-Matrix)  
 [Decompose Essential Matrix](docs/epipolar_geometry_essential_matrix_fundamental_matrix.ipynb#Decompose-Essential-Matrix)  
+[Laplacian Variance Blur Detection]()
+
 
 # [OpenCV API](#)
 [Basic Operations](src/basic_operations.cpp)  
