@@ -12,6 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y \
         cmake \
+        ninja-build \
         build-essential \
         pkg-config \
         python3 \
