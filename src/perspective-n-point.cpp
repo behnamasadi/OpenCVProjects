@@ -1,16 +1,17 @@
 #include <iostream>
 #include <vector>
-#define EIGEN_RUNTIME_NO_MALLOC // Define this symbol to enable runtime tests
-                                // for allocations
-#include "opencv2/core/eigen.hpp"
-#include <Eigen/Dense>
-
-//#include "include/projection_matrix.hpp"
-//#include "include/dlt.hpp"
 
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+
+#define EIGEN_RUNTIME_NO_MALLOC // Define this symbol to enable runtime tests
+                                // for allocations
+#include <Eigen/Dense>
+#include "opencv2/core/eigen.hpp"
+
+//#include "include/projection_matrix.hpp"
+//#include "include/dlt.hpp"
 
 void projectFromCameraCoordinateToCameraPlane(
     Eigen::Matrix3Xd &pointsInCameraCoordinate,
