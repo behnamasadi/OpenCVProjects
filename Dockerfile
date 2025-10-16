@@ -31,6 +31,11 @@ RUN apt-get update \
         libgtk-3-dev \
         locales \
         x11-apps \
+        # Ceres Solver dependencies
+        libgoogle-glog-dev \
+        libgflags-dev \
+        libatlas-base-dev \
+        libceres-dev \
         # Useful utilities
         git \
         wget \
