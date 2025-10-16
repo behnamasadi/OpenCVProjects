@@ -187,6 +187,12 @@ target_link_libraries(structured_light_range_finding ${OpenCV_LIBS})
 add_executable(convolution src/convolution.cpp)
 target_link_libraries(convolution ${OpenCV_LIBS})
 
+add_executable(edge_detection src/edge_detection.cpp)
+target_link_libraries(edge_detection ${OpenCV_LIBS})
+
+add_executable(histogram_analysis src/histogram_analysis.cpp)
+target_link_libraries(histogram_analysis ${OpenCV_LIBS})
+
 add_executable(virtual_camera_calibration src/virtual_camera_calibration.cpp)
 target_link_libraries(virtual_camera_calibration ${OpenCV_LIBS})
 
@@ -244,8 +250,8 @@ target_link_libraries(P3P rerun_sdk ${OpenCV_LIBS})
 add_executable(PnP src/PnP.cpp)
 target_link_libraries(PnP ${OpenCV_LIBS})
 
-# add_executable(perspective-n-point src/perspective-n-point.cpp)
-# target_link_libraries(perspective-n-point ${OpenCV_LIBS})
+add_executable(perspective-n-point src/perspective-n-point.cpp)
+target_link_libraries(perspective-n-point ${OpenCV_LIBS})
 
 add_executable(drawing_frame_axes src/drawing_frame_axes.cpp)
 target_link_libraries(drawing_frame_axes ${OpenCV_LIBS})
