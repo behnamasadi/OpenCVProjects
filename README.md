@@ -13,13 +13,13 @@ This project contains my **Computer Vision Projects** with OpenCV.
 
 ### 1. Building the Image
 
-The Dockerfile uses the official OpenCV image as a base, making builds fast and reliable. Build the image with:
+The Dockerfile uses Ubuntu 24.04 with OpenCV from official repositories, making builds fast and reliable. Build the image with:
 
 ```bash
 docker build -t myopencv_image:latest .
 ```
 
-**Note:** This build is much faster than building OpenCV from scratch since it uses the pre-built `opencvcourses/opencv-docker:latest` image.
+**Note:** This build is much faster than building OpenCV from scratch since it uses pre-built OpenCV packages (version 4.6.0) from Ubuntu repositories instead of compiling from source.
 
 ### 2. Creating the container
 

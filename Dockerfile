@@ -1,18 +1,26 @@
 # ------------------------------------------------------------
-# Use official OpenCV image as base
+# Use Ubuntu with OpenCV from official repositories
 # ------------------------------------------------------------
-FROM opencvcourses/opencv-docker:latest
+FROM ubuntu:24.04
 
 LABEL maintainer="Behnam Asadi <behnam.asadi@gmail.com>"
 
 ENV TZ=Europe/Berlin
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install additional dependencies needed for the project
+# Install OpenCV and all project dependencies
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    && apt-get install -y \
         cmake \
         build-essential \
         pkg-config \
+        python3 \
+        python3-pip \
+        python3-dev \
+        # OpenCV and its dependencies
+        libopencv-dev \
+        python3-opencv \
+        # Additional project dependencies
         libeigen3-dev \
         libsuitesparse-dev \
         libva-dev \
@@ -20,10 +28,20 @@ RUN apt-get update \
         libcanberra-gtk-module \
         libcanberra-gtk3-module \
         libgtk2.0-dev \
+        libgtk-3-dev \
         locales \
         x11-apps \
+        # Useful utilities
+        git \
+        wget \
+        curl \
+        nano \
+        vim \
     && rm -rf /var/lib/apt/lists/* \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
+
+# Verify OpenCV installation
+RUN pkg-config --modversion opencv4 || echo "OpenCV installed successfully"
 
 WORKDIR /
