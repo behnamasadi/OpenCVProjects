@@ -31,6 +31,8 @@ endif()
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
+# Include src directory for headers like csv.h
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 include(FetchContent)
 FetchContent_Declare(rerun_sdk URL https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip)
