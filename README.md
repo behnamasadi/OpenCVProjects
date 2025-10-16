@@ -69,6 +69,52 @@ docker run -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
 
 read more [here](https://ros-developer.com/2017/11/08/docker/)
 
+### Using Docker Containers as Disposable
+
+Some developers prefer using Docker containers as disposable, meaning they create a fresh container each time instead of reusing existing ones. This approach ensures a clean environment every time.
+
+To use this workflow:
+
+1. First, allow Docker to access your X server (only needed once per session):
+
+```bash
+xhost +local:docker
+```
+
+2. Run a new container with the `--rm` flag (auto-removes container when it exits):
+
+```bash
+docker run --rm \
+    -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -e DISPLAY=$DISPLAY \
+    -e QT_X11_NO_MITSHM=1 \
+    --network=host \
+    --privileged \
+    -it myopencv_image bash
+```
+
+**Key differences from persistent containers:**
+
+- The `--rm` flag automatically removes the container when you exit
+- No `--name` flag needed since the container is temporary
+- Any changes made inside the container (outside mounted volumes) are lost when you exit
+- Your code in `/OpenCVProjects` persists because it's mounted from your host machine
+- Build artifacts in `/OpenCVProjects/build` persist because they're in the mounted directory
+
+**When to use disposable containers:**
+
+- Testing configurations without affecting a persistent environment
+- Ensuring reproducible builds from a clean state
+- Avoiding container name conflicts
+- Keeping your Docker environment clean without manual pruning
+
+**When to use persistent containers:**
+
+- You've installed additional packages and want to keep them
+- You want to maintain shell history and configurations
+- You prefer faster startup times (no need to recreate the container)
+
 # How to build on your machine
 
 configure it:
