@@ -1,12 +1,20 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.20)
 set(CMAKE_BUILD_TYPE Debug)
 option(USE_CLANG "build application with clang" OFF)
+
+# Enable parallel builds with all available cores
+include(ProcessorCount)
+ProcessorCount(N)
+if(NOT N EQUAL 0)
+    set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
+    message(STATUS "Building with ${N} parallel jobs")
+endif()
 
 
 
 project(OpenCVProjects)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -51,33 +59,26 @@ else()
 	message("glog not found")
 endif()
 
-# message("\n########################################## Ceres ##########################################\n")
-# add_definitions(-DCERES_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
+message("\n########################################## Ceres ##########################################\n")
 
-# if(EXISTS "$ENV{HOME}/usr/lib/cmake/Ceres")
-# set(Ceres_DIR "$ENV{HOME}/usr/lib/cmake/Ceres")
-# set(Ceres_DIR "$ENV{HOME}/usr/lib/cmake/Ceres")
-# find_package(Ceres REQUIRED)
-# message("CERES_FOUND: " ${CERES_FOUND})
-# message("CERES_VERSION: " ${CERES_VERSION})
-# message("CERES_LIBRARIES: " ${CERES_LIBRARIES})
-# endif()
+find_package(Ceres QUIET)
 
-# find_package(Ceres QUIET)
-
-# if(${CERES_FOUND})
-# message("Ceres_VERSION: " ${Ceres_VERSION})
-# message("CERES_include_DIRS: " ${CERES_include_DIRS})
-# message("CERES_LIBRARIES: " ${CERES_LIBRARIES})
-
-# # add_executable(bundle_adjuster_example1 src/bundle_adjuster_example1.cpp)
-# # target_link_libraries(bundle_adjuster_example1  ${OpenCV_LIBS}  ${CERES_LIBRARIES})
-
-# # add_executable(bundle_adjuster_example2 src/bundle_adjuster_example2.cpp src/bal_problem.cpp)
-# # target_link_libraries(bundle_adjuster_example2  ${OpenCV_LIBS}  ${CERES_LIBRARIES} gflags)
-# else()
-# message("Ceres not found")
-# endif()
+if(${CERES_FOUND})
+	message("CERES_FOUND: " ${CERES_FOUND})
+	message("Ceres_VERSION: " ${Ceres_VERSION})
+	message("CERES_INCLUDE_DIRS: " ${CERES_INCLUDE_DIRS})
+	message("CERES_LIBRARIES: " ${CERES_LIBRARIES})
+	include_directories(${CERES_INCLUDE_DIRS})
+	
+	# Uncomment these if you have the source files
+	# add_executable(bundle_adjuster_example1 src/bundle_adjuster_example1.cpp)
+	# target_link_libraries(bundle_adjuster_example1 ${OpenCV_LIBS} ${CERES_LIBRARIES})
+	
+	# add_executable(bundle_adjuster_example2 src/bundle_adjuster_example2.cpp src/bal_problem.cpp)
+	# target_link_libraries(bundle_adjuster_example2 ${OpenCV_LIBS} ${CERES_LIBRARIES} gflags)
+else()
+	message("Ceres not found")
+endif()
 message("\n########################################## Eigen ##########################################\n")
 
 find_package(Eigen3)
@@ -263,7 +264,7 @@ target_link_libraries(camera_rays ${OpenCV_LIBS})
 
 
 
-add_executable(undistort_points src/undistort_points.cpp)
+add_executable(undistort_points src/undistort_points.cpp.cpp)
 target_link_libraries(undistort_points ${OpenCV_LIBS})
 
 
