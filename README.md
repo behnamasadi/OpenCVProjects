@@ -186,6 +186,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Image Warping](docs/image_warping.ipynb)  
 [Perspective Transformation](docs/perspective_transform.ipynb)  
 [Homography Transformation](docs/homography.ipynb)  
+[Image Remaping](docs/remap.ipynb)  
 [Lense Distortion Modeling, Undistorting Points and Images](docs/undistortion.ipynb)  
 [Triangulation](docs/triangulation.ipynb)  
 [Epipolar Geometry, Essential Matrix, Fundamental Matrix](docs/epipolar_geometry_essential_matrix_fundamental_matrix.ipynb)  
