@@ -26,8 +26,13 @@ docker build -t myopencv_image:latest .
 Create a container where you mount the checkout code into your container:
 
 ```bash
-docker run --name myopencv_container -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects -it myopencv_image
+docker run --name myopencv_container \
+    --user $(id -u):$(id -g) \
+    -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
+    -it myopencv_image
 ```
+
+**Note:** The `--user $(id -u):$(id -g)` flag runs the container with your host user's UID and GID, ensuring that files created in the build directory are owned by your user on the host, not root. This allows you to delete the build directory without sudo.
 
 ### 3. Starting an existing container
 
@@ -60,6 +65,7 @@ and then:
 docker run -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     --name myopencv_container \
+    --user $(id -u):$(id -g) \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     --network=host \
@@ -87,6 +93,7 @@ xhost +local:docker
 docker run --rm \
     -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
+    --user $(id -u):$(id -g) \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     --network=host \
