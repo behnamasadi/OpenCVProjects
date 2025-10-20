@@ -1,9 +1,7 @@
 import os
 import cv2
-import numpy as np
-import argparse
-import os
 import sys
+from utils.file_utils import resource_path
 
 
 def drawCorrespondences(img1, img2, detector, matcher, top_k_matches=10):
@@ -54,11 +52,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         relative_path = sys.argv[1]
     else:
-        relative_path = "../images/correspondences_matching/"
+        relative_path = "../images/00/image_2/"
 
-    # Get the absolute path to the directory
-    directory_path_abs_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), relative_path))
+    directory_path_abs_path = resource_path(relative_path)
 
     # Check if the directory exists
     if not os.path.exists(directory_path_abs_path):
@@ -88,10 +84,10 @@ if __name__ == "__main__":
 
     for i in range(len(file_list)-1):
 
-        img1 = cv2.imread(directory_path_abs_path + "/" +
-                          file_list[i], cv2.IMREAD_GRAYSCALE)
-        img2 = cv2.imread(directory_path_abs_path + "/" +
-                          file_list[i+1], cv2.IMREAD_GRAYSCALE)
+        img1 = cv2.imread(os.path.join(directory_path_abs_path,
+                          file_list[i]), cv2.IMREAD_GRAYSCALE)
+        img2 = cv2.imread(os.path.join(directory_path_abs_path,
+                          file_list[i+1]), cv2.IMREAD_GRAYSCALE)
 
         assert img1 is not None, "file could not be read,"
         assert img2 is not None, "file could not be read,"
