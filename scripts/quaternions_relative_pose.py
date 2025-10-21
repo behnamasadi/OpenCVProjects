@@ -1,22 +1,31 @@
-from pyquaternion import Quaternion
+"""
+Example usage of quaternion_utils module for relative pose computation.
+
+This demonstrates computing the pose of frame C in frame A, given:
+- Pose of frame B in frame A
+- Pose of frame C in frame B
+"""
 import numpy as np
+from quaternion_utils import relative_pose
 
-# Define the quaternions
-# Example rotation of B in A by 45 degrees around y-axis
-Q_B_A = Quaternion(axis=[0, 1, 0], degrees=45)
-# Example rotation of C in B by 30 degrees around x-axis
-Q_C_B = Quaternion(axis=[1, 0, 0], degrees=30)
+# Define poses in format: [x, y, z, q_w, q_x, q_y, q_z]
 
-# Combined rotation
-Q_C_A = Q_B_A * Q_C_B
+# Pose of B in A: position [1, 2, 3], rotation 45 degrees around y-axis
+# q = [cos(22.5°), 0, sin(22.5°), 0] = [0.9239, 0, 0.3827, 0]
+pose_B_in_A = [1, 2, 3, 0.9239, 0, 0.3827, 0]
 
-print(f"Q_C_A (combined rotation): {Q_C_A}")
+# Pose of C in B: position [2, 0, 1], rotation 30 degrees around x-axis
+# q = [cos(15°), sin(15°), 0, 0] = [0.9659, 0.2588, 0, 0]
+pose_C_in_B = [2, 0, 1, 0.9659, 0.2588, 0, 0]
 
-# Define the positions
-P_B_A = np.array([1, 2, 3])  # Example position of B in A
-P_C_B = np.array([2, 0, 1])  # Example position of C in B
+# Compute combined pose
+pose_C_in_A = relative_pose(pose_B_in_A, pose_C_in_B)
 
-# Combined translation
-P_C_A = P_B_A + (Q_B_A.rotate(P_C_B))
-
-print(f"P_C_A (combined position): {P_C_A}")
+print(f"Pose of B in A: {pose_B_in_A}")
+print(f"Pose of C in B: {pose_C_in_B}")
+print(f"Pose of C in A: {pose_C_in_A}")
+print()
+print(
+    f"Position of C in A: [{pose_C_in_A[0]:.4f}, {pose_C_in_A[1]:.4f}, {pose_C_in_A[2]:.4f}]")
+print(
+    f"Orientation of C in A (quaternion): [{pose_C_in_A[3]:.4f}, {pose_C_in_A[4]:.4f}, {pose_C_in_A[5]:.4f}, {pose_C_in_A[6]:.4f}]")
