@@ -192,6 +192,28 @@ ln -s "$HOME/workspace/OpenCVProjects/scripts" .
 ln -s "$HOME/workspace/OpenCVProjects/images"  .
 ```
 
+## Deep image matching toolkit (hloc)
+
+The env already includes `colmap`, `pycolmap`, `pytorch`, and `kornia`. To add [hloc](https://github.com/cvg/Hierarchical-Localization) (SuperPoint, DISK, ALIKED, LightGlue, LoFTR, NetVLAD, vocab-tree retrieval — all wrapped around COLMAP):
+
+```bash
+conda activate OpenCVProjects
+git clone --recursive https://github.com/cvg/Hierarchical-Localization.git thirdparty/hloc
+python -m pip install -e thirdparty/hloc
+```
+
+Pipeline example: [docs/hloc.md](docs/hloc.md).
+
+## Pre-trained COLMAP vocabulary trees
+
+The `vocab_tree/` directory holds FAISS-based vocabulary trees (SIFT and ALIKED variants) for COLMAP image retrieval, tracked via **Git LFS** so `git clone` is cheap when you don't need them. To fetch only what you want:
+
+```bash
+git lfs pull --include "vocab_tree/vocab_tree_faiss_flickr100K_words256K.bin"
+```
+
+Which file is which, and how to fetch selectively: [docs/vocab_tree.md](docs/vocab_tree.md).
+
 # [Computer Vision](#)
 
 [Edge Detection](docs/edge_detection.ipynb)  
@@ -301,16 +323,8 @@ ln -s "$HOME/workspace/OpenCVProjects/images"  .
 [Photogrammetry](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.ipynb#photogrammetry)  
 [Structure from Motion (SfM)](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#structure-from-motion--sfm-)  
 [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
-[Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)
-
-**Deep image matching & localization toolkit** — [hloc](https://github.com/cvg/Hierarchical-Localization) wraps SuperPoint, DISK, ALIKED, LightGlue, LoFTR, NetVLAD, and vocab-tree retrieval around a COLMAP backend. The conda env already has `colmap`, `pycolmap`, `pytorch`, and `kornia`; to add hloc:
-
-```bash
-conda activate OpenCVProjects
-git clone --recursive https://github.com/cvg/Hierarchical-Localization.git thirdparty/hloc
-python -m pip install -e thirdparty/hloc
-```
-
-See [docs/hloc.md](docs/hloc.md) for a runnable pipeline example.
+[Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)  
+[Hierarchical Localization / deep image matching (hloc)](docs/hloc.md)  
+[Pre-trained COLMAP vocabulary trees](docs/vocab_tree.md)
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)
