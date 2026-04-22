@@ -1,38 +1,66 @@
 {
-  "version": 3,
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
   "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "RelWithDebInfo",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "asan",
+      "displayName": "AddressSanitizer + UBSan",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer -O1",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
+    },
     {
       "name": "ninja-multi",
       "displayName": "Ninja Multi-Config",
-      "description": "Use Ninja with multiple configurations",
+      "inherits": "base",
       "generator": "Ninja Multi-Config",
-      "binaryDir": "${sourceDir}/build/",
       "cacheVariables": {
-        "CMAKE_POLICY_DEFAULT_CMP0048": "NEW",
         "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
       }
     }
   ],
   "buildPresets": [
-    {
-      "name": "ninja-multi-debug",
-      "configurePreset": "ninja-multi",
-      "configuration": "Debug"
-    },
-    {
-      "name": "ninja-multi-release",
-      "configurePreset": "ninja-multi",
-      "configuration": "Release"
-    },
-    {
-      "name": "ninja-multi-relwithdebinfo",
-      "configurePreset": "ninja-multi",
-      "configuration": "RelWithDebInfo"
-    },
-    {
-      "name": "ninja-multi-minsizerel",
-      "configurePreset": "ninja-multi",
-      "configuration": "MinSizeRel"
-    }
+    { "name": "debug",          "configurePreset": "debug" },
+    { "name": "release",        "configurePreset": "release" },
+    { "name": "relwithdebinfo", "configurePreset": "relwithdebinfo" },
+    { "name": "asan",           "configurePreset": "asan" },
+    { "name": "ninja-multi-debug",          "configurePreset": "ninja-multi", "configuration": "Debug" },
+    { "name": "ninja-multi-release",        "configurePreset": "ninja-multi", "configuration": "Release" },
+    { "name": "ninja-multi-relwithdebinfo", "configurePreset": "ninja-multi", "configuration": "RelWithDebInfo" },
+    { "name": "ninja-multi-minsizerel",     "configurePreset": "ninja-multi", "configuration": "MinSizeRel" }
+  ],
+  "testPresets": [
+    { "name": "debug",   "configurePreset": "debug",   "output": { "outputOnFailure": true } },
+    { "name": "release", "configurePreset": "release", "output": { "outputOnFailure": true } }
   ]
 }

@@ -4,6 +4,9 @@
 FROM ubuntu:24.04
 
 LABEL maintainer="Behnam Asadi <behnam.asadi@gmail.com>"
+LABEL org.opencontainers.image.source="https://github.com/behnamasadi/OpenCVProjects"
+LABEL org.opencontainers.image.licenses="BSD-3-Clause"
+LABEL org.opencontainers.image.description="OpenCV C++ project environment (Ubuntu 24.04, OpenCV 4.6, Ceres, Eigen)"
 
 ENV TZ=Europe/Berlin
 ENV DEBIAN_FRONTEND=noninteractive

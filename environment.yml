@@ -1,0 +1,36 @@
+name: OpenCVProjects
+channels:
+  - conda-forge
+dependencies:
+  # Leave the Python version unpinned so `conda env update` doesn't try to
+  # downgrade an existing env. The stack below is tested against 3.11 and 3.13.
+
+  # Core scientific / CV stack
+  - opencv
+  - numpy
+  - scipy
+  - matplotlib
+  - scikit-image
+  - jupyterlab
+  - ipywidgets
+  - h5py
+  - tqdm
+
+  # SfM / localization backend (needed by hloc)
+  - colmap
+  - pycolmap
+
+  # Deep learning backend (feature extractors + matchers)
+  # Swap to a CUDA-enabled build if you have an NVIDIA GPU:
+  #   conda install -c conda-forge "pytorch=*=*cuda*" torchvision
+  - pytorch
+  - torchvision
+
+  - pip
+  - pip:
+      - rerun-sdk
+      - kornia          # native PyTorch: SuperPoint, LoFTR, DISK, LightGlue, ALIKED
+      - einops
+      # hloc itself is installed from a local clone (see README) because
+      # it ships SuperPoint/DISK/ALIKED/LightGlue/LoFTR/NetVLAD as git
+      # submodules that pip-from-PyPI does not pull in.

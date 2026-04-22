@@ -1,4 +1,5 @@
 build/*
+thirdparty/
 data/kitti/05/image_0/*
 data/kitti/05/image_1/*
 */__pycache__/*

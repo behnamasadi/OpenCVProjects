@@ -1,6 +1,7 @@
 # OpenCV Projects
 
-![Ubuntu](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker-build.yml/badge.svg)
+![CI](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/ci.yml/badge.svg)
+![Docker](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker.yml/badge.svg)
 ![alt text](https://img.shields.io/badge/license-BSD-blue.svg)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/behnamasadi/OpenCVProjects)
 ![GitHub Release](https://img.shields.io/github/v/release/behnamasadi/OpenCVProjects)
@@ -11,28 +12,45 @@ This project contains my **Computer Vision Projects** with OpenCV.
 
 ## Building and Installation
 
-### 1. Building the Image
+### 1. Getting the Image
 
-The Dockerfile uses Ubuntu 24.04 with OpenCV from official repositories, making builds fast and reliable. Build the image with:
+#### Option A — Pull the pre-built image (fastest)
+
+CI publishes the image to GitHub Container Registry on every push to `master` and every tag. Just pull it:
+
+```bash
+docker pull ghcr.io/behnamasadi/opencvprojects:master
+docker tag  ghcr.io/behnamasadi/opencvprojects:master myopencv_image:latest
+```
+
+#### Option B — Build it locally
+
+The Dockerfile uses Ubuntu 24.04 with OpenCV from official repositories. Build it with:
 
 ```bash
 docker build -t myopencv_image:latest .
 ```
 
-**Note:** This build is much faster than building OpenCV from scratch since it uses pre-built OpenCV packages (version 4.6.0) from Ubuntu repositories instead of compiling from source.
+**Note:** This is much faster than building OpenCV from scratch because it uses pre-built OpenCV packages (version 4.6.0) from the Ubuntu archive instead of compiling from source.
 
 ### 2. Creating the container
 
-Create a container where you mount the checkout code into your container:
+From the project root (the directory containing the `Dockerfile`), create a container that mounts the checkout into the container:
 
 ```bash
 docker run --name myopencv_container \
     --user $(id -u):$(id -g) \
-    -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
-    -it myopencv_image
+    -v "$(pwd)":/OpenCVProjects \
+    -w /OpenCVProjects \
+    -it myopencv_image bash
 ```
 
-**Note:** The `--user $(id -u):$(id -g)` flag runs the container with your host user's UID and GID, ensuring that files created in the build directory are owned by your user on the host, not root. This allows you to delete the build directory without sudo.
+**Notes:**
+
+- `--user $(id -u):$(id -g)` runs the container with your host user's UID and GID, so files created in the build directory are owned by your user on the host, not root. This lets you delete the build directory without `sudo`.
+- `-w /OpenCVProjects` drops you into the mounted project directory (the Dockerfile's default `WORKDIR` is `/`).
+- `-v "$(pwd)":/OpenCVProjects` avoids hardcoding a path — run the command from the repo root.
+- The trailing `bash` makes the shell explicit regardless of the image's default `CMD`.
 
 ### 3. Starting an existing container
 
@@ -42,36 +60,42 @@ If you have already created a container from the docker image, you can start it 
 docker start -i myopencv_container
 ```
 
-### 4. Removing unnecessary images and containers
+### 4. Removing unused images and containers
 
-You can remove unnecessary images and containers by:
+To reclaim disk space, remove stopped containers and dangling/unused images. Both commands prompt for confirmation unless you pass `-f`:
 
 ```bash
-docker image prune -a
-docker container prune
+docker container prune          # remove all stopped containers
+docker image prune -a           # remove all images not referenced by any container
 ```
+
+**Warning:** `docker image prune -a` removes every image that isn't currently in use by a container, not just intermediate/dangling ones. Use plain `docker image prune` if you only want to drop dangling layers.
 
 ### GUI application with docker
 
-1. You need to run:
+This is an **alternative to step 2** when you need X11 forwarding (e.g., `cv::imshow`, `highgui` windows). If you already created `myopencv_container` in step 2, either pick a different `--name`, remove the old container with `docker rm myopencv_container`, or use the disposable workflow below.
+
+1. Allow local Docker clients to talk to your X server (once per login session):
 
 ```bash
 xhost +local:docker
 ```
 
-and then:
+2. Then, from the project root, run:
 
 ```bash
-docker run -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    --name myopencv_container \
+docker run --name myopencv_container_gui \
     --user $(id -u):$(id -g) \
+    -v "$(pwd)":/OpenCVProjects \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -w /OpenCVProjects \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     --network=host \
-    --privileged \
     -it myopencv_image bash
 ```
+
+**Note on `--privileged`:** It is **not** required for X11 forwarding and is omitted above because it grants the container broad host access. Add `--privileged` (or a narrower `--device=...`) only if you need direct access to host devices such as a webcam (`/dev/video*`) or GPU.
 
 read more [here](https://ros-developer.com/2017/11/08/docker/)
 
@@ -87,17 +111,17 @@ To use this workflow:
 xhost +local:docker
 ```
 
-2. Run a new container with the `--rm` flag (auto-removes container when it exits):
+2. From the project root, run a new container with the `--rm` flag (auto-removes the container when it exits):
 
 ```bash
 docker run --rm \
-    -v /home/$USER/workspace/OpenCVProjects:/OpenCVProjects \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
     --user $(id -u):$(id -g) \
+    -v "$(pwd)":/OpenCVProjects \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -w /OpenCVProjects \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     --network=host \
-    --privileged \
     -it myopencv_image bash
 ```
 
@@ -124,56 +148,48 @@ docker run --rm \
 
 # How to build on your machine
 
-configure it:
+The project ships CMake presets (`CMakePresets.json`). Pick one and build:
 
-`cmake -G "Ninja Multi-Config"  -S . -B build -DOpenCV_DIR="/home/$USER/usr/lib/cmake/opencv4"`
+```bash
+cmake --preset release          # or: debug | relwithdebinfo | asan | ninja-multi
+cmake --build --preset release  # matches the configure preset
+ctest --preset release          # runs tests (no-op until tests/ is populated)
+```
 
-Build it:
+Build artifacts land under `build/<preset>/`. Without presets:
 
-`cmake --build build --config Release`
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+```
 
-or
+If your OpenCV/Ceres/Eigen are installed to a non-standard prefix, point CMake at it with `CMAKE_PREFIX_PATH` (do **not** hardcode paths in `CMakeLists.txt`):
 
-`cmake --build build --config Debug`
-
-or be more specific:
-
-`cmake --build build --target all --config Release`
-
-If you prefer `preset` use:
-
-`cmake --preset ninja-multi`
-
-and
-
-`cmake --build --preset ninja-multi-debug`
-
-or
-
-`cmake --build --preset ninja-multi-release`
+```bash
+cmake --preset release -DCMAKE_PREFIX_PATH="$HOME/usr"
+```
 
 # Installing OpenCV Python API
 
-Install the conda packages:
+All Python dependencies live in `environment.yml` (single source of truth for the conda env). Create and activate the environment with:
 
 ```bash
-unset PYTHONPATH
-export PYTHONNOUSERSITE=1
-conda create -n OpenCVProjects
+conda env create -f environment.yml
 conda activate OpenCVProjects
-conda install conda-forge::opencv
-conda install scipy numpy matplotlib scikit-image
-conda install -c conda-forge jupyterlab
-conda install anaconda::ipywidgets
-conda install -c conda-forge rerun-sdk
 ```
 
-create softlinks:
+To update after editing `environment.yml`:
 
+```bash
+conda env update -f environment.yml --prune
 ```
-cd $HOME/anaconda3/envs/OpenCVProjects/
-ln -s $HOME/workspace/OpenCVProjects/scripts .
-ln -s $HOME/workspace/OpenCVProjects/images/ .
+
+Optional — symlink the project's `scripts/` and `images/` into the env directory so they're on Jupyter's default path:
+
+```bash
+cd "$HOME/anaconda3/envs/OpenCVProjects/"
+ln -s "$HOME/workspace/OpenCVProjects/scripts" .
+ln -s "$HOME/workspace/OpenCVProjects/images"  .
 ```
 
 # [Computer Vision](#)
@@ -219,7 +235,7 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Decompose Projection Matrix](docs/decomposition_matrix.ipynb#Decompose-Essential-Matrix)  
 [Decompose Homography Matrix](docs/decomposition_matrix.ipynb#decomposition_matrix.ipynb#Decompose-Homography-Matrix)  
 [Decompose Essential Matrix](docs/epipolar_geometry_essential_matrix_fundamental_matrix.ipynb#Decompose-Essential-Matrix)  
-[Laplacian Variance Blur Detection](docs/laplacian_variance_blur_detection.ipynb)
+[Laplacian Variance Blur Detection](docs/laplacian_variance_blur_detection.ipynb)  
 [Image-Based Rendering](https://staff.aist.go.jp/naoyuki.ichimura/research/IBR/ibr.htm)
 
 # [OpenCV API](#)
@@ -286,5 +302,15 @@ ln -s $HOME/workspace/OpenCVProjects/images/ .
 [Structure from Motion (SfM)](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#structure-from-motion--sfm-)  
 [Bundle Adjustment](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#bundle-adjustment)  
 [Noah Snavely reprojection error](docs/photogrammetry_bundle_adjustment_structure_from_motion_reprojection_error.md#noah-snavely-reprojection-error)
+
+**Deep image matching & localization toolkit** — [hloc](https://github.com/cvg/Hierarchical-Localization) wraps SuperPoint, DISK, ALIKED, LightGlue, LoFTR, NetVLAD, and vocab-tree retrieval around a COLMAP backend. The conda env already has `colmap`, `pycolmap`, `pytorch`, and `kornia`; to add hloc:
+
+```bash
+conda activate OpenCVProjects
+git clone --recursive https://github.com/cvg/Hierarchical-Localization.git thirdparty/hloc
+python -m pip install -e thirdparty/hloc
+```
+
+See [docs/hloc.md](docs/hloc.md) for a runnable pipeline example.
 
 Refs: [1](https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw/videos),[2](https://github.com/spmallick/learnopencv/blob/master/README.md),[3](http://graphics.cs.cmu.edu/courses/15-463/),[4](https://www.tangramvision.com/blog/camera-modeling-exploring-distortion-and-distortion-models-part-i)
