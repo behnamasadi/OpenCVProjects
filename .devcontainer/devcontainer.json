@@ -1,0 +1,34 @@
+{
+    "name": "OpenCVProjects",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": ".."
+    },
+    "workspaceFolder": "/OpenCVProjects",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/OpenCVProjects,type=bind,consistency=cached",
+    "runArgs": [
+        "--network=host"
+    ],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "QT_X11_NO_MITSHM": "1"
+    },
+    "mounts": [
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+    ],
+    "updateRemoteUserUID": true,
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "llvm-vs-code-extensions.vscode-clangd",
+                "twxs.cmake"
+            ],
+            "settings": {
+                "cmake.configureOnOpen": false,
+                "C_Cpp.default.compileCommands": "${workspaceFolder}/build/release/compile_commands.json"
+            }
+        }
+    }
+}

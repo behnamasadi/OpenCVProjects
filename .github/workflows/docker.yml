@@ -1,4 +1,4 @@
-name: Docker
+name: Docker CI
 
 on:
   push:
@@ -6,9 +6,6 @@ on:
     tags: ['v*']
   pull_request:
     branches: [master]
-    paths:
-      - Dockerfile
-      - .github/workflows/docker.yml
   workflow_dispatch:
 
 concurrency:
@@ -20,8 +17,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-push:
-    name: Build & publish image
+  build:
+    name: Build image & build/test C++ inside it
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -51,12 +48,34 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix=
 
-      - name: Build and push
+      - name: Build image (load to local daemon)
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          load: true
+          tags: opencvprojects:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & test C++ inside the image
+        run: |
+          docker run --rm \
+            -v "$(pwd)":/OpenCVProjects \
+            -w /OpenCVProjects \
+            opencvprojects:ci \
+            bash -c '
+              set -e
+              cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+              cmake --build build -j
+              ctest --test-dir build --output-on-failure --no-tests=ignore
+            '
+
+      - name: Push image to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max

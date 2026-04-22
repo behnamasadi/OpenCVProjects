@@ -1,7 +1,6 @@
 # OpenCV Projects
 
-![CI](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/ci.yml/badge.svg)
-![Docker](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker.yml/badge.svg)
+![Docker CI](https://github.com/behnamasadi/OpenCVProjects/actions/workflows/docker.yml/badge.svg)
 ![alt text](https://img.shields.io/badge/license-BSD-blue.svg)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/behnamasadi/OpenCVProjects)
 ![GitHub Release](https://img.shields.io/github/v/release/behnamasadi/OpenCVProjects)
@@ -11,6 +10,45 @@
 This project contains my **Computer Vision Projects** with OpenCV.
 
 ## Building and Installation
+
+> **TL;DR** — the project runs entirely inside a Docker image (OpenCV 4.6, Eigen, Ceres, etc. all pre-installed). The host never needs any C++ dependency installed. Every build step is a one-shot `docker run` with the repo bind-mounted, so your editor sees every file instantly and `build/` stays on the host.
+
+### Quickstart — build & run everything inside the image
+
+From the repo root:
+
+```bash
+# 1. Pull the pre-built image (or see §1 below to build it locally)
+docker pull ghcr.io/behnamasadi/opencvprojects:master
+docker tag  ghcr.io/behnamasadi/opencvprojects:master myopencv_image:latest
+
+# 2. Shorthand for every subsequent command — same flags, different cmd at the end
+RUN='docker run --rm --user $(id -u):$(id -g) -v "$(pwd)":/OpenCVProjects -w /OpenCVProjects myopencv_image'
+
+# 3. Configure, build, test
+eval $RUN cmake --preset release
+eval $RUN cmake --build --preset release
+eval $RUN ctest --preset release            # no-op until tests/ is populated
+
+# 4. Run a binary (add X11 flags if the demo uses cv::imshow)
+eval $RUN ./build/release/basic_operations
+
+# 5. Run a GUI demo with X11 forwarding
+xhost +local:docker
+docker run --rm --user $(id -u):$(id -g) \
+    -v "$(pwd)":/OpenCVProjects -w /OpenCVProjects \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 --network=host \
+    myopencv_image ./build/release/edge_detection
+```
+
+**Why the indirection via `$RUN`**: it keeps the long mount+user flags in one place while the actual cmake/ctest/binary invocations stay visible — no hidden wrapper script.
+
+**Caveat** — binaries under `build/release/` link against the container's OpenCV, so they will **not** run on the bare host. Always launch them through `docker run ... myopencv_image ./build/release/<exe>` (or from an interactive shell inside the container; see §2 below).
+
+**VSCode users** — open the project and choose *Reopen in Container*. The ships-with `.devcontainer/devcontainer.json` builds the same image, mounts the source, wires up X11, and points C++ IntelliSense at `build/release/compile_commands.json`. (Inspect the JSON to see exactly what it does — nothing hidden.)
+
+The remaining subsections document additional Docker flows (local build, persistent container, disposable container with GUI, cleanup).
 
 ### 1. Getting the Image
 
@@ -145,29 +183,6 @@ docker run --rm \
 - You've installed additional packages and want to keep them
 - You want to maintain shell history and configurations
 - You prefer faster startup times (no need to recreate the container)
-
-# How to build on your machine
-
-The project ships CMake presets (`CMakePresets.json`). Pick one and build:
-
-```bash
-cmake --preset release          # or: debug | relwithdebinfo | asan | ninja-multi
-cmake --build --preset release  # matches the configure preset
-ctest --preset release          # runs tests (no-op until tests/ is populated)
-```
-
-Build artifacts land under `build/<preset>/`. Without presets:
-
-```bash
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
-```
-
-If your OpenCV/Ceres/Eigen are installed to a non-standard prefix, point CMake at it with `CMAKE_PREFIX_PATH` (do **not** hardcode paths in `CMakeLists.txt`):
-
-```bash
-cmake --preset release -DCMAKE_PREFIX_PATH="$HOME/usr"
-```
 
 # Installing OpenCV Python API
 
