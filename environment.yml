@@ -17,8 +17,9 @@ dependencies:
   - tqdm
 
   # SfM / localization backend (needed by hloc)
-  - colmap
-  - pycolmap
+  # Temporarily disabled while debugging slow solver; re-enable once resolved.
+  # - colmap
+  # - pycolmap
 
   # Deep learning backend (feature extractors + matchers)
   # Swap to a CUDA-enabled build if you have an NVIDIA GPU:
