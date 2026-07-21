@@ -162,7 +162,7 @@ RMS error in RGB is a poor proxy for perceived color error. Evaluate in **CIELAB
 which is approximately perceptually uniform, using the **color difference ΔE**:
 
 $$
-\Delta E^*_{ab} = \sqrt{(\Delta L^*)^2 + (\Delta a^*)^2 + (\Delta b^*)^2}
+\Delta E^{\ast}_{ab} = \sqrt{(\Delta L^{\ast})^2 + (\Delta a^{\ast})^2 + (\Delta b^{\ast})^2}
 $$
 
 between each calibrated patch and its reference (newer metrics ΔE94 / ΔE2000 weight

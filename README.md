@@ -22,16 +22,19 @@ From the repo root:
 docker pull ghcr.io/behnamasadi/opencvprojects:master
 docker tag  ghcr.io/behnamasadi/opencvprojects:master myopencv_image:latest
 
-# 2. Shorthand for every subsequent command — same flags, different cmd at the end
-RUN='docker run --rm --user $(id -u):$(id -g) -v "$(pwd)":/OpenCVProjects -w /OpenCVProjects myopencv_image'
+# 2. Define a shorthand for every subsequent command — same flags, different
+#    cmd at the end. A shell function is safer than an eval'd variable: it
+#    handles paths with spaces and needs no `eval`.
+dr() { docker run --rm --user "$(id -u):$(id -g)" \
+    -v "$PWD":/OpenCVProjects -w /OpenCVProjects myopencv_image "$@"; }
 
 # 3. Configure, build, test
-eval $RUN cmake --preset release
-eval $RUN cmake --build --preset release
-eval $RUN ctest --preset release            # no-op until tests/ is populated
+dr cmake --preset release
+dr cmake --build --preset release
+dr ctest --preset release            # no-op until tests/ is populated
 
 # 4. Run a binary (add X11 flags if the demo uses cv::imshow)
-eval $RUN ./build/release/basic_operations
+dr ./build/release/basic_operations
 
 # 5. Run a GUI demo with X11 forwarding
 xhost +local:docker

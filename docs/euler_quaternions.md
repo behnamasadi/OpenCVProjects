@@ -151,7 +151,7 @@ Key properties:
   more stable than multiplying $3\times3$ matrices, and easy to renormalize:
   $q_{\text{total}} = q_2 \otimes q_1$ applies $q_1$ first.
 - **Inverse** of a unit quaternion is its conjugate:
-  $q^{-1} = q^* = (w, -x, -y, -z)$.
+  $q^{-1} = q^{\ast} = (w, -x, -y, -z)$.
 - **Interpolation** via **SLERP** (spherical linear interpolation) gives
   constant-angular-velocity, shortest-arc blends between orientations —
   something Euler angles cannot do cleanly.

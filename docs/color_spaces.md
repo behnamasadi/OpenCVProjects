@@ -101,7 +101,7 @@ Because distance $\approx$ perceived difference, color difference is just a
 Euclidean norm (CIE76 $\Delta E$):
 
 $$
-\Delta E_{76} = \sqrt{(\Delta L^*)^2 + (\Delta a^*)^2 + (\Delta b^*)^2}
+\Delta E_{76} = \sqrt{(\Delta L^{\ast})^2 + (\Delta a^{\ast})^2 + (\Delta b^{\ast})^2}
 $$
 
 $\Delta E \approx 2.3$ is the just-noticeable-difference threshold. (Later
