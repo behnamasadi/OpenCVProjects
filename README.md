@@ -57,16 +57,18 @@ The remaining subsections document additional Docker flows (local build, persist
 
 #### Option A — Pull the pre-built image (fastest)
 
-CI publishes the image to GitHub Container Registry on every push to `master` and every tag. Just pull it:
+This is **this project's own environment image**, published automatically by CI to GitHub Container Registry on every push to `master` and every tag. It bundles OpenCV 4.6 **and** the rest of the C++ toolchain this repo needs (Ceres, Eigen, rerun, ffmpeg, GTK). There is no generic public OpenCV image that ships all of these together, so pulling this one is the intended path — it's public, so no login is required:
 
 ```bash
 docker pull ghcr.io/behnamasadi/opencvprojects:master
 docker tag  ghcr.io/behnamasadi/opencvprojects:master myopencv_image:latest
 ```
 
+> If you only need plain OpenCV (no Ceres/Eigen), the "most common" alternatives are `apt install libopencv-dev` on `ubuntu:24.04` (what Option B does) or `pip install opencv-python` for Python — but neither is enough to build this repo's C++ targets.
+
 #### Option B — Build it locally
 
-The Dockerfile uses Ubuntu 24.04 with OpenCV from official repositories. Build it with:
+The Dockerfile builds on Ubuntu 24.04 and installs OpenCV 4.6 from Ubuntu's apt repositories (a prebuilt package, not a from-source compile). Build it with:
 
 ```bash
 docker build -t myopencv_image:latest .
