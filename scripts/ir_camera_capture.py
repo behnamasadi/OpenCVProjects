@@ -61,7 +61,7 @@ def robust_color(y16: np.ndarray, lo: float = 2, hi: float = 98) -> np.ndarray:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--device", default="/dev/video2")
+    parser.add_argument("--device", default="/dev/video0")
     parser.add_argument("--view", default="both",
                         choices=["preview", "raw", "both"],
                         help="preview = top AGC'd half, raw = bottom Y16 half")
