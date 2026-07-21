@@ -16,7 +16,7 @@
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.image?\text{4.}P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum&space;P(A|B,C_i)P(C_i|B)P(B)}{P(B)}=\sum&space;P(A|B,C_i)P(C_i|B)\text{3.}P(A,B)=\sum&space;P(A,B,C_i)=\sum&space;P(A|B,C_i)P(B,C_i)=\sum&space;P(A|B,C_i)P(C_i|B)P(B)\\\text{4.}P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum&space;P(A|B,C_i)P(C_i|B)P(B)}{P(B)}=\sum&space;P(A|B,C_i)P(C_i|B)" alt="https://latex.codecogs.com/svg.image?\text{4. } P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum P(A|B,C_i)P(C_i|B)P(B)}{P(B)} =\sum P(A|B,C_i)P(C_i|B)\text{3. }P(A,B)=\sum P(A,B,C_i)=\sum P(A|B,C_i)P(B,C_i)=\sum P(A|B,C_i)P(C_i|B)P(B) \\ \text{4. } P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum P(A|B,C_i)P(C_i|B)P(B)}{P(B)} =\sum P(A|B,C_i)P(C_i|B)" />
+<img src="https://latex.codecogs.com/svg.image?\text{4.}P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum&space;P(A|B,C_i)P(C_i|B)P(B)}{P(B)}=\sum&space;P(A|B,C_i)P(C_i|B)" alt="https://latex.codecogs.com/svg.image?\text{4. } P(A|B)=\frac{P(A,B)}{P(B)}=\frac{\sum P(A|B,C_i)P(C_i|B)P(B)}{P(B)} =\sum P(A|B,C_i)P(C_i|B)" />
 
 
 
@@ -58,7 +58,7 @@ Now by using (6):
 <img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CU_t%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,U_t) dX_{t-1}" />
 
 
-sin X_t-1 has no dependency on U_t, we can omit it:
+since X<sub>t-1</sub> has no dependency on U_t, we can omit it:
 <br/>
 <br/>
 <img src="https://latex.codecogs.com/svg.latex?Bel%28X_t%29%3D%5Ceta%20P%28Z_t%7CX_t%29%5Cint%20P%28X_t%7CU_t%2C%20X_%7Bt-1%7D%29P%28X_%7Bt-1%7D%7CU_1%2C%20Z_1%2C...%2CZ_%7Bt-1%7D%2CU_%7Bt-1%7D%29%20dX_%7Bt-1%7D" alt="https://latex.codecogs.com/svg.latex?Bel(X_t)=\eta P(Z_t|X_t)\int P(X_t|U_t, X_{t-1})P(X_{t-1}|U_1, Z_1,...,Z_{t-1},U_{t-1}) dX_{t-1}" />
@@ -133,7 +133,7 @@ For multidimensional data
 
 
 
-<img src="https://latex.codecogs.com/svg.image?\Sigma^{\prime&space;}=\Sigma_0&space;^{2}-K\Sigma_0^2" title="https://latex.codecogs.com/svg.image?\Sigma^{\prime }=\Sigma_0 ^{2}-K\Sigma_0^2" />
+<img src="https://latex.codecogs.com/svg.image?\Sigma^{\prime&space;}=\Sigma_0-K\Sigma_0" title="https://latex.codecogs.com/svg.image?\Sigma^{\prime }=\Sigma_0-K\Sigma_0" />
 
 <br/>
 <br/>
@@ -213,7 +213,20 @@ and new covariance:
 
 <img src="https://latex.codecogs.com/svg.image?P^\prime&space;_K=P_K-K^\prime&space;H_K&space;P_k" title="https://latex.codecogs.com/svg.image?P^\prime _K=P_K-K^\prime H_K P_k" />
 
+which is equivalent to $P^\prime_k = (I - K^\prime H_k)\,P_k$.
+
+**Where:**
+- $F$ — state transition matrix (maps the previous state to the predicted state).
+- $B$ — control (input) matrix; $\vec{U}$ is the control vector.
+- $P$ — state (error) covariance; $Q$ — process noise covariance.
+- $H$ — measurement matrix (maps the state space into the measurement space).
+- $R$ — measurement noise covariance.
+- $Z_k$ — measurement; $Z_k - H_k\hat{X}_k$ — the innovation (measurement residual).
+- $K^\prime$ — Kalman gain.
+
 # Extended Kalman Filter
+
+When the motion model $g$ and the measurement model $h$ are non-linear, the EKF linearizes them around the current estimate using their Jacobians. The linear state transition matrix $F$ is replaced by $G_k=\partial g/\partial X$, and the measurement matrix $H$ is replaced by $H_k=\partial h/\partial X$.
 
 
 <img src="https://latex.codecogs.com/svg.image?\hat{X}_k=g(X_{k-1},U_{k-1})" title="https://latex.codecogs.com/svg.image?\hat{X}_k=g(X_{k-1},U_{k-1})" />
@@ -243,7 +256,7 @@ First order Linearization:
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.image?g(X_{K-1},U_{K})\approx&space;&space;\frac{\delta&space;g(\mu_K,U_k)}{\delta&space;X_{K-1}}(X_{K-1}-\mu_{K-1})" title="https://latex.codecogs.com/svg.image?g(X_{K-1},U_{K})\approx \frac{\delta g(\mu_K,U_k)}{\delta X_{K-1}}(X_{K-1}-\mu_{K-1})" />
+<img src="https://latex.codecogs.com/svg.image?g(X_{K-1},U_{K})\approx&space;g(\mu_{K-1},U_K)&plus;\frac{\delta&space;g(\mu_{K-1},U_K)}{\delta&space;X_{K-1}}(X_{K-1}-\mu_{K-1})" title="https://latex.codecogs.com/svg.image?g(X_{K-1},U_{K})\approx g(\mu_{K-1},U_K)+\frac{\delta g(\mu_{K-1},U_K)}{\delta X_{K-1}}(X_{K-1}-\mu_{K-1})" />
 
 
 <br/>
@@ -273,7 +286,7 @@ Linearization of update function:
 <br/>
 <br/>
 
-<img src="https://latex.codecogs.com/svg.image?h(X_K)\approx&space;\underbrace{&space;\frac{\partial&space;h(\mu_K)}{\partial&space;X_K}&space;}_H_K&space;(X_K-\mu_K)&space;&plus;h(\mu_k)&space;" title="https://latex.codecogs.com/svg.image?h(X_K)\approx \underbrace{ \frac{\partial h(\mu_K)}{\partial X_K} }_H_K (X_K-\mu_K) +h(\mu_k) " />
+<img src="https://latex.codecogs.com/svg.image?h(X_K)\approx&space;h(\mu_K)&plus;\underbrace{\frac{\partial&space;h(\mu_K)}{\partial&space;X_K}}_{H_K}(X_K-\mu_K)" title="https://latex.codecogs.com/svg.image?h(X_K)\approx h(\mu_K)+\underbrace{\frac{\partial h(\mu_K)}{\partial X_K}}_{H_K}(X_K-\mu_K)" />
 
 
 

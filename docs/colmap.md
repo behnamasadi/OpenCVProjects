@@ -152,6 +152,17 @@ First set your camera parameter
 
 Refs: [1](https://colmap.github.io/cameras.html)
 
+### When you don't provide intrinsics (EXIF → prior → self-calibration)
+
+COLMAP always has a camera model with intrinsics; it just does **not** require *you* to supply them. When you skip `--ImageReader.camera_params`, it obtains the focal length in this order:
+
+1. **EXIF** — focal length in mm together with the sensor width (from COLMAP's built-in sensor database) → focal in pixels. This is the preferred source.
+2. **Heuristic prior** — no usable EXIF? Focal is initialized to `ImageReader.default_focal_length_factor × max(width, height)`, the factor defaulting to **1.2**, with the principal point at the image centre.
+3. **Bundle-adjustment self-calibration** — the real workhorse. Whatever the starting value, focal length (and distortion) are treated as **free parameters** in bundle adjustment and refined against reprojection error as images register. With enough views and genuine translation this pins the intrinsics down far more robustly than any two-view formula.
+
+By default COLMAP shares one intrinsics block across all images from the same camera (`--ImageReader.single_camera 1` forces this even without EXIF grouping), which makes self-calibration much better constrained. To keep intrinsics fixed at values you trust, pass `--Mapper.ba_refine_focal_length 0` and `--Mapper.ba_refine_extra_params 0`.
+
+The classical theory behind why two views alone already constrain focal length (recovering it from the fundamental matrix via the essential-matrix / Bougnoux constraints) is written up in [epipolar_geometry_essential_matrix_fundamental_matrix.ipynb](epipolar_geometry_essential_matrix_fundamental_matrix.ipynb) — but note that formula is noise-sensitive, which is exactly why COLMAP leans on EXIF + priors + BA in practice.
 
 If you have your camera parameter you specify them:
 

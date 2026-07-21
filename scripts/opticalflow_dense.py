@@ -83,11 +83,14 @@ for y in range(0, h, step):
 h, w = prev.shape
 y_coords, x_coords = np.mgrid[0:h, 0:w].astype(np.float32)
 
-# Add flow to coordinates to get new positions
-map_x = x_coords + u
-map_y = y_coords + v
+# Reconstruct `next` from `prev` by backward warping: for each destination
+# pixel (x, y) we sample `prev` at (x - u, y - v). Farneback flow is defined
+# on prev's grid (prev pixel (x, y) moves to (x + u, y + v) in next), so the
+# backward map uses the NEGATIVE flow. Using +u/+v here would not match `next`.
+map_x = x_coords - u
+map_y = y_coords - v
 
-# Warp prev frame: move each pixel to its new location according to flow
+# Sample prev at the shifted coordinates; result should resemble `next`.
 warped_prev = cv2.remap(prev, map_x, map_y, cv2.INTER_LINEAR)
 
 # Calculate difference to see warping error
